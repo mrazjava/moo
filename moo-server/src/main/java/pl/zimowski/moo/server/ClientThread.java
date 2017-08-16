@@ -1,5 +1,10 @@
 package pl.zimowski.moo.server;
 
+import java.net.Socket;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.zimowski.moo.api.ServerEvent;
 
 /**
@@ -12,9 +17,35 @@ import pl.zimowski.moo.api.ServerEvent;
  */
 public class ClientThread extends Thread implements ClientNotification {
 
+    private static final Logger log = LoggerFactory.getLogger(ClientThread.class);
+
+    private Socket socket;
+
+    private ServerNotification serverNotifier;
+
+
+    /**
+     * Constructs an live link between client and a server. The link is
+     * established over a socket and server notifier. This is all that a
+     * running thread needs to exchange information between client and a
+     * server.
+     *
+     * @param socket connection established by the client
+     * @param serverNotifier used to inform server about events received from the client
+     */
+    public ClientThread(Socket socket, ServerNotification serverNotifier) {
+        this.socket = socket;
+        this.serverNotifier = serverNotifier;
+    }
+
     @Override
     public void notify(ServerEvent event) {
-        // TODO Auto-generated method stub
 
+        log.debug("received: {}", event);
+    }
+
+    @Override
+    public String toString() {
+        return "ClientThread [socket=" + socket + "]";
     }
 }
