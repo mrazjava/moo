@@ -90,7 +90,6 @@ public class ChatEngine implements ChatService, ServerNotification {
                 synchronized(this) {
                     connectedClients.add(client);
                 }
-                jmxReporter.clientConnected();
                 log.debug("connected clients: {}", connectedClients.size());
                 executor.submit(client);
             }
@@ -161,6 +160,7 @@ public class ChatEngine implements ChatService, ServerNotification {
                 synchronized(this) {
                     connectedClients.add(clientThread);
                 }
+                jmxReporter.clientConnected(); // thread safe
 
                 if(connectedClients.size() > 1)
                     serverMessage = String.format("(%s) %s joined; %d participants", App.SERVER_NAME, clientEvent.getAuthor(), connectedClients.size());
@@ -173,7 +173,7 @@ public class ChatEngine implements ChatService, ServerNotification {
                 synchronized(this) {
                     connectedClients.remove(clientThread);
                 }
-                jmxReporter.clientDisconnected();
+                jmxReporter.clientDisconnected(); // thread safe
 
                 String exitInfo = String.format("(%s) %s left; ", App.SERVER_NAME, clientEvent.getAuthor());
                 serverMessage = exitInfo +
