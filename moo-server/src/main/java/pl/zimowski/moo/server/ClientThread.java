@@ -45,6 +45,15 @@ public class ClientThread extends Thread implements ClientNotification {
     }
 
     @Override
+    public int hashCode() {
+
+        int result = 23;
+        result = 31 * result + (socket == null ? 0 : socket.hashCode());
+        result = 31 * result + (serverNotifier == null ? 0 : serverNotifier.hashCode());
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "ClientThread [socket=" + socket + "]";
     }
