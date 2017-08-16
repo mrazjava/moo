@@ -9,10 +9,12 @@
       <pattern>[%level] %logger [%M] - %msg%n</pattern>
     </encoder>
   </appender>
-  
+
   <logger name="org.springframework" level="WARN" />
   <logger name="javax.management" level="INFO" />
   <logger name="org.hibernate.validator" level="ERROR" />
+
+  <logger name="pl.zimowski.moo.api.ApiUtils" level="DEBUG" />
 
   <root level="TRACE">
     <appender-ref ref="STDOUT" />
