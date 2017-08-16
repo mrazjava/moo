@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+    <!-- %-4relative [%thread] %-5level %logger{35} - %msg %n -->
+      <pattern>[%level] %logger [%M] - %msg%n</pattern>
+    </encoder>
+  </appender>
+  
+  <logger name="org.springframework" level="WARN" />
+  <logger name="javax.management" level="INFO" />
+  <logger name="org.hibernate.validator" level="ERROR" />
+
+  <root level="TRACE">
+    <appender-ref ref="STDOUT" />
+  </root>
+
+</configuration>
