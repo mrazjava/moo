@@ -51,7 +51,7 @@ public class App implements ApplicationRunner {
         try (Scanner scanner = new Scanner(System.in)) {
 
             log.info("How do you want to moo? (type nickname or just hit enter)");
-            System.out.print("> ");
+            ApiUtils.printPrompt();
 
             nick = scanner.nextLine();
             boolean customNick = false;
@@ -64,13 +64,13 @@ public class App implements ApplicationRunner {
             if(log.isInfoEnabled()) {
                 log.info((customNick ? "You're" : "Alright") + " \"{}\", go ahead and mooo (ctrl-c to exit)", nick);
             }
-            System.out.print("> ");
+            ApiUtils.printPrompt();
 
             while(scanner.hasNextLine()) {
 
                 String input = scanner.nextLine();
                 log.debug("sending: {}", input);
-                System.out.print("> ");
+                ApiUtils.printPrompt();
             }
         }
     }
