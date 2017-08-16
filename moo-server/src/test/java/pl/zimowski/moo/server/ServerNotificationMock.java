@@ -20,7 +20,7 @@ public class ServerNotificationMock implements ServerNotification {
     /**
      * {@inheritDoc} This implementation does not perform notification at all.
      * It simply caches parameters for later retrieval and always returns
-     * success.
+     * zero to indicate that no clients were notified.
      */
     @Override
     public int notify(ClientThread client, ClientEvent event) {
