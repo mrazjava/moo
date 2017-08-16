@@ -62,11 +62,11 @@ public class App implements ApplicationRunner {
             ApiUtils.printPrompt();
 
             nick = scanner.nextLine();
-            boolean customNick = false;
+            boolean anonymousNick = false; // assume mooer is creative
 
             if(StringUtils.isBlank(nick)) {
                 nick = clientUtils.randomNickName();
-                customNick = true;
+                anonymousNick = true;
             }
 
             if(!connMgr.connect()) {
@@ -74,7 +74,7 @@ public class App implements ApplicationRunner {
             }
 
             if(log.isInfoEnabled()) {
-                log.info((customNick ? "You're known as" : "Alright") + " \"{}\", go ahead and mooo (ctrl-c to exit)", nick);
+                log.info((anonymousNick ? "You're known as" : "Alright") + " \"{}\", go ahead and mooo (ctrl-c to exit)", nick);
             }
             ApiUtils.printPrompt();
 
