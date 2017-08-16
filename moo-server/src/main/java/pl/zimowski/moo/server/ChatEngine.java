@@ -60,7 +60,7 @@ public class ChatEngine implements ChatService, ServerNotification {
     public void start() {
 
         log.info("\n{}", ApiUtils.fetchResource("/logo"));
-        log.info("listening on port {}", port);
+        log.info("listening on port {} (ctrl-c to exit)", port);
 
         try (ServerSocket server = new ServerSocket(port)) {
             listen(server);
