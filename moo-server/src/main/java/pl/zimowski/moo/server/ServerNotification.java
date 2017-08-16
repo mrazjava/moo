@@ -12,10 +12,12 @@ public interface ServerNotification {
 
     /**
      * Given a thread associated with established (live) client, and specific
-     * message it generated, tell server about it so it can handle it.
+     * message it generated, tell server about it so it can distribute the
+     * message to other clients.
      *
      * @param client which generated an event
      * @param event to be handled by the server
+     * @return number of clients that were notified
      */
-    void notify(ClientThread client, ClientEvent event);
+    int notify(ClientThread client, ClientEvent event);
 }

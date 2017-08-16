@@ -3,6 +3,7 @@ package pl.zimowski.moo.server;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import org.slf4j.Logger;
@@ -87,9 +88,23 @@ public class ClientThread extends Thread implements ClientNotification {
     }
 
     @Override
-    public void notify(ServerEvent event) {
+    public boolean notify(ServerEvent event) {
 
-        log.debug("received: {}", event);
+        log.debug("processing {}", event);
+
+        boolean status = true; // assume success
+
+        try {
+            ObjectOutputStream ois = new ObjectOutputStream(socket.getOutputStream());
+            ois.writeObject(event);
+            ois.flush();
+        }
+        catch (IOException e) {
+            log.error("failed to read from server socket: {}", e.getMessage());
+            status = false;
+        }
+
+        return status;
     }
 
     @Override

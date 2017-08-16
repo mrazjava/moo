@@ -16,6 +16,7 @@ public interface ClientNotification {
      * clients, it must notify each one separately.
      *
      * @param event emited by server to a client
+     * @returns {@code true} if event was forwarded onto a client; {@code false} if not due to error
      */
-    void notify(ServerEvent event);
+    boolean notify(ServerEvent event);
 }

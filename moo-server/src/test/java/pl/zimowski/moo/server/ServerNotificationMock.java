@@ -17,11 +17,17 @@ public class ServerNotificationMock implements ServerNotification {
     private ClientEvent clientEvent;
 
 
+    /**
+     * {@inheritDoc} This implementation does not perform notification at all.
+     * It simply caches parameters for later retrieval and always returns
+     * success.
+     */
     @Override
-    public void notify(ClientThread client, ClientEvent event) {
+    public int notify(ClientThread client, ClientEvent event) {
 
         clientThread = client;
         clientEvent = event;
+        return 0;
     }
 
     public ClientThread getClientThread() {

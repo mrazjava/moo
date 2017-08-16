@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import pl.zimowski.moo.api.ApiUtils;
+import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
+import pl.zimowski.moo.api.ServerAction;
+import pl.zimowski.moo.api.ServerEvent;
 
 /**
  * Core implementation of chat server based on web sockets. Supports multiple
@@ -82,7 +85,7 @@ public class ChatEngine implements ChatService, ServerNotification {
                 synchronized(this) {
                     connectedClients.add(client);
                 }
-                log.debug("{} connected clients", connectedClients.size());
+                log.debug("connected clients: {}", connectedClients.size());
                 executor.submit(client);
             }
             catch(IOException e) {
@@ -99,8 +102,84 @@ public class ChatEngine implements ChatService, ServerNotification {
     }
 
     @Override
-    public void notify(ClientThread client, ClientEvent event) {
-        log.debug("processing {} from {}", event, client);
+    public int notify(ClientThread clientThread, ClientEvent clientEvent) {
+
+        log.debug("processing {} from {}", clientEvent, clientThread);
+
+        ServerEvent serverEvent = processClientMessage(clientThread, clientEvent);
+        int notifiedClients = 0;
+
+        // could be perf bottleneck - should re-think for optimization; this
+        // needs to be thread safe as otherwise iterator would get screwed up
+        // and event delivery unpredictable (events eaten out)
+        synchronized(this) {
+            for(ClientNotification connectedClient : connectedClients) {
+                if(connectedClient == clientThread && clientEvent.getAction() != ClientAction.Signin) {
+                    continue;
+                }
+                log.debug("broadcasting to: {}", connectedClient);
+                connectedClient.notify(serverEvent);
+                notifiedClients++;
+            }
+        }
+
+        log.debug("nofied {} clients", notifiedClients);
+
+        return notifiedClients;
+    }
+
+    /**
+     * Inspects the nature of a message received from a client, and updates
+     * collection of connected clients as necessary. Transforms the client
+     * message to equivalent server message so that it can be used by the
+     * engine to rebroadcast it.
+     *
+     * @param clientThread which produced an event/message
+     * @param clientEvent produced by the client
+     * @return equivalent server message
+     */
+    private ServerEvent processClientMessage(ClientThread clientThread, ClientEvent clientEvent) {
+
+        ClientAction clientAction = clientEvent.getAction();
+        ServerAction serverAction = null;
+        String serverMessage = null;
+
+        switch(clientAction) {
+            case Signin:
+                serverAction = ServerAction.ParticipantCount;
+
+                synchronized(this) {
+                    connectedClients.add(clientThread);
+                }
+
+                if(connectedClients.size() > 1)
+                    serverMessage = String.format("(%s) %s joined; %d participants", App.SERVER_NAME, clientEvent.getAuthor(), connectedClients.size());
+                else
+                    serverMessage = String.format("(%s) You're the only participant so far", App.SERVER_NAME);
+                break;
+            case Signoff:
+                serverAction = ServerAction.ParticipantCount;
+
+                synchronized(this) {
+                    connectedClients.remove(clientThread);
+                }
+
+                String exitInfo = String.format("(%s) %s left; ", App.SERVER_NAME, clientEvent.getAuthor());
+                serverMessage = exitInfo +
+                        (connectedClients.size() > 1 ?
+                        String.format("%d participants", connectedClients.size()) :
+                        "might be boring, you're all by yourself now :(");
+                break;
+            case Message:
+                serverAction = ServerAction.Message;
+                serverMessage = String.format("(%s): %s", clientEvent.getAuthor(), clientEvent.getMessage());
+                break;
+        }
+
+        log.trace("connected clients: {}", connectedClients.size());
+
+        return new ServerEvent(serverAction, serverMessage)
+                .withParticipantCount(connectedClients.size());
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +22,8 @@ import org.mockito.junit.MockitoRule;
 
 import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
+import pl.zimowski.moo.api.ServerAction;
+import pl.zimowski.moo.api.ServerEvent;
 
 /**
  * Ensures operation of {@link ClientThread} is as expected.
@@ -46,12 +49,8 @@ public class ClientThreadTest {
     @Test
     public void shouldRunClientThreadAndExit() throws IOException {
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-
-        oos.writeObject(new ClientEvent(ClientAction.Signoff, "zorro", null));
-
-        InputStream is = new ByteArrayInputStream(baos.toByteArray());
+        Object event = new ClientEvent(ClientAction.Signoff, "zorro", null);
+        InputStream is = eventAsInputStream(event);
 
         given(socket.getInputStream()).willReturn(is);
 
@@ -62,5 +61,29 @@ public class ClientThreadTest {
 
         // intentionally comparing references
         assertTrue(clientThreadObserver.getClientThread() == clientThread);
+    }
+
+    @Test
+    public void shouldProcessServerNotification() throws IOException, ClassNotFoundException {
+
+        given(socket.getOutputStream()).willReturn(new ByteArrayOutputStream());
+        assertTrue(clientThread.notify(new ServerEvent(ServerAction.Message, "hello there")));
+    }
+
+    private InputStream eventAsInputStream(Object event) throws IOException {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+
+        oos.writeObject(event);
+
+        return new ByteArrayInputStream(baos.toByteArray());
+    }
+
+    class MockSocket extends Socket {
+
+        public MockSocket() throws UnknownHostException, IOException {
+            super("localhost", 8000);
+        }
     }
 }
