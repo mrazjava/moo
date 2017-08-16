@@ -8,4 +8,18 @@
   <artifactId>moo-client</artifactId>
   <description>Client app for mooing</description>
   <name>Moo (client)</name>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources-filtered</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+  </build>
+
 </project>
