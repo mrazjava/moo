@@ -8,4 +8,12 @@
   <artifactId>moo-api</artifactId>
   <name>Moo (api)</name>
   <description>Common data structures, contracts and utilities used for communication by server and client.</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>  
+  </dependencies>
+
 </project>
