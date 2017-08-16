@@ -20,7 +20,11 @@ public class ServerEvent implements Serializable {
         this(action);
     }
 
-    public ServerEvent withContent(String message) {
+    public ServerEvent withMessage(String message) {
+        return this;
+    }
+
+    public ServerEvent withParticipantCount(int count) {
         return this;
     }
 
@@ -30,6 +34,10 @@ public class ServerEvent implements Serializable {
 
     public ServerAction getAction() {
         return null;
+    }
+
+    public int getParticipantCount() {
+        return 0;
     }
 
     public String getMessage() {
