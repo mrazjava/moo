@@ -17,9 +17,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 
 import pl.zimowski.moo.api.ApiUtils;
+import pl.zimowski.moo.api.ClientAction;
+import pl.zimowski.moo.api.ClientEvent;
 
 /**
- * Text based front end to a client of a Moo chat service.
+ * Text based client UI of a Moo chat service.
  *
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
@@ -31,6 +33,9 @@ public class App implements ApplicationRunner {
     private Logger log;
 
     private String nick;
+
+    @Inject
+    private ConnectionManagement connMgr;
 
 
     /**
@@ -61,15 +66,23 @@ public class App implements ApplicationRunner {
                 customNick = true;
             }
 
+            if(!connMgr.connect()) {
+                return;
+            }
+
             if(log.isInfoEnabled()) {
-                log.info((customNick ? "You're" : "Alright") + " \"{}\", go ahead and mooo (ctrl-c to exit)", nick);
+                log.info((customNick ? "You're known as" : "Alright") + " \"{}\", go ahead and mooo (ctrl-c to exit)", nick);
             }
             ApiUtils.printPrompt();
+
+            connMgr.send(new ClientEvent(ClientAction.Signin).withAuthor(nick));
 
             while(scanner.hasNextLine()) {
 
                 String input = scanner.nextLine();
-                log.debug("sending: {}", input);
+                ClientEvent event = new ClientEvent(ClientAction.Message, nick, input);
+                log.debug("sending: {}", event);
+                connMgr.send(event);
                 ApiUtils.printPrompt();
             }
         }
@@ -79,6 +92,7 @@ public class App implements ApplicationRunner {
     public void shutdown() {
         if(nick != null) {
             log.info("(client) done mooing? bye {}!", nick);
+            connMgr.send(new ClientEvent(ClientAction.Signoff).withAuthor(nick));
         }
     }
 
