@@ -19,10 +19,10 @@ import org.springframework.validation.annotation.Validated;
 public class ServerSettings {
 
     @NotNull(message = "server host is required")
-    private String host;
+    String host;
 
     @NotNull(message = "server port is required")
-    private Integer port;
+    Integer port;
 
 
     public void setPort(int port) {
