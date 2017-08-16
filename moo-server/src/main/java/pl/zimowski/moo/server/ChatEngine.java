@@ -100,7 +100,7 @@ public class ChatEngine implements ChatService, ServerNotification {
 
     @Override
     public void notify(ClientThread client, ClientEvent event) {
-        log.debug("received: {} from {}", event, client);
+        log.debug("processing {} from {}", event, client);
     }
 
     @Override

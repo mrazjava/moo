@@ -1,10 +1,15 @@
 package pl.zimowski.moo.server;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.zimowski.moo.api.ClientAction;
+import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ServerEvent;
 
 /**
@@ -19,9 +24,20 @@ public class ClientThread extends Thread implements ClientNotification {
 
     private static final Logger log = LoggerFactory.getLogger(ClientThread.class);
 
+    /**
+     * connection tunnel over which communication takes place
+     */
     private Socket socket;
 
+    /**
+     * server notification service
+     */
     private ServerNotification serverNotifier;
+
+    /**
+     * tracker of connection state
+     */
+    private boolean connected;
 
 
     /**
@@ -36,6 +52,38 @@ public class ClientThread extends Thread implements ClientNotification {
     public ClientThread(Socket socket, ServerNotification serverNotifier) {
         this.socket = socket;
         this.serverNotifier = serverNotifier;
+    }
+
+    @Override
+    public void run() {
+
+        try {
+            connected = true;
+            while(connected) {
+                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                ClientEvent msg = (ClientEvent)ois.readObject();
+                log.debug("in: {}", msg);
+                serverNotifier.notify(this, msg);
+                if(ClientAction.Signoff == msg.getAction()) {
+                    log.info("closing connection: {}", socket);
+                    socket.close();
+                    break;
+                }
+            }
+        }
+        catch(ClassNotFoundException e) {
+            e.printStackTrace(); // should not happen
+        }
+        catch(EOFException e) {
+            log.trace("socket already closed(?)");
+        }
+        catch(IOException e) {
+            log.error("problem reading client socket", e);
+        }
+    }
+
+    public void disconnect() {
+        connected = false;
     }
 
     @Override
