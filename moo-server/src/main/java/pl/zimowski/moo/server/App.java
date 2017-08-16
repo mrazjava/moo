@@ -12,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 
+import pl.zimowski.moo.server.jmx.JmxReportingSupport;
+
 /**
  * Sever app. Bootstraps actual server engine, which depending on
  * implementation may operate on various protocols. A default moo server
@@ -31,6 +33,10 @@ public class App implements ApplicationRunner {
     @Inject
     private ChatService server;
 
+    @Inject
+    private JmxReportingSupport jmxReporer;
+
+
     public static final void main(String[] args) {
 
         SpringApplication.run(App.class, args);
@@ -40,6 +46,8 @@ public class App implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
 
         log.info("initializing server...");
+
+        jmxReporer.initialize();
         server.start();
     }
 

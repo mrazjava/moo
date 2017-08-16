@@ -20,6 +20,7 @@ import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ServerAction;
 import pl.zimowski.moo.api.ServerEvent;
+import pl.zimowski.moo.server.jmx.JmxReportingSupport;
 
 /**
  * Core implementation of chat server based on web sockets. Supports multiple
@@ -40,6 +41,10 @@ public class ChatEngine implements ChatService, ServerNotification {
     private int port;
 
     private boolean running;
+
+    @Inject
+    private JmxReportingSupport jmxReporter;
+
 
     /**
      * each connected client will receive server events; this is the essence
@@ -85,6 +90,7 @@ public class ChatEngine implements ChatService, ServerNotification {
                 synchronized(this) {
                     connectedClients.add(client);
                 }
+                jmxReporter.clientConnected();
                 log.debug("connected clients: {}", connectedClients.size());
                 executor.submit(client);
             }
@@ -163,6 +169,7 @@ public class ChatEngine implements ChatService, ServerNotification {
                 synchronized(this) {
                     connectedClients.remove(clientThread);
                 }
+                jmxReporter.clientDisconnected();
 
                 String exitInfo = String.format("(%s) %s left; ", App.SERVER_NAME, clientEvent.getAuthor());
                 serverMessage = exitInfo +
