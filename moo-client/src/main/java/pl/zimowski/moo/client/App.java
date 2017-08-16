@@ -46,7 +46,7 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments arg0) throws Exception {
 
-        log.info("CLIENT\n{}", ApiUtils.fetchResource("/logo"));
+        log.info("\n{}", ApiUtils.fetchResource("/logo"));
 
         try (Scanner scanner = new Scanner(System.in)) {
 
