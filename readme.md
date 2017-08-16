@@ -27,7 +27,9 @@ Starting server:
 cd moo/moo-server/
 mvn spring-boot:run
 ```
-Server starts on port `8000`. Port can be changed via `application.properties`.
+Server starts on port `8000`. Port can be changed via `application.properties`. 
+Server repors client count stats to JMX console. Start the JMX console with a 
+server PID and watch `ClientAnalytics` MBean.
 
 ## Client
 -----------
