@@ -20,4 +20,11 @@ public interface ChatService {
      * @return {@code true} if service is running, {@code false} otherwise.
      */
     boolean isRunning();
+
+    /**
+     * Stop a running server. All connected clients will be disconnected by
+     * force. After this operation no client should be able to establish a new
+     * connection (unless {@link #start()} is subsequently invoked).
+     */
+    void stop();
 }

@@ -21,5 +21,7 @@ public class ChatEngineTest {
         assertFalse(engine.isRunning());
         engine.start();
         assertTrue(engine.isRunning());
+        engine.stop();
+        assertFalse(engine.isRunning());
     }
 }
