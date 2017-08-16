@@ -37,6 +37,9 @@ public class App implements ApplicationRunner {
     @Inject
     private ConnectionManagement connMgr;
 
+    @Inject
+    private ClientUtils clientUtils;
+
 
     /**
      * Application entry point.
@@ -62,7 +65,7 @@ public class App implements ApplicationRunner {
             boolean customNick = false;
 
             if(StringUtils.isBlank(nick)) {
-                nick = "anonymous";
+                nick = clientUtils.randomNickName();
                 customNick = true;
             }
 
