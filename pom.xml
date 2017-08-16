@@ -320,5 +320,6 @@
   <modules>
   <module>moo-client</module>
   <module>moo-server</module>
+  <module>moo-api</module>
   </modules>
 </project>
