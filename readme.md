@@ -2,11 +2,13 @@
 -----------
 Mooo is a simple console based Java chat service.
 
-Stack
+Stack:
+
  * Java 8
  * Spring Boot
 
-Features
+Features:
+
  * Server support for multiple clients
  * Server JMX reporting
 
