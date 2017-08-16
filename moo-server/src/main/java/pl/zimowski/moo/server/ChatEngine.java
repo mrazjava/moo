@@ -120,12 +120,16 @@ public class ChatEngine implements ChatService, ServerNotification {
         // and event delivery unpredictable (events eaten out)
         synchronized(this) {
             for(ClientNotification connectedClient : connectedClients) {
+
                 if(connectedClient == clientThread && clientEvent.getAction() != ClientAction.Signin) {
                     continue;
                 }
+
                 log.debug("broadcasting to: {}", connectedClient);
-                connectedClient.notify(serverEvent);
-                notifiedClients++;
+
+                if(connectedClient.notify(serverEvent)) {
+                    notifiedClients++;
+                }
             }
         }
 
