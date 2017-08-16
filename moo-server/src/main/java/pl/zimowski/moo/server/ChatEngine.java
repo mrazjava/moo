@@ -5,15 +5,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChatEngine implements ChatService {
 
+    private boolean running;
+
+
     @Override
     public void start() {
-        // TODO Auto-generated method stub
 
+        running = true;
     }
 
     @Override
     public boolean isRunning() {
-        // TODO Auto-generated method stub
-        return false;
+        return running;
     }
 }
