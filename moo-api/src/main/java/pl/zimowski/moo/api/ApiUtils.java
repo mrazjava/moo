@@ -49,7 +49,7 @@ public class ApiUtils {
     }
 
     /**
-     * Simulates command line prompt by printing a &gt symbol to the
+     * Simulates command line prompt by printing a &gt; symbol to the
      * console using {@link System#out} followed by one space (and no line
      * break). This is just additional eye candy that can make a boring console
      * app more appealing.
