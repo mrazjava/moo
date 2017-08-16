@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -78,12 +77,5 @@ public class ClientThreadTest {
         oos.writeObject(event);
 
         return new ByteArrayInputStream(baos.toByteArray());
-    }
-
-    class MockSocket extends Socket {
-
-        public MockSocket() throws UnknownHostException, IOException {
-            super("localhost", 8000);
-        }
     }
 }
