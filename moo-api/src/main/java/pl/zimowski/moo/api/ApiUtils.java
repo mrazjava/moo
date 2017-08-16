@@ -8,6 +8,12 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Handy utility calls common to both server and client.
+ *
+ * @since 1.0.0
+ * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
+ */
 public class ApiUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ApiUtils.class);
