@@ -319,5 +319,6 @@
   <description>Root project for Moo chat service</description>
   <modules>
   <module>moo-client</module>
+  <module>moo-server</module>
   </modules>
 </project>
