@@ -3,6 +3,8 @@ package pl.zimowski.moo.client;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -41,8 +43,12 @@ public class ConnectionManager implements ConnectionManagement {
         boolean status = false;
         log.info("establishing connection to {}:{}", host, port);
 
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
         try {
             socket = new Socket(host, port);
+            Thread serverListener = new ServerListener(socket);
+            executor.submit(serverListener);
             status = true;
         }
         catch(IOException e) {
@@ -58,11 +64,16 @@ public class ConnectionManager implements ConnectionManagement {
     }
 
     @Override
-    public void send(ClientEvent message) {
+    public void send(ClientEvent event) {
+
+        if(socket == null) {
+            log.warn("null socket; was connect() invoked? ignoring {}", event);
+            return;
+        }
 
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            out.writeObject(message);
+            out.writeObject(event);
             out.flush();
         }
         catch(IOException e) {
