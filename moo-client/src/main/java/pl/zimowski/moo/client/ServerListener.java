@@ -12,6 +12,9 @@ import pl.zimowski.moo.api.ApiUtils;
 import pl.zimowski.moo.api.ServerEvent;
 
 /**
+ * Listens for incoming events from the server and echoes them back to the
+ * client.
+ *
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
