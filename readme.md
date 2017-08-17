@@ -48,7 +48,7 @@ Start another client and have fun! Moo...
 
 ## Future Vision
 -----------
- * More clients! (gui?)
- * More servers! (something different than socket)
+ * More clients! (gui)
+ * More servers! (gui?; something different than sockets)
  * Alternate implementation of ChatService (different engine, same server)
  * More features! (direct/private user chats, channels, encryption, etc) 
