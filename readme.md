@@ -28,7 +28,7 @@ cd moo/moo-server/
 mvn spring-boot:run
 ```
 Server starts on port `8000`. Port can be changed via `application.properties`. 
-Server repors client count stats to JMX console. Start the JMX console with a 
+Server reports client count stats to JMX console. Start the JMX console with a 
 server PID and watch `ClientAnalytics` MBean.
 
 ## Client
@@ -50,4 +50,5 @@ Start another client and have fun! Moo...
 -----------
  * More clients! (gui?)
  * More servers! (something different than socket)
- * More features! (support for channels, end to end encryption, etc) 
+ * Alternate implementation of ChatService (different engine, same server)
+ * More features! (direct/private user chats, channels, encryption, etc) 
