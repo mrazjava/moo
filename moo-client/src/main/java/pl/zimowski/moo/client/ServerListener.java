@@ -35,7 +35,7 @@ public class ServerListener extends Thread {
             while(!socket.isInputShutdown()) {
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 ServerEvent serverEvent = (ServerEvent)in.readObject();
-                log.info(serverEvent.getMessage());
+                log.info("({}) {}", serverEvent.getAuthor(), serverEvent.getMessage());
                 ApiUtils.printPrompt();
             }
         }

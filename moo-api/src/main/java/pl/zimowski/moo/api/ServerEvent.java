@@ -1,6 +1,7 @@
 package pl.zimowski.moo.api;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Information that server can emit to a client.
@@ -17,6 +18,8 @@ public class ServerEvent implements Serializable {
     private ServerAction action;
 
     private String message;
+
+    private String author;
 
     private int participantCount;
 
@@ -36,6 +39,11 @@ public class ServerEvent implements Serializable {
         return this;
     }
 
+    public ServerEvent withAuthor(String author) {
+        this.author = author;
+        return this;
+    }
+
     public ServerEvent withParticipantCount(int count) {
         participantCount = count;
         return this;
@@ -43,6 +51,10 @@ public class ServerEvent implements Serializable {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public String getDateTime() {
+        return new Date(timestamp).toString();
     }
 
     public ServerAction getAction() {
@@ -57,9 +69,13 @@ public class ServerEvent implements Serializable {
         return message;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
     @Override
     public String toString() {
-        return "ServerEvent [timestamp=" + timestamp + ", action=" + action + ", message=" + message
-                + ", participantCount=" + participantCount + "]";
+        return "ServerEvent [timestamp=" + timestamp + ", action=" + action + ", author=" + author
+                + ", message=" + message + ", participantCount=" + participantCount + "]";
     }
 }

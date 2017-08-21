@@ -65,7 +65,7 @@ public class ClientThread extends Thread implements ClientNotification {
                 ClientEvent msg = (ClientEvent)ois.readObject();
                 log.debug("in: {}", msg);
                 serverNotifier.notify(this, msg);
-                if(ClientAction.Signoff == msg.getAction()) {
+                if(ClientAction.Disconnect == msg.getAction()) {
                     log.info("closing connection: {}", socket);
                     socket.close();
                     break;
@@ -76,7 +76,8 @@ public class ClientThread extends Thread implements ClientNotification {
             e.printStackTrace(); // should not happen
         }
         catch(EOFException e) {
-            log.trace("socket already closed(?)");
+            log.trace("socket already closed(?); ejecting connection");
+            serverNotifier.notify(this, new ClientEvent(ClientAction.Disconnect));
         }
         catch(IOException e) {
             log.error("problem reading client socket", e);
