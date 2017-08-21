@@ -5,12 +5,16 @@ Mooo is a simple console based Java chat service.
 Stack:
 
  * Java 8
+ * Angular
+ * REST
  * Spring Boot
 
 Features:
 
  * Server support for multiple clients
  * Server JMX reporting
+ * Console client
+ * Web client
 
 ## First things first
 -----------
@@ -33,7 +37,7 @@ server PID and watch `ClientAnalytics` MBean.
 
 ## Client
 -----------
-Starting client:
+Starting console client:
 ```
 cd moo/moo-client/
 mvn spring-boot:run
@@ -42,13 +46,21 @@ Client will attempt to connect to server at `localhost` on port `8000`.
 This can be re-configured via `application.properties`. Client aborts 
 immediately if server connection cannot be established.
 
+Starting web client:
+```
+cd moo/moo-ui-web1
+mvn spring-boot:run
+```
+This client will also attempt to connect to server at `localhost` on port 
+`8000`. This client right now does not expose configuration options.
+
 ## Chatting
 -----------
-Start another client and have fun! Moo...
+Start yet another client and have fun! Moo...
 
 ## Future Vision
 -----------
  * More clients! (gui)
- * More servers! (gui?; something different than sockets)
+ * More servers! (maybe node? with gui?)
  * Alternate implementation of ChatService (different engine, same server)
  * More features! (direct/private user chats, channels, encryption, etc) 
