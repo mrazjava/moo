@@ -1,6 +1,5 @@
 package pl.zimowski.moo.server;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -75,12 +74,9 @@ public class ClientThread extends Thread implements ClientNotification {
         catch(ClassNotFoundException e) {
             e.printStackTrace(); // should not happen
         }
-        catch(EOFException e) {
-            log.trace("socket already closed(?); ejecting connection");
-            serverNotifier.notify(this, new ClientEvent(ClientAction.Disconnect));
-        }
         catch(IOException e) {
-            log.error("problem reading client socket", e);
+            log.info("ejecting connection: {}", e.getMessage());
+            serverNotifier.notify(this, new ClientEvent(ClientAction.Disconnect));
         }
     }
 

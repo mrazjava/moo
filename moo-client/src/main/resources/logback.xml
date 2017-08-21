@@ -24,6 +24,7 @@
   <logger name="org.hibernate.validator" level="ERROR" />
 
   <logger name="pl.zimowski.moo.api.ApiUtils" level="DEBUG" />
+  <logger name="pl.zimowski.moo.client.App" level="INFO" />
 
   <logger name="pl.zimowski.moo.client.ServerListener" level="INFO" additivity="false">
     <appender-ref ref="STDOUT-chat" />

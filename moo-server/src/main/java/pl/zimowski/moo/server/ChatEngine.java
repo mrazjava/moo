@@ -133,10 +133,6 @@ public class ChatEngine implements ChatService, ServerNotification {
         synchronized(this) {
             for(ClientNotification connectedClient : connectedClients) {
 
-                if(connectedClient == clientThread && clientEvent.getAction() != ClientAction.Signin) {
-                    continue;
-                }
-
                 log.debug("broadcasting to: {}", connectedClient);
 
                 if(connectedClient.notify(serverEvent)) {
@@ -173,21 +169,19 @@ public class ChatEngine implements ChatService, ServerNotification {
                 participantCount++;
 
                 author = App.SERVER_NAME;
+                StringBuilder msg = new StringBuilder(String.format("%s joined;", clientEvent.getAuthor()));
                 if(participantCount > 1)
-                    serverMessage = String.format("%s joined; %d participants", clientEvent.getAuthor(), participantCount);
+                    msg.append(String.format(" %d participants", participantCount));
                 else
-                    serverMessage = String.format("You're the only participant so far");
+                    msg.append(" and is the only participant so far");
+
+                serverMessage = msg.toString();
                 break;
             case Signoff:
                 serverAction = ServerAction.ParticipantCount;
                 participantCount--;
                 author = App.SERVER_NAME;
-
-                String exitInfo = String.format("%s left; ", clientEvent.getAuthor());
-                serverMessage = exitInfo +
-                        (participantCount > 1 ?
-                        String.format("%d participants", participantCount) :
-                        "might be boring, you're all by yourself now :(");
+                serverMessage = String.format("%s left; %d participant(s) remaining", clientEvent.getAuthor(), participantCount);
                 break;
             case Message:
                 serverAction = ServerAction.Message;
