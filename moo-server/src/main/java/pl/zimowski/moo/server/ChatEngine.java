@@ -173,7 +173,7 @@ public class ChatEngine implements ChatService, ServerNotification {
                 participantCount++;
 
                 author = App.SERVER_NAME;
-                if(connectedClients.size() > 1)
+                if(participantCount > 1)
                     serverMessage = String.format("%s joined; %d participants", clientEvent.getAuthor(), participantCount);
                 else
                     serverMessage = String.format("You're the only participant so far");
