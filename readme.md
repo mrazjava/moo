@@ -11,10 +11,10 @@ Stack:
 
 Features:
 
- * Server support for multiple clients
+ * Distributed Architecture (eg: console client can chat with web client)
  * Server JMX reporting
  * Console client
- * Web client
+ * Web client (single page angular/rest/springboot)
 
 ## First things first
 -----------
@@ -60,7 +60,7 @@ Start yet another client and have fun! Moo...
 
 ## Future Vision
 -----------
- * More clients! (gui)
+ * More clients! (various flavors of web, android, ios)
  * More servers! (maybe node? with gui?)
  * Alternate implementation of ChatService (different engine, same server)
  * More features! (direct/private user chats, channels, encryption, etc) 

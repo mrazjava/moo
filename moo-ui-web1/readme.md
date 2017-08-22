@@ -26,7 +26,12 @@ localhost:8080
 
 ## Limitations
 -----------
-Re-loading page aborts established chat session with the server without 
-notifying the server. As a result, server continues to track a user that is 
-no longer in chat (reports incorrect stats). This can be resolved by notifying 
-the server properly or by having the server track users activity timeout.
+UI server side does not track users. It probably should, using HttpSession. As 
+a result, re-loading page aborts established chat link with the server without 
+notifying the server. Server continues to track an orphaned user link (reports 
+incorrect stats). This can be resolved by UI server tracking user session with 
+timeouts and informing server when UI user is no longer active. In addition, 
+the moo server should probably do something similar at the connection level, 
+so if connection had no activity in some time period, it should be ejected. UI 
+client would then have to introduce some sort of a heartbeat to prevent its 
+global connection being ejected by the server if there was no chat activity.
