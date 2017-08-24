@@ -55,6 +55,13 @@ public class ChatEngine implements ChatService, ServerNotification {
      */
     private Set<ClientNotification> connectedClients = new HashSet<>();
 
+    /**
+     * Connected client is not the same as chat participant. For instance, a
+     * web client may establish a single connection but may provide for many
+     * participants.
+     */
+    private int participantCount;
+
 
     @Override
     public void start() {
@@ -90,7 +97,8 @@ public class ChatEngine implements ChatService, ServerNotification {
                 synchronized(this) {
                     connectedClients.add(client);
                 }
-                log.debug("connected clients: {}", connectedClients.size());
+                jmxReporter.clientConnected();
+                log.debug("connections: {}, participants: {}", connectedClients.size(), participantCount);
                 executor.submit(client);
             }
             catch(IOException e) {
@@ -114,15 +122,16 @@ public class ChatEngine implements ChatService, ServerNotification {
         ServerEvent serverEvent = processClientMessage(clientThread, clientEvent);
         int notifiedClients = 0;
 
+        if(clientEvent.getAction() == ClientAction.Disconnect) {
+            connectedClients.remove(clientEvent);
+            return notifiedClients;
+        }
+
         // could be perf bottleneck - should re-think for optimization; this
         // needs to be thread safe as otherwise iterator would get screwed up
         // and event delivery unpredictable (events eaten out)
         synchronized(this) {
             for(ClientNotification connectedClient : connectedClients) {
-
-                if(connectedClient == clientThread && clientEvent.getAction() != ClientAction.Signin) {
-                    continue;
-                }
 
                 log.debug("broadcasting to: {}", connectedClient);
 
@@ -152,45 +161,45 @@ public class ChatEngine implements ChatService, ServerNotification {
         ClientAction clientAction = clientEvent.getAction();
         ServerAction serverAction = null;
         String serverMessage = null;
+        String author = null;
 
         switch(clientAction) {
             case Signin:
                 serverAction = ServerAction.ParticipantCount;
+                participantCount++;
 
-                synchronized(this) {
-                    connectedClients.add(clientThread);
-                }
-                jmxReporter.clientConnected(); // thread safe
-
-                if(connectedClients.size() > 1)
-                    serverMessage = String.format("(%s) %s joined; %d participants", App.SERVER_NAME, clientEvent.getAuthor(), connectedClients.size());
+                author = App.SERVER_NAME;
+                StringBuilder msg = new StringBuilder(String.format("%s joined;", clientEvent.getAuthor()));
+                if(participantCount > 1)
+                    msg.append(String.format(" %d participants", participantCount));
                 else
-                    serverMessage = String.format("(%s) You're the only participant so far", App.SERVER_NAME);
+                    msg.append(" and is the only participant so far");
+
+                serverMessage = msg.toString();
                 break;
             case Signoff:
                 serverAction = ServerAction.ParticipantCount;
-
-                synchronized(this) {
-                    connectedClients.remove(clientThread);
-                }
-                jmxReporter.clientDisconnected(); // thread safe
-
-                String exitInfo = String.format("(%s) %s left; ", App.SERVER_NAME, clientEvent.getAuthor());
-                serverMessage = exitInfo +
-                        (connectedClients.size() > 1 ?
-                        String.format("%d participants", connectedClients.size()) :
-                        "might be boring, you're all by yourself now :(");
+                participantCount--;
+                author = App.SERVER_NAME;
+                serverMessage = String.format("%s left; %d participant(s) remaining", clientEvent.getAuthor(), participantCount);
                 break;
             case Message:
                 serverAction = ServerAction.Message;
-                serverMessage = String.format("(%s): %s", clientEvent.getAuthor(), clientEvent.getMessage());
+                author = clientEvent.getAuthor();
+                serverMessage = String.format("%s", clientEvent.getMessage());
+                break;
+            case Disconnect:
+                synchronized(this) {
+                    connectedClients.remove(clientThread);
+                }
                 break;
         }
 
-        log.trace("connected clients: {}", connectedClients.size());
+        log.trace("clients: {}, participants: {}", connectedClients.size(), participantCount);
 
         return new ServerEvent(serverAction, serverMessage)
-                .withParticipantCount(connectedClients.size());
+                .withParticipantCount(participantCount)
+                .withAuthor(author);
     }
 
     @Override

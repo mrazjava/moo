@@ -7,7 +7,7 @@
   </parent>
   <artifactId>moo-client</artifactId>
   <description>Client app for mooing</description>
-  <name>Moo (client)</name>
+  <name>Moo (client: console)</name>
 
   <build>
     <resources>

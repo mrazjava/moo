@@ -323,8 +323,9 @@
   <name>Moo (master)</name>
   <description>Root project for Moo chat service</description>
   <modules>
-  <module>moo-client</module>
-  <module>moo-server</module>
-  <module>moo-api</module>
+    <module>moo-api</module>
+    <module>moo-server</module>
+    <module>moo-client</module>
+    <module>moo-ui-web1</module>
   </modules>
 </project>

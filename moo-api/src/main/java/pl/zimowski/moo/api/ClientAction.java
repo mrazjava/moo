@@ -20,7 +20,12 @@ public enum ClientAction {
     Message,
 
     /**
-     * User terminated chat session (client terminated connection).
+     * User terminated chat session.
      */
-    Signoff
+    Signoff,
+
+    /**
+     * Client terminated connection.
+     */
+    Disconnect
 }

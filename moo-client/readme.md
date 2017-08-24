@@ -1,4 +1,4 @@
 # Moo - chat client
 =====================
 
-Text based client for Moo chat service.
+Console (text based) client for Moo chat service.
