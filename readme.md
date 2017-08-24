@@ -1,6 +1,6 @@
-# Moo - so you can chat from command
+# Moo - so you can chat like a bull!
 -----------
-Mooo is a simple console based Java chat service.
+Mooo is a based Java chat service.
 
 Stack:
 
