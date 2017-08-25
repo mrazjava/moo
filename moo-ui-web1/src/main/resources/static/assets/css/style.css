@@ -30,3 +30,10 @@ li{
 #msgOutPanel {
  display: none;
 }
+#sessionExpired {
+	display: none;
+
+}
+#sessionExpired span {
+	color: red;
+}

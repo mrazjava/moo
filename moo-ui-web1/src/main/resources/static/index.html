@@ -11,6 +11,7 @@
 
 <body ng-app="mooChatDemo">
  <img src="assets/images/moo.png" /> mooo...
+ <div id="sessionExpired">| <span>SESSION EXPIRED</span> |</div>
  <div id="loginPanel" ng-controller="MooConnectController">
   <input id="nickName" ng-model="usr.nickName" type="text" placeholder="nickname" ng-keyup="$event.keyCode === 13 && mooLogin()"/> 
   <input id="loginButton" type="button" ng-click="mooLogin()" value="Login" /> 
