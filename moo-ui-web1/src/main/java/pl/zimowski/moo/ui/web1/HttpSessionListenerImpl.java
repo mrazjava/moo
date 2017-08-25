@@ -11,10 +11,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * Standard listener for create/destroy events of {@link HttpSession}.
+ *
+ * @since 1.1.0
+ * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
+ */
 @Component
-public class HttpSessionSnoop implements HttpSessionListener {
+public class HttpSessionListenerImpl implements HttpSessionListener {
 
-    private static final Logger log = LoggerFactory.getLogger(HttpSessionSnoop.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpSessionListenerImpl.class);
 
     @Inject
     private EventProvider eventProvider;
