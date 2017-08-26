@@ -49,6 +49,8 @@ public class App implements ApplicationRunner {
 
         jmxReporer.initialize();
         server.start();
+
+        log.info("server terminated");
     }
 
     /**

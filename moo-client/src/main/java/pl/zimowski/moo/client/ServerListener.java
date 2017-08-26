@@ -24,26 +24,38 @@ public class ServerListener extends Thread {
 
     private Socket socket;
 
-    public ServerListener(Socket socket) {
+    private ConnectionManagement connectionManagement;
+
+    private String clientId;
+
+
+    public ServerListener(Socket socket, ConnectionManagement connectionManagement, String clientId) {
         this.socket = socket;
+        this.connectionManagement = connectionManagement;
+        this.clientId = clientId;
     }
 
     @Override
     public void run() {
 
+        log.debug("listening as client {}", clientId);
+
         try {
             while(!socket.isInputShutdown()) {
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 ServerEvent serverEvent = (ServerEvent)in.readObject();
-                log.info("({}) {}", serverEvent.getAuthor(), serverEvent.getMessage());
+                App.LOG_CHAT.info("({}) {}", serverEvent.getAuthor(), serverEvent.getMessage());
                 ApiUtils.printPrompt();
             }
         }
         catch(EOFException e) {
-            log.info("(client) connection terminated by server; bye!");
+            App.LOG_CHAT.info("(client) connection terminated by server; bye!");
         }
         catch (IOException | ClassNotFoundException e) {
             log.error("unexpected connection error: {}; aborting!", e.getMessage());
         }
+
+        connectionManagement.disconnect();
+        System.exit(MAX_PRIORITY);
     }
 }

@@ -36,26 +36,37 @@ public class ConnectionManager implements ConnectionManagement {
 
     private Socket socket;
 
+    private boolean connected;
+
 
     @Override
-    public boolean connect() {
+    public boolean connect(String clientId) {
 
-        boolean status = false;
         log.info("establishing connection to {}:{}", host, port);
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         try {
             socket = new Socket(host, port);
-            Thread serverListener = new ServerListener(socket);
+            Thread serverListener = new ServerListener(socket, this, clientId);
             executor.submit(serverListener);
-            status = true;
+            connected = true;
         }
         catch(IOException e) {
             log.error("could not connect to server: {}", e.getMessage());
         }
 
-        return status;
+        return connected;
+    }
+
+    @Override
+    public void disconnect() {
+        connected = false;
+    }
+
+    @Override
+    public boolean isConnected() {
+        return connected;
     }
 
     @PreDestroy

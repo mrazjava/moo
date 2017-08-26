@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -92,7 +93,7 @@ public class ChatEngine implements ChatService, ServerNotification {
         while(running) {
             try {
                 Socket socket = serverSocket.accept();
-                log.info("recieved {}", socket);
+                log.info("received {}", socket);
                 ClientThread client = new ClientThread(socket, this);
                 synchronized(this) {
                     connectedClients.add(client);
@@ -131,8 +132,9 @@ public class ChatEngine implements ChatService, ServerNotification {
         // needs to be thread safe as otherwise iterator would get screwed up
         // and event delivery unpredictable (events eaten out)
         synchronized(this) {
-            for(ClientNotification connectedClient : connectedClients) {
+            for(Iterator<ClientNotification> iterator = connectedClients.iterator(); iterator.hasNext();) {
 
+                ClientNotification connectedClient = iterator.next();
                 log.debug("broadcasting to: {}", connectedClient);
 
                 if(connectedClient.notify(serverEvent)) {
@@ -199,7 +201,8 @@ public class ChatEngine implements ChatService, ServerNotification {
 
         return new ServerEvent(serverAction, serverMessage)
                 .withParticipantCount(participantCount)
-                .withAuthor(author);
+                .withAuthor(author)
+                .withClientId(clientEvent.getId());
     }
 
     @Override
@@ -223,6 +226,6 @@ public class ChatEngine implements ChatService, ServerNotification {
 
     @PreDestroy
     public void shutdown() {
-        log.info("shutting down; bye!");
+        log.debug("engine shutdown ({} clients, {} participants)", getConnectedClientCount(), participantCount);
     }
 }
