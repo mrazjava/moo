@@ -1,7 +1,6 @@
 package pl.zimowski.moo.client;
 
 import java.util.Scanner;
-import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -61,33 +60,24 @@ public class App implements ApplicationRunner {
 
         try (Scanner scanner = new Scanner(System.in)) {
 
-            log.info("How do you want to moo? (type nickname or just hit enter)");
-            ApiUtils.printPrompt();
+            log.info("How do you want to moo? (type nickname or just hit enter, ctrl-c to exit)");
 
             nick = scanner.nextLine();
-            boolean anonymousNick = false; // assume mooer is creative
 
             if(StringUtils.isBlank(nick)) {
                 nick = clientUtils.randomNickName();
-                anonymousNick = true;
             }
 
-            String id = UUID.randomUUID().toString();
-
-            if(log.isInfoEnabled()) {
-                log.info((anonymousNick ? "You're known as" : "Alright") + " \"{}\", go ahead and mooo (ctrl-c to exit)", nick);
-            }
-
-            if(!connMgr.connect(id)) {
+            if(!connMgr.connect()) {
                 return;
             }
 
-            connMgr.send(new ClientEvent(ClientAction.Signin).withAuthor(nick).withId(id));
+            connMgr.send(new ClientEvent(ClientAction.Signin).withAuthor(nick));
 
             while(scanner.hasNextLine()) {
 
                 String input = scanner.nextLine();
-                ClientEvent event = new ClientEvent(ClientAction.Message, nick, input).withId(id);
+                ClientEvent event = new ClientEvent(ClientAction.Message, nick, input);
                 log.debug("sending: {}", event);
                 connMgr.send(event);
             }

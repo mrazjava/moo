@@ -40,7 +40,7 @@ public class ConnectionManager implements ConnectionManagement {
 
 
     @Override
-    public boolean connect(String clientId) {
+    public boolean connect() {
 
         log.info("establishing connection to {}:{}", host, port);
 
@@ -48,7 +48,7 @@ public class ConnectionManager implements ConnectionManagement {
 
         try {
             socket = new Socket(host, port);
-            Thread serverListener = new ServerListener(socket, this, clientId);
+            Thread serverListener = new ServerListener(socket, this);
             executor.submit(serverListener);
             connected = true;
         }

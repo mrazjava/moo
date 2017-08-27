@@ -8,7 +8,7 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.zimowski.moo.api.ApiUtils;
+import pl.zimowski.moo.api.ServerAction;
 import pl.zimowski.moo.api.ServerEvent;
 
 /**
@@ -26,26 +26,23 @@ public class ServerListener extends Thread {
 
     private ConnectionManagement connectionManagement;
 
-    private String clientId;
 
-
-    public ServerListener(Socket socket, ConnectionManagement connectionManagement, String clientId) {
+    public ServerListener(Socket socket, ConnectionManagement connectionManagement) {
         this.socket = socket;
         this.connectionManagement = connectionManagement;
-        this.clientId = clientId;
     }
 
     @Override
     public void run() {
 
-        log.debug("listening as client {}", clientId);
-
         try {
             while(!socket.isInputShutdown()) {
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 ServerEvent serverEvent = (ServerEvent)in.readObject();
+                if(serverEvent.getAction() == ServerAction.ConnectionEstablished) {
+                    serverEvent.setMessage("connected, client id: " + serverEvent.getClientId());
+                }
                 App.LOG_CHAT.info("({}) {}", serverEvent.getAuthor(), serverEvent.getMessage());
-                ApiUtils.printPrompt();
             }
         }
         catch(EOFException e) {
