@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,8 @@ import pl.zimowski.moo.api.ServerEvent;
 public class ClientThread extends Thread implements ClientNotification {
 
     private static final Logger log = LoggerFactory.getLogger(ClientThread.class);
+
+    private String clientId;
 
     /**
      * connection tunnel over which communication takes place
@@ -53,7 +56,13 @@ public class ClientThread extends Thread implements ClientNotification {
     public ClientThread(Socket socket, ServerNotification serverNotifier) {
         this.socket = socket;
         this.serverNotifier = serverNotifier;
+        clientId = UUID.randomUUID().toString();
         lastActivity = System.currentTimeMillis();
+    }
+
+    @Override
+    public String getClientId() {
+        return clientId;
     }
 
     @Override
@@ -64,6 +73,7 @@ public class ClientThread extends Thread implements ClientNotification {
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                 lastActivity = System.currentTimeMillis();
                 ClientEvent msg = (ClientEvent)ois.readObject();
+                msg.withId(clientId);
                 log.debug("in: {}", msg);
                 serverNotifier.notify(this, msg);
                 if(ClientAction.Disconnect == msg.getAction()) {

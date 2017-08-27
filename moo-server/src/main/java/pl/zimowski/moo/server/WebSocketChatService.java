@@ -106,6 +106,9 @@ public class WebSocketChatService implements ChatService, ServerNotification {
                 jmxReporter.clientConnected();
                 log.debug("connections: {}, participants: {}", connectedClients.size(), participantCount);
                 executor.submit(client);
+                client.notify(new ServerEvent(ServerAction.ConnectionEstablished)
+                        .withClientId(client.getClientId())
+                        );
             }
             catch(IOException e) {
                 log.error("unexpected problem; aborting!", e);
@@ -125,6 +128,28 @@ public class WebSocketChatService implements ChatService, ServerNotification {
 
         log.debug("processing {} from {}", clientEvent, clientThread);
 
+        // could be perf bottleneck - should re-think for optimization; this
+        // needs to be thread safe as otherwise iterator would get screwed up
+        // and event delivery unpredictable (events eaten out)
+        synchronized(this) {
+            // first evict inactive clients
+            for(Iterator<ClientNotification> iterator = connectedClients.iterator(); iterator.hasNext();) {
+
+                ClientNotification connectedClient = iterator.next();
+                DateTime lastActive = new DateTime(connectedClient.getLastActivity());
+                int inactiveSeconds = Seconds.secondsBetween(lastActive, new DateTime()).getSeconds();
+
+                if(evictionTimeout != null && inactiveSeconds > evictionTimeout) {
+                    log.info("{} inactive for {} seconds, evicting!", connectedClient, inactiveSeconds);
+                    connectedClient.notify(new ServerEvent(ServerAction.ConnectionTimeOut).withMessage("disconnected due to inactivity"));
+                    connectedClient.disconnect();
+                    iterator.remove();
+                    participantCount--;
+                    continue;
+                }
+            }
+        }
+
         ServerEvent serverEvent = processClientMessage(clientThread, clientEvent);
         int notifiedClients = 0;
 
@@ -133,24 +158,9 @@ public class WebSocketChatService implements ChatService, ServerNotification {
             return notifiedClients;
         }
 
-        // could be perf bottleneck - should re-think for optimization; this
-        // needs to be thread safe as otherwise iterator would get screwed up
-        // and event delivery unpredictable (events eaten out)
         synchronized(this) {
-            for(Iterator<ClientNotification> iterator = connectedClients.iterator(); iterator.hasNext();) {
-
-                ClientNotification connectedClient = iterator.next();
-                DateTime lastActive = new DateTime(connectedClient.getLastActivity());
-                int inactiveSeconds = Seconds.secondsBetween(lastActive, new DateTime()).getSeconds();
-
-                if(evictionTimeout != null && inactiveSeconds > evictionTimeout) {
-                    log.info("client inactive for {} seconds, evicting!\n{}", inactiveSeconds, connectedClient);
-                    connectedClient.notify(new ServerEvent(ServerAction.ConnectionTimeOut).withMessage("disconnected due to inactivity"));
-                    connectedClient.disconnect();
-                    iterator.remove();
-                    participantCount--;
-                    continue;
-                }
+            // standard message broadcast
+            for(ClientNotification connectedClient : connectedClients) {
 
                 log.debug("broadcasting to: {}", connectedClient);
 

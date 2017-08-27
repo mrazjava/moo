@@ -11,6 +11,11 @@ import pl.zimowski.moo.api.ServerEvent;
 public interface ClientNotification {
 
     /**
+     * @return unique id of the client
+     */
+    String getClientId();
+
+    /**
      * Given a message from server, inform a client about it. This operation
      * is intended to inform a specific client. If a server supports multiple
      * clients, it must notify each one separately.
