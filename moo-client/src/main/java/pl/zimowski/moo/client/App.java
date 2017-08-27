@@ -74,12 +74,12 @@ public class App implements ApplicationRunner {
 
             String id = UUID.randomUUID().toString();
 
-            if(!connMgr.connect(id)) {
-                return;
-            }
-
             if(log.isInfoEnabled()) {
                 log.info((anonymousNick ? "You're known as" : "Alright") + " \"{}\", go ahead and mooo (ctrl-c to exit)", nick);
+            }
+
+            if(!connMgr.connect(id)) {
+                return;
             }
 
             connMgr.send(new ClientEvent(ClientAction.Signin).withAuthor(nick).withId(id));

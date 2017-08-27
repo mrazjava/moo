@@ -1,4 +1,4 @@
-package pl.zimowski.moo.api;
+ package pl.zimowski.moo.api;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,7 +21,7 @@ public class ServerEvent implements Serializable {
 
     private String message;
 
-    private String author;
+    private String author = ApiUtils.APP_NAME;
 
     private int participantCount;
 

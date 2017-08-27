@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import pl.zimowski.moo.api.MockLogger;
 
 /**
- * Ensures that {@link ChatEngine} operates as expected.
+ * Ensures that {@link WebSocketChatService} operates as expected.
  *
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
@@ -35,7 +35,7 @@ public class ChatEngineTest {
     public MockitoRule mockito = MockitoJUnit.rule();
 
     @InjectMocks
-    private ChatEngine engine;
+    private WebSocketChatService engine;
 
     @Spy
     private MockLogger mockLog;

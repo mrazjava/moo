@@ -25,8 +25,6 @@ import pl.zimowski.moo.server.jmx.JmxReportingSupport;
 @SpringBootApplication
 public class App implements ApplicationRunner {
 
-    public static final String SERVER_NAME = "moo";
-
     @Inject
     private Logger log;
 

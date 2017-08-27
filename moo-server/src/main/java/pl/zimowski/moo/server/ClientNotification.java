@@ -19,4 +19,16 @@ public interface ClientNotification {
      * @returns {@code true} if event was forwarded onto a client; {@code false} if not due to error
      */
     boolean notify(ServerEvent event);
+
+    /**
+     * @return snapshot of system clock (in millis) when last activity from
+     *  the client was registered
+     */
+    long getLastActivity();
+
+    /**
+     * Terminate server's connection with the client such that subsequent
+     * notifications are no longer possible.
+     */
+    void disconnect();
 }

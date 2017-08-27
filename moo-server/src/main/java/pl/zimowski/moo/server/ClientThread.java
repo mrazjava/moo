@@ -82,10 +82,7 @@ public class ClientThread extends Thread implements ClientNotification {
         }
     }
 
-    /**
-     * @return snapshot of system clock (in millis) when last activity from
-     *  socket was registered
-     */
+    @Override
     public long getLastActivity() {
         return lastActivity;
     }
