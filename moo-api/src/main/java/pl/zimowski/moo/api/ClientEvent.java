@@ -20,6 +20,8 @@ public class ClientEvent implements Serializable {
 
     private ClientAction action;
 
+    private String id;
+
 
     public ClientEvent(ClientAction action) {
         timestamp = System.currentTimeMillis();
@@ -37,6 +39,11 @@ public class ClientEvent implements Serializable {
         return this;
     }
 
+    public ClientEvent withId(String id) {
+        this.id = id;
+        return this;
+    }
+
     public ClientEvent withMessage(String message) {
         this.message = message;
         return this;
@@ -50,6 +57,18 @@ public class ClientEvent implements Serializable {
         return author;
     }
 
+    /**
+     * Each client should provide best to its ability a unique id that can
+     * allow it to recognize its own events broadcasted back by the server.
+     * For example, a client can filter certain events from itself that server
+     * echoed back. It is highly recommended this to be a UUID.
+     *
+     * @return unique identifier that distinguishes this client from others
+     */
+    public String getId() {
+        return id;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -60,7 +79,7 @@ public class ClientEvent implements Serializable {
 
     @Override
     public String toString() {
-        return "ClientEvent [author=" + author + ", message=" + message + ", timestamp=" + timestamp + ", action="
+        return "ClientEvent [id=" + id + ", author=" + author + ", message=" + message + ", timestamp=" + timestamp + ", action="
                 + action + "]";
     }
 }

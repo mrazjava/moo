@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,6 +12,8 @@ import java.util.concurrent.Executors;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
+import org.joda.time.DateTime;
+import org.joda.time.Seconds;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -32,13 +35,16 @@ import pl.zimowski.moo.server.jmx.JmxReportingSupport;
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 @Component
-public class ChatEngine implements ChatService, ServerNotification {
+public class WebSocketChatService implements ChatService, ServerNotification {
 
     @Inject
     private Logger log;
 
     @Value("${port}")
     private int port;
+
+    @Value("${evictionTimeout}")
+    private Integer evictionTimeout;
 
     private boolean running;
 
@@ -92,7 +98,7 @@ public class ChatEngine implements ChatService, ServerNotification {
         while(running) {
             try {
                 Socket socket = serverSocket.accept();
-                log.info("recieved {}", socket);
+                log.info("received {}", socket);
                 ClientThread client = new ClientThread(socket, this);
                 synchronized(this) {
                     connectedClients.add(client);
@@ -131,7 +137,20 @@ public class ChatEngine implements ChatService, ServerNotification {
         // needs to be thread safe as otherwise iterator would get screwed up
         // and event delivery unpredictable (events eaten out)
         synchronized(this) {
-            for(ClientNotification connectedClient : connectedClients) {
+            for(Iterator<ClientNotification> iterator = connectedClients.iterator(); iterator.hasNext();) {
+
+                ClientNotification connectedClient = iterator.next();
+                DateTime lastActive = new DateTime(connectedClient.getLastActivity());
+                int inactiveSeconds = Seconds.secondsBetween(lastActive, new DateTime()).getSeconds();
+
+                if(evictionTimeout != null && inactiveSeconds > evictionTimeout) {
+                    log.info("client inactive for {} seconds, evicting!\n{}", inactiveSeconds, connectedClient);
+                    connectedClient.notify(new ServerEvent(ServerAction.ConnectionTimeOut).withMessage("disconnected due to inactivity"));
+                    connectedClient.disconnect();
+                    iterator.remove();
+                    participantCount--;
+                    continue;
+                }
 
                 log.debug("broadcasting to: {}", connectedClient);
 
@@ -168,7 +187,7 @@ public class ChatEngine implements ChatService, ServerNotification {
                 serverAction = ServerAction.ParticipantCount;
                 participantCount++;
 
-                author = App.SERVER_NAME;
+                author = ApiUtils.APP_NAME;
                 StringBuilder msg = new StringBuilder(String.format("%s joined;", clientEvent.getAuthor()));
                 if(participantCount > 1)
                     msg.append(String.format(" %d participants", participantCount));
@@ -180,7 +199,7 @@ public class ChatEngine implements ChatService, ServerNotification {
             case Signoff:
                 serverAction = ServerAction.ParticipantCount;
                 participantCount--;
-                author = App.SERVER_NAME;
+                author = ApiUtils.APP_NAME;
                 serverMessage = String.format("%s left; %d participant(s) remaining", clientEvent.getAuthor(), participantCount);
                 break;
             case Message:
@@ -199,7 +218,8 @@ public class ChatEngine implements ChatService, ServerNotification {
 
         return new ServerEvent(serverAction, serverMessage)
                 .withParticipantCount(participantCount)
-                .withAuthor(author);
+                .withAuthor(author)
+                .withClientId(clientEvent.getId());
     }
 
     @Override
@@ -223,6 +243,6 @@ public class ChatEngine implements ChatService, ServerNotification {
 
     @PreDestroy
     public void shutdown() {
-        log.info("shutting down; bye!");
+        log.debug("engine shutdown ({} clients, {} participants)", getConnectedClientCount(), participantCount);
     }
 }

@@ -35,9 +35,10 @@ public class ClientThread extends Thread implements ClientNotification {
     private ServerNotification serverNotifier;
 
     /**
-     * tracker of connection state
+     * snapshot of system clock indicating when this thread last processed
+     * socket activity
      */
-    private boolean connected;
+    private long lastActivity;
 
 
     /**
@@ -52,15 +53,16 @@ public class ClientThread extends Thread implements ClientNotification {
     public ClientThread(Socket socket, ServerNotification serverNotifier) {
         this.socket = socket;
         this.serverNotifier = serverNotifier;
+        lastActivity = System.currentTimeMillis();
     }
 
     @Override
     public void run() {
 
         try {
-            connected = true;
-            while(connected) {
+            while(true) {
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                lastActivity = System.currentTimeMillis();
                 ClientEvent msg = (ClientEvent)ois.readObject();
                 log.debug("in: {}", msg);
                 serverNotifier.notify(this, msg);
@@ -80,8 +82,30 @@ public class ClientThread extends Thread implements ClientNotification {
         }
     }
 
+    @Override
+    public long getLastActivity() {
+        return lastActivity;
+    }
+
+    /**
+     * @return {@code true} if active socket connection is up and operational,
+     *  {@code false} if no further communication over socket is possible
+     */
+    public boolean isConnected() {
+        return !socket.isClosed();
+    }
+
+    /**
+     * Terminates connection with a client. After this call, no communication
+     * is possible and essentially this thread is dead.
+     */
     public void disconnect() {
-        connected = false;
+        try {
+            socket.close();
+        }
+        catch(IOException e) {
+            log.warn("problem closing socket: {}", e.getMessage());
+        }
     }
 
     @Override

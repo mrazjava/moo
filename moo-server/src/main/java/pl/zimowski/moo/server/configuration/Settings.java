@@ -21,8 +21,20 @@ public class Settings {
     @NotNull(message = "server requires port to be running on!")
     private Integer port;
 
+    /**
+     * Number of seconds of client inactivity allowed. If this limit is exceeded
+     * server will terminate client connection. If not defined, server never
+     * terminates client connection.
+     */
+    @SuppressWarnings("unused")
+    private Integer evictionTimeout;
+
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public void setEvictionTimeout(Integer evictionTimeout) {
+        this.evictionTimeout = evictionTimeout;
     }
 }

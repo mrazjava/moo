@@ -1,6 +1,7 @@
 package pl.zimowski.moo.client;
 
 import java.util.Scanner;
+import java.util.UUID;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -28,6 +29,8 @@ import pl.zimowski.moo.api.ClientEvent;
  */
 @SpringBootApplication
 public class App implements ApplicationRunner {
+
+    public static final Logger LOG_CHAT = LoggerFactory.getLogger("CHAT_ECHO");
 
     @Inject
     private Logger log;
@@ -69,32 +72,32 @@ public class App implements ApplicationRunner {
                 anonymousNick = true;
             }
 
-            if(!connMgr.connect()) {
-                return;
-            }
+            String id = UUID.randomUUID().toString();
 
             if(log.isInfoEnabled()) {
                 log.info((anonymousNick ? "You're known as" : "Alright") + " \"{}\", go ahead and mooo (ctrl-c to exit)", nick);
             }
-            ApiUtils.printPrompt();
 
-            connMgr.send(new ClientEvent(ClientAction.Signin).withAuthor(nick));
+            if(!connMgr.connect(id)) {
+                return;
+            }
+
+            connMgr.send(new ClientEvent(ClientAction.Signin).withAuthor(nick).withId(id));
 
             while(scanner.hasNextLine()) {
 
                 String input = scanner.nextLine();
-                ClientEvent event = new ClientEvent(ClientAction.Message, nick, input);
+                ClientEvent event = new ClientEvent(ClientAction.Message, nick, input).withId(id);
                 log.debug("sending: {}", event);
                 connMgr.send(event);
-                ApiUtils.printPrompt();
             }
         }
     }
 
     @PreDestroy
     public void shutdown() {
-        if(nick != null) {
-            log.info("(client) done mooing? bye {}!", nick);
+        if(connMgr.isConnected()) {
+            LOG_CHAT.info("(client) done mooing? bye {}!", nick);
             connMgr.send(new ClientEvent(ClientAction.Signoff).withAuthor(nick));
         }
     }

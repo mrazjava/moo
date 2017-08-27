@@ -15,9 +15,14 @@ public interface ConnectionManagement {
      * Initiate connection from client to server. After this operation succeeds,
      * it should be possible to communicate with the server.
      *
+     * @param id of a client establishing connection
      * @return {@code true} if connection was established; {@code false} if connection failed
      */
-    boolean connect();
+    boolean connect(String id);
+
+    void disconnect();
+
+    boolean isConnected();
 
     /**
      * Notify server of an event that took place on a client.
