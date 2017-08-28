@@ -160,7 +160,7 @@ public class WebSocketChatService implements ChatService, ServerNotification {
             clientEvent.setAuthor(nick);
         }
 
-        ServerEvent serverEvent = processClientMessage(clientThread, clientEvent);
+        ServerEvent serverEvent = clientEventToServerEvent(clientThread, clientEvent);
         int notifiedClients = 0;
 
         if(clientEvent.getAction() == ClientAction.Disconnect) {
@@ -195,7 +195,7 @@ public class WebSocketChatService implements ChatService, ServerNotification {
      * @param clientEvent produced by the client
      * @return equivalent server message
      */
-    private ServerEvent processClientMessage(ClientThread clientThread, ClientEvent clientEvent) {
+    private ServerEvent clientEventToServerEvent(ClientThread clientThread, ClientEvent clientEvent) {
 
         ClientAction clientAction = clientEvent.getAction();
         ServerAction serverAction = null;
