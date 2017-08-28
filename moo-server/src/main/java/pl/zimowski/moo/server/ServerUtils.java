@@ -1,4 +1,4 @@
-package pl.zimowski.moo.client;
+package pl.zimowski.moo.server;
 
 import java.util.Random;
 
@@ -8,13 +8,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * Useful client utility methods.
+ * Useful utility methods.
  *
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 @Component
-public class ClientUtils {
+public class ServerUtils {
 
     @Inject
     private NickNameElements nickNameElementProvider;

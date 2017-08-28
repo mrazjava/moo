@@ -57,6 +57,10 @@ public class ClientEvent implements Serializable {
         return author;
     }
 
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
     /**
      * Each client should provide best to its ability a unique id that can
      * allow it to recognize its own events broadcasted back by the server.

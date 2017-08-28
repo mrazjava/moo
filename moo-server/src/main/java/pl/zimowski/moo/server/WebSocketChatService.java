@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 import org.slf4j.Logger;
@@ -50,6 +51,9 @@ public class WebSocketChatService implements ChatService, ServerNotification {
 
     @Inject
     private JmxReportingSupport jmxReporter;
+
+    @Inject
+    private ServerUtils serverUtils;
 
 
     /**
@@ -148,6 +152,12 @@ public class WebSocketChatService implements ChatService, ServerNotification {
                     continue;
                 }
             }
+        }
+
+        if(clientEvent.getAction() == ClientAction.Signin && StringUtils.isBlank(clientEvent.getAuthor())) {
+            String nick = serverUtils.randomNickName();
+            clientThread.notify(new ServerEvent(ServerAction.NickGenerated).withMessage(nick));
+            clientEvent.setAuthor(nick);
         }
 
         ServerEvent serverEvent = processClientMessage(clientThread, clientEvent);

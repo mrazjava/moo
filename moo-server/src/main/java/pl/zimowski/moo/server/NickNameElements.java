@@ -1,4 +1,4 @@
-package pl.zimowski.moo.client;
+package pl.zimowski.moo.server;
 
 /**
  * Operations needed to assemble random nickname.
