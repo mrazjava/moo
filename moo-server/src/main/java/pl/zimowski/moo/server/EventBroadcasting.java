@@ -3,12 +3,12 @@ package pl.zimowski.moo.server;
 import pl.zimowski.moo.api.ClientEvent;
 
 /**
- * Broadcasting of client events onto the server.
+ * Broadcasting of event from a client to other clients.
  *
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
-public interface ServerNotification {
+public interface EventBroadcasting {
 
     /**
      * Given a thread associated with established (live) client, and specific
@@ -19,5 +19,5 @@ public interface ServerNotification {
      * @param event to be handled by the server
      * @return number of clients that were notified
      */
-    int notify(ClientThread client, ClientEvent event);
+    int broadcast(ClientThread client, ClientEvent event);
 }

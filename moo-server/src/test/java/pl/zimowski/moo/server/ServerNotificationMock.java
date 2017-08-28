@@ -10,7 +10,7 @@ import pl.zimowski.moo.api.ClientEvent;
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
-public class ServerNotificationMock implements ServerNotification {
+public class ServerNotificationMock implements EventBroadcasting {
 
     private ClientThread clientThread;
 
@@ -23,7 +23,7 @@ public class ServerNotificationMock implements ServerNotification {
      * zero to indicate that no clients were notified.
      */
     @Override
-    public int notify(ClientThread client, ClientEvent event) {
+    public int broadcast(ClientThread client, ClientEvent event) {
 
         clientThread = client;
         clientEvent = event;

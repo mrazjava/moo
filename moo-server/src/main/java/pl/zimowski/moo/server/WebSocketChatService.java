@@ -36,7 +36,7 @@ import pl.zimowski.moo.server.jmx.JmxReportingSupport;
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 @Component
-public class WebSocketChatService implements ChatService, ServerNotification {
+public class WebSocketChatService implements ChatService, EventBroadcasting {
 
     @Inject
     private Logger log;
@@ -128,37 +128,13 @@ public class WebSocketChatService implements ChatService, ServerNotification {
     }
 
     @Override
-    public int notify(ClientThread clientThread, ClientEvent clientEvent) {
+    public int broadcast(ClientThread clientThread, ClientEvent clientEvent) {
 
-        log.debug("processing {} from {}", clientEvent, clientThread);
+        evictInactiveClients();
 
-        // could be perf bottleneck - should re-think for optimization; this
-        // needs to be thread safe as otherwise iterator would get screwed up
-        // and event delivery unpredictable (events eaten out)
-        synchronized(this) {
-            // first evict inactive clients
-            for(Iterator<ClientNotification> iterator = connectedClients.iterator(); iterator.hasNext();) {
+        log.debug("broadcasting {} from {}", clientEvent, clientThread);
 
-                ClientNotification connectedClient = iterator.next();
-                DateTime lastActive = new DateTime(connectedClient.getLastActivity());
-                int inactiveSeconds = Seconds.secondsBetween(lastActive, new DateTime()).getSeconds();
-
-                if(evictionTimeout != null && inactiveSeconds > evictionTimeout) {
-                    log.info("{} inactive for {} seconds, evicting!", connectedClient, inactiveSeconds);
-                    connectedClient.notify(new ServerEvent(ServerAction.ConnectionTimeOut).withMessage("disconnected due to inactivity"));
-                    connectedClient.disconnect();
-                    iterator.remove();
-                    participantCount--;
-                    continue;
-                }
-            }
-        }
-
-        if(clientEvent.getAction() == ClientAction.Signin && StringUtils.isBlank(clientEvent.getAuthor())) {
-            String nick = serverUtils.randomNickName();
-            clientThread.notify(new ServerEvent(ServerAction.NickGenerated).withMessage(nick));
-            clientEvent.setAuthor(nick);
-        }
+        verifySignin(clientThread, clientEvent);
 
         ServerEvent serverEvent = clientEventToServerEvent(clientThread, clientEvent);
         int notifiedClients = 0;
@@ -168,6 +144,9 @@ public class WebSocketChatService implements ChatService, ServerNotification {
             return notifiedClients;
         }
 
+        // could be perf bottleneck - should re-think for optimization; this
+        // needs to be thread safe as otherwise iterator would get screwed up
+        // and event delivery unpredictable (events eaten out)
         synchronized(this) {
             // standard message broadcast
             for(ClientNotification connectedClient : connectedClients) {
@@ -183,6 +162,42 @@ public class WebSocketChatService implements ChatService, ServerNotification {
         log.debug("nofied {} clients", notifiedClients);
 
         return notifiedClients;
+    }
+
+    /**
+     * Ensures that user is always signed in with a valid nick name. Client
+     * may opt to produce signin event without a user nick name in which case
+     * server must ensure that one is provided (randomly).
+     *
+     * @param clientThread associated with the client attached to the user
+     * @param clientEvent to verify (and modify if necessary)
+     */
+    private void verifySignin(ClientThread clientThread, ClientEvent clientEvent) {
+
+        if(clientEvent.getAction() == ClientAction.Signin && StringUtils.isBlank(clientEvent.getAuthor())) {
+            String nick = serverUtils.randomNickName();
+            clientThread.notify(new ServerEvent(ServerAction.NickGenerated).withMessage(nick));
+            clientEvent.setAuthor(nick);
+        }
+    }
+
+    private synchronized void evictInactiveClients() {
+
+        for(Iterator<ClientNotification> iterator = connectedClients.iterator(); iterator.hasNext();) {
+
+            ClientNotification connectedClient = iterator.next();
+            DateTime lastActive = new DateTime(connectedClient.getLastActivity());
+            int inactiveSeconds = Seconds.secondsBetween(lastActive, new DateTime()).getSeconds();
+
+            if(evictionTimeout != null && inactiveSeconds > evictionTimeout) {
+                log.info("{} inactive for {} seconds, evicting!", connectedClient, inactiveSeconds);
+                connectedClient.notify(new ServerEvent(ServerAction.ConnectionTimeOut).withMessage("disconnected due to inactivity"));
+                connectedClient.disconnect();
+                iterator.remove();
+                participantCount--;
+                continue;
+            }
+        }
     }
 
     /**

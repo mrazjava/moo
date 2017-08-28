@@ -35,7 +35,7 @@ public class ClientThread extends Thread implements ClientNotification {
     /**
      * server notification service
      */
-    private ServerNotification serverNotifier;
+    private EventBroadcasting serverNotifier;
 
     /**
      * snapshot of system clock indicating when this thread last processed
@@ -53,7 +53,7 @@ public class ClientThread extends Thread implements ClientNotification {
      * @param socket connection established by the client
      * @param serverNotifier used to inform server about events received from the client
      */
-    public ClientThread(Socket socket, ServerNotification serverNotifier) {
+    public ClientThread(Socket socket, EventBroadcasting serverNotifier) {
         this.socket = socket;
         this.serverNotifier = serverNotifier;
         clientId = UUID.randomUUID().toString();
@@ -75,7 +75,7 @@ public class ClientThread extends Thread implements ClientNotification {
                 ClientEvent msg = (ClientEvent)ois.readObject();
                 msg.withId(clientId);
                 log.debug("in: {}", msg);
-                serverNotifier.notify(this, msg);
+                serverNotifier.broadcast(this, msg);
                 if(ClientAction.Disconnect == msg.getAction()) {
                     log.info("closing connection: {}", socket);
                     socket.close();
@@ -88,7 +88,7 @@ public class ClientThread extends Thread implements ClientNotification {
         }
         catch(IOException e) {
             log.info("ejecting connection: {}", e.getMessage());
-            serverNotifier.notify(this, new ClientEvent(ClientAction.Disconnect));
+            serverNotifier.broadcast(this, new ClientEvent(ClientAction.Disconnect));
         }
     }
 
