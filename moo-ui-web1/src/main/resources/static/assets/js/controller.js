@@ -3,12 +3,17 @@ var app = angular.module('mooChatDemo', ['ngStomp']);
 app.controller('MooConnectController', function($scope, $http) {
 
 	$scope.mooLogin = function() {
-		console.log("moo login: " + $scope.usr.nickName);
+		var nickTxt = angular.element(document.querySelector('#nickName'))[0];
+
+		if($scope.usr == undefined) {
+			$scope.usr = {nickName: ' ', autogen: true};; 
+		}
+		console.log("moo login: [" + $scope.usr.nickName + "]");
 		angular.element(document.querySelector('#loginButton'))[0].style.display = "none";
 		angular.element(document.querySelector('#logoutButton'))[0].style.display = "inline";
 		angular.element(document.querySelector('#sessionExpired'))[0].style.display = "none";
 		angular.element(document.querySelector('#msgOutPanel'))[0].style.display = "block";
-		angular.element(document.querySelector('#nickName'))[0].disabled = true;
+		nickTxt.disabled = true;
 		
 		$http.post('/moo/login', $scope.usr.nickName).success(function(data) {
 			console.log("login result: " + data);
@@ -17,10 +22,15 @@ app.controller('MooConnectController', function($scope, $http) {
 
 	$scope.mooLogout = function() {
 		console.log("moo logout: " + $scope.usr.nickName);
-		
+				
 		$http.post('/moo/logout', $scope.usr.nickName).success(function(data) {
 			console.log("logout result: " + data);
 		});
+
+		if($scope.usr.autogen) {
+			$scope.usr.nickName = '';
+			$scope.usr.autogen = false;
+		}
 
 		resetUiAfterLogout();
 	};
@@ -64,5 +74,10 @@ app.controller('ChatMsgController', function ($stomp, $scope, $http) {
             	  	resetUiAfterLogout();
             	  	angular.element(document.querySelector('#sessionExpired'))[0].style.display = "inline";
               });
+              var subscription3 = $stomp.subscribe('/topic/nick-generated',
+                	  function (payload, headers, res) {
+          	  	console.log('server generated nick:! (' + payload + ')');
+          	  angular.element(document.querySelector('#nickName'))[0].value = payload;
+            });            		  
        });
 });

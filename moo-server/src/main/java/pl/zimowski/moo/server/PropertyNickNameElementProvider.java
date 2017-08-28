@@ -1,4 +1,4 @@
-package pl.zimowski.moo.client;
+package pl.zimowski.moo.server;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class PropertyNickNameElementProvider implements NickNameElements {
 
-    @Value("${client.nickAdjectives}")
+    @Value("${nickAdjectives}")
     private String[] nickAdjectives;
 
-    @Value("${client.nickNouns}")
+    @Value("${nickNouns}")
     private String[] nickNouns;
 
 

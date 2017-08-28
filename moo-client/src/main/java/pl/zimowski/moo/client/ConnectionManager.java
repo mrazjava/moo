@@ -38,6 +38,9 @@ public class ConnectionManager implements ConnectionManagement {
 
     private boolean connected;
 
+    @Inject
+    private NickNameAssigning nickNameAssigner;
+
 
     @Override
     public boolean connect() {
@@ -48,7 +51,8 @@ public class ConnectionManager implements ConnectionManagement {
 
         try {
             socket = new Socket(host, port);
-            Thread serverListener = new ServerListener(socket, this);
+            Thread serverListener = new ServerListener(socket, this)
+                    .withNickNameAssigner(nickNameAssigner);
             executor.submit(serverListener);
             connected = true;
         }

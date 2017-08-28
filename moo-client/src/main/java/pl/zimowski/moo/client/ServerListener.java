@@ -26,10 +26,17 @@ public class ServerListener extends Thread {
 
     private ConnectionManagement connectionManagement;
 
+    private NickNameAssigning nickNameAssigner;
+
 
     public ServerListener(Socket socket, ConnectionManagement connectionManagement) {
         this.socket = socket;
         this.connectionManagement = connectionManagement;
+    }
+
+    public ServerListener withNickNameAssigner(NickNameAssigning assigner) {
+        this.nickNameAssigner = assigner;
+        return this;
     }
 
     @Override
@@ -41,6 +48,12 @@ public class ServerListener extends Thread {
                 ServerEvent serverEvent = (ServerEvent)in.readObject();
                 if(serverEvent.getAction() == ServerAction.ConnectionEstablished) {
                     serverEvent.setMessage("connected, client id: " + serverEvent.getClientId());
+                }
+                if(serverEvent.getAction() == ServerAction.NickGenerated && nickNameAssigner != null) {
+                    String assignedNickName = serverEvent.getMessage();
+                    nickNameAssigner.setNickName(assignedNickName);
+                    serverEvent.setMessage(String.format("You will be known as '%s'", assignedNickName));
+
                 }
                 App.LOG_CHAT.info("({}) {}", serverEvent.getAuthor(), serverEvent.getMessage());
             }
