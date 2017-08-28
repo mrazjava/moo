@@ -8,6 +8,7 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.zimowski.moo.api.ApiUtils;
 import pl.zimowski.moo.api.ServerAction;
 import pl.zimowski.moo.api.ServerEvent;
 
@@ -59,7 +60,7 @@ public class ServerListener extends Thread {
             }
         }
         catch(EOFException e) {
-            App.LOG_CHAT.info("(client) connection terminated by server; bye!");
+            App.LOG_CHAT.info("({}) connection terminated by server; bye!", ApiUtils.APP_NAME);
         }
         catch (IOException | ClassNotFoundException e) {
             log.error("unexpected connection error: {}; aborting!", e.getMessage());

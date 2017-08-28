@@ -61,6 +61,7 @@ public class App implements ApplicationRunner {
                 return;
             }
 
+            // allow connect to buffer console output before printing more
             Thread.sleep(300);
 
             log.info("How do you want to moo? (type nickname or just hit enter, ctrl-c to exit)");
