@@ -71,10 +71,10 @@ public class EventProvider {
      * @return {@code true} on success
      */
     @RequestMapping(value = "/moo/login", method = RequestMethod.POST)
-    public boolean mooLogin(@RequestBody String nick, HttpSession httpSession) {
+    public boolean mooLogin(@RequestBody String nick) {
 
-        log.debug("login: {}", nick);
-        httpSession.setAttribute(App.SESSION_ATTR_NICK, nick);
+        log.debug("login: [{}]", nick);
+
         ClientEvent event = new ClientEvent(ClientAction.Signin).withAuthor(nick);
         return sendClientEvent(event);
     }

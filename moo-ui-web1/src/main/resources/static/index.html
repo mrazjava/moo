@@ -9,19 +9,21 @@
 <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
 
-<body ng-app="mooChatDemo">
+<body ng-app="mooChatDemo" ng-controller="MainController">
  <img src="assets/images/moo.png" /> mooo...
  <div id="sessionExpired">| <span>SESSION EXPIRED</span> |</div>
- <div id="loginPanel" ng-controller="MooConnectController">
+
+ <div id="loginPanel">
   <input id="nickName" ng-model="usr.nickName" type="text" placeholder="nickname" ng-keyup="$event.keyCode === 13 && mooLogin()"/> 
   <input id="loginButton" type="button" ng-click="mooLogin()" value="Login" /> 
   <input id="logoutButton" type="button" ng-click="mooLogout()" value="Logout" />
  </div>
- <div class="liveChat" ng-controller="ChatMsgController">
+ <div class="liveChat">
   <ul>
    <li ng-repeat="evt in events">{{evt.dateTime}} [{{evt.author}}] <b>{{evt.message}}</b></li>
   </ul>
  </div>
+
  <div id="msgOutPanel" ng-controller="MooMsgController">
   <input id="msgOut" ng-model="usr.msg" type="text" placeholder="chat msg + ENTER" ng-keyup="$event.keyCode === 13 && mooMsg()" />
  </div>
