@@ -6,7 +6,7 @@ app.controller('MooConnectController', function($scope, $http) {
 		var nickTxt = angular.element(document.querySelector('#nickName'))[0];
 
 		if($scope.usr == undefined) {
-			$scope.usr = {nickName: ' ', autogen: true};; 
+			$scope.usr = {nickName: ' ', autogen: true};
 		}
 		console.log("moo login: [" + $scope.usr.nickName + "]");
 		angular.element(document.querySelector('#loginButton'))[0].style.display = "none";
