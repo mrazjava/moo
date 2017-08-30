@@ -1,6 +1,6 @@
-# Moo - so you can chat like a bull!
+# Moo - distributed chat experiment
 -----------
-Mooo is a based Java chat service.
+Mooo is a Java based chat service written as test bed for various concepts.
 
 Stack:
 
