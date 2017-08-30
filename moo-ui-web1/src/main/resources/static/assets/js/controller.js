@@ -44,6 +44,8 @@ app.controller('MainController', function ($stomp, $scope, $http) {
                   function (payload, headers, res) {
                       $scope.events = payload;
                       $scope.$apply($scope.events);
+                      var chatDiv = angular.element(document.querySelector('.liveChat'))[0];
+                      chatDiv.scrollTop = chatDiv.scrollHeight;
               });
               var subscription2 = $stomp.subscribe('/topic/session-expired',
             	  function (payload, headers, res) {
