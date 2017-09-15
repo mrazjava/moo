@@ -127,7 +127,8 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         return connectedClients.size();
     }
 
-    @Override
+    @SuppressWarnings("unlikely-arg-type")
+	@Override
     public int broadcast(ClientThread clientThread, ClientEvent clientEvent) {
 
         evictInactiveClients();
