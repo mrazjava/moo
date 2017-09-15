@@ -45,7 +45,7 @@ public class ClientThread extends Thread implements ClientNotification {
 
 
     /**
-     * Constructs an live link between client and a server. The link is
+     * Constructs n live link between client and a server. The link is
      * established over a socket and server notifier. This is all that a
      * running thread needs to exchange information between client and a
      * server.
