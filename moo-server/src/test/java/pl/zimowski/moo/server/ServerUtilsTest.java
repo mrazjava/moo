@@ -1,4 +1,4 @@
-package pl.zimowski.moo.client.configuration;
+package pl.zimowski.moo.server;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -10,22 +10,19 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import pl.zimowski.moo.client.ClientUtils;
-import pl.zimowski.moo.client.NickNameElements;
-
 /**
  * Ensures that {@link ClientUtils} performs as expected.
  *
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
-public class ClientUtilsTest {
+public class ServerUtilsTest {
 
     @Rule
     public MockitoRule mockito = MockitoJUnit.rule();
 
     @InjectMocks
-    private ClientUtils clientUtils;
+    private ServerUtils clientUtils;
 
     @Mock
     private NickNameElements nickNameElements;

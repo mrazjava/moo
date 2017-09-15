@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,8 @@ public class ClientThread extends Thread implements ClientNotification {
 
     private static final Logger log = LoggerFactory.getLogger(ClientThread.class);
 
+    private String clientId;
+
     /**
      * connection tunnel over which communication takes place
      */
@@ -32,12 +35,13 @@ public class ClientThread extends Thread implements ClientNotification {
     /**
      * server notification service
      */
-    private ServerNotification serverNotifier;
+    private EventBroadcasting serverNotifier;
 
     /**
-     * tracker of connection state
+     * snapshot of system clock indicating when this thread last processed
+     * socket activity
      */
-    private boolean connected;
+    private long lastActivity;
 
 
     /**
@@ -49,21 +53,29 @@ public class ClientThread extends Thread implements ClientNotification {
      * @param socket connection established by the client
      * @param serverNotifier used to inform server about events received from the client
      */
-    public ClientThread(Socket socket, ServerNotification serverNotifier) {
+    public ClientThread(Socket socket, EventBroadcasting serverNotifier) {
         this.socket = socket;
         this.serverNotifier = serverNotifier;
+        clientId = UUID.randomUUID().toString();
+        lastActivity = System.currentTimeMillis();
+    }
+
+    @Override
+    public String getClientId() {
+        return clientId;
     }
 
     @Override
     public void run() {
 
         try {
-            connected = true;
-            while(connected) {
+            while(true) {
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                lastActivity = System.currentTimeMillis();
                 ClientEvent msg = (ClientEvent)ois.readObject();
+                msg.withId(clientId);
                 log.debug("in: {}", msg);
-                serverNotifier.notify(this, msg);
+                serverNotifier.broadcast(this, msg);
                 if(ClientAction.Disconnect == msg.getAction()) {
                     log.info("closing connection: {}", socket);
                     socket.close();
@@ -76,12 +88,34 @@ public class ClientThread extends Thread implements ClientNotification {
         }
         catch(IOException e) {
             log.info("ejecting connection: {}", e.getMessage());
-            serverNotifier.notify(this, new ClientEvent(ClientAction.Disconnect));
+            serverNotifier.broadcast(this, new ClientEvent(ClientAction.Disconnect));
         }
     }
 
+    @Override
+    public long getLastActivity() {
+        return lastActivity;
+    }
+
+    /**
+     * @return {@code true} if active socket connection is up and operational,
+     *  {@code false} if no further communication over socket is possible
+     */
+    public boolean isConnected() {
+        return !socket.isClosed();
+    }
+
+    /**
+     * Terminates connection with a client. After this call, no communication
+     * is possible and essentially this thread is dead.
+     */
     public void disconnect() {
-        connected = false;
+        try {
+            socket.close();
+        }
+        catch(IOException e) {
+            log.warn("problem closing socket: {}", e.getMessage());
+        }
     }
 
     @Override

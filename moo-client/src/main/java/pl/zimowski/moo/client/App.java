@@ -5,7 +5,6 @@ import java.util.Scanner;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InjectionPoint;
@@ -29,16 +28,16 @@ import pl.zimowski.moo.api.ClientEvent;
 @SpringBootApplication
 public class App implements ApplicationRunner {
 
+    public static final Logger LOG_CHAT = LoggerFactory.getLogger("CHAT_ECHO");
+
     @Inject
     private Logger log;
 
-    private String nick;
+    @Inject
+    private NickNameManager nickNameManager;
 
     @Inject
     private ConnectionManagement connMgr;
-
-    @Inject
-    private ClientUtils clientUtils;
 
 
     /**
@@ -58,44 +57,42 @@ public class App implements ApplicationRunner {
 
         try (Scanner scanner = new Scanner(System.in)) {
 
-            log.info("How do you want to moo? (type nickname or just hit enter)");
-            ApiUtils.printPrompt();
-
-            nick = scanner.nextLine();
-            boolean anonymousNick = false; // assume mooer is creative
-
-            if(StringUtils.isBlank(nick)) {
-                nick = clientUtils.randomNickName();
-                anonymousNick = true;
-            }
-
             if(!connMgr.connect()) {
                 return;
             }
 
-            if(log.isInfoEnabled()) {
-                log.info((anonymousNick ? "You're known as" : "Alright") + " \"{}\", go ahead and mooo (ctrl-c to exit)", nick);
-            }
-            ApiUtils.printPrompt();
+            // allow connect to buffer console output before printing more
+            Thread.sleep(300);
 
-            connMgr.send(new ClientEvent(ClientAction.Signin).withAuthor(nick));
+            log.info("How do you want to moo? (type nickname or just hit enter, ctrl-c to exit)");
+
+            nickNameManager.setNickName(scanner.nextLine());
+
+            connMgr.send(new ClientEvent(ClientAction.Signin)
+                    .withAuthor(nickNameManager.getNickName())
+                    );
 
             while(scanner.hasNextLine()) {
 
                 String input = scanner.nextLine();
-                ClientEvent event = new ClientEvent(ClientAction.Message, nick, input);
+                ClientEvent event = new ClientEvent(ClientAction.Message, nickNameManager.getNickName(), input);
                 log.debug("sending: {}", event);
                 connMgr.send(event);
-                ApiUtils.printPrompt();
             }
         }
     }
 
     @PreDestroy
     public void shutdown() {
-        if(nick != null) {
-            log.info("(client) done mooing? bye {}!", nick);
-            connMgr.send(new ClientEvent(ClientAction.Signoff).withAuthor(nick));
+        String nick = nickNameManager.getNickName();
+        if(connMgr.isConnected() && nick != null) {
+            LOG_CHAT.info("(client) done mooing? bye {}!", nick);
+            if(nick != null) {
+                connMgr.send(new ClientEvent(ClientAction.Signoff).withAuthor(nick));
+            }
+        }
+        if(connMgr.isConnected()) {
+            connMgr.send(new ClientEvent(ClientAction.Disconnect));
         }
     }
 

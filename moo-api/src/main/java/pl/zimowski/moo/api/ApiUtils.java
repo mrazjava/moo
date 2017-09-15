@@ -18,6 +18,8 @@ public class ApiUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ApiUtils.class);
 
+    public static final String APP_NAME = "moo";
+
     /**
      * Given a resource path, reads the resource and returns its content as {@code String}. Capable
      * of fetching a local resource (such as when running exploaded), or packaged resource (such

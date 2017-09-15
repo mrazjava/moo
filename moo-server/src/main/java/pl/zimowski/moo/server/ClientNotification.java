@@ -11,6 +11,11 @@ import pl.zimowski.moo.api.ServerEvent;
 public interface ClientNotification {
 
     /**
+     * @return unique id of the client
+     */
+    String getClientId();
+
+    /**
      * Given a message from server, inform a client about it. This operation
      * is intended to inform a specific client. If a server supports multiple
      * clients, it must notify each one separately.
@@ -19,4 +24,16 @@ public interface ClientNotification {
      * @returns {@code true} if event was forwarded onto a client; {@code false} if not due to error
      */
     boolean notify(ServerEvent event);
+
+    /**
+     * @return snapshot of system clock (in millis) when last activity from
+     *  the client was registered
+     */
+    long getLastActivity();
+
+    /**
+     * Terminate server's connection with the client such that subsequent
+     * notifications are no longer possible.
+     */
+    void disconnect();
 }

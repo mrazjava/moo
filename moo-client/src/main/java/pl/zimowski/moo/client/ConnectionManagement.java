@@ -19,6 +19,10 @@ public interface ConnectionManagement {
      */
     boolean connect();
 
+    void disconnect();
+
+    boolean isConnected();
+
     /**
      * Notify server of an event that took place on a client.
      *

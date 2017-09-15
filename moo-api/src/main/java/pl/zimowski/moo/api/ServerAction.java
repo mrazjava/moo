@@ -8,6 +8,10 @@ package pl.zimowski.moo.api;
  */
 public enum ServerAction {
 
+    ConnectionEstablished,
+
+    NickGenerated,
+
     /**
      * report count of online users due to change to client collection (login,
      * logout, timeout)

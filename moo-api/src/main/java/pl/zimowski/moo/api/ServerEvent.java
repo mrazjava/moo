@@ -1,4 +1,4 @@
-package pl.zimowski.moo.api;
+ package pl.zimowski.moo.api;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,11 +15,13 @@ public class ServerEvent implements Serializable {
 
     private long timestamp;
 
+    private String clientId;
+
     private ServerAction action;
 
     private String message;
 
-    private String author;
+    private String author = ApiUtils.APP_NAME;
 
     private int participantCount;
 
@@ -49,6 +51,11 @@ public class ServerEvent implements Serializable {
         return this;
     }
 
+    public ServerEvent withClientId(String clientId) {
+        this.clientId = clientId;
+        return this;
+    }
+
     public long getTimestamp() {
         return timestamp;
     }
@@ -69,13 +76,25 @@ public class ServerEvent implements Serializable {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public String getAuthor() {
         return author;
     }
 
+    /**
+     * @return id of a client which triggered this server event; may be
+     *  {@code null} if server itself triggered the event
+     */
+    public String getClientId() {
+        return clientId;
+    }
+
     @Override
     public String toString() {
-        return "ServerEvent [timestamp=" + timestamp + ", action=" + action + ", author=" + author
+        return "ServerEvent [timestamp=" + timestamp + ", action=" + action + ", clientId=" + clientId + ", author=" + author
                 + ", message=" + message + ", participantCount=" + participantCount + "]";
     }
 }

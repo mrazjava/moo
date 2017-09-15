@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,6 +12,9 @@ import java.util.concurrent.Executors;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Seconds;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -32,7 +36,7 @@ import pl.zimowski.moo.server.jmx.JmxReportingSupport;
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 @Component
-public class ChatEngine implements ChatService, ServerNotification {
+public class WebSocketChatService implements ChatService, EventBroadcasting {
 
     @Inject
     private Logger log;
@@ -40,10 +44,16 @@ public class ChatEngine implements ChatService, ServerNotification {
     @Value("${port}")
     private int port;
 
+    @Value("${evictionTimeout}")
+    private Integer evictionTimeout;
+
     private boolean running;
 
     @Inject
     private JmxReportingSupport jmxReporter;
+
+    @Inject
+    private ServerUtils serverUtils;
 
 
     /**
@@ -92,7 +102,7 @@ public class ChatEngine implements ChatService, ServerNotification {
         while(running) {
             try {
                 Socket socket = serverSocket.accept();
-                log.info("recieved {}", socket);
+                log.info("received {}", socket);
                 ClientThread client = new ClientThread(socket, this);
                 synchronized(this) {
                     connectedClients.add(client);
@@ -100,6 +110,9 @@ public class ChatEngine implements ChatService, ServerNotification {
                 jmxReporter.clientConnected();
                 log.debug("connections: {}, participants: {}", connectedClients.size(), participantCount);
                 executor.submit(client);
+                client.notify(new ServerEvent(ServerAction.ConnectionEstablished)
+                        .withClientId(client.getClientId())
+                        );
             }
             catch(IOException e) {
                 log.error("unexpected problem; aborting!", e);
@@ -116,11 +129,15 @@ public class ChatEngine implements ChatService, ServerNotification {
 
     @SuppressWarnings("unlikely-arg-type")
 	@Override
-    public int notify(ClientThread clientThread, ClientEvent clientEvent) {
+    public int broadcast(ClientThread clientThread, ClientEvent clientEvent) {
 
-        log.debug("processing {} from {}", clientEvent, clientThread);
+        evictInactiveClients();
 
-        ServerEvent serverEvent = processClientMessage(clientThread, clientEvent);
+        log.debug("broadcasting {} from {}", clientEvent, clientThread);
+
+        verifySignin(clientThread, clientEvent);
+
+        ServerEvent serverEvent = clientEventToServerEvent(clientThread, clientEvent);
         int notifiedClients = 0;
 
         if(clientEvent.getAction() == ClientAction.Disconnect) {
@@ -132,6 +149,7 @@ public class ChatEngine implements ChatService, ServerNotification {
         // needs to be thread safe as otherwise iterator would get screwed up
         // and event delivery unpredictable (events eaten out)
         synchronized(this) {
+            // standard message broadcast
             for(ClientNotification connectedClient : connectedClients) {
 
                 log.debug("broadcasting to: {}", connectedClient);
@@ -148,6 +166,42 @@ public class ChatEngine implements ChatService, ServerNotification {
     }
 
     /**
+     * Ensures that user is always signed in with a valid nick name. Client
+     * may opt to produce signin event without a user nick name in which case
+     * server must ensure that one is provided (randomly).
+     *
+     * @param clientThread associated with the client attached to the user
+     * @param clientEvent to verify (and modify if necessary)
+     */
+    private void verifySignin(ClientThread clientThread, ClientEvent clientEvent) {
+
+        if(clientEvent.getAction() == ClientAction.Signin && StringUtils.isBlank(clientEvent.getAuthor())) {
+            String nick = serverUtils.randomNickName();
+            clientThread.notify(new ServerEvent(ServerAction.NickGenerated).withMessage(nick));
+            clientEvent.setAuthor(nick);
+        }
+    }
+
+    private synchronized void evictInactiveClients() {
+
+        for(Iterator<ClientNotification> iterator = connectedClients.iterator(); iterator.hasNext();) {
+
+            ClientNotification connectedClient = iterator.next();
+            DateTime lastActive = new DateTime(connectedClient.getLastActivity());
+            int inactiveSeconds = Seconds.secondsBetween(lastActive, new DateTime()).getSeconds();
+
+            if(evictionTimeout != null && inactiveSeconds > evictionTimeout) {
+                log.info("{} inactive for {} seconds, evicting!", connectedClient, inactiveSeconds);
+                connectedClient.notify(new ServerEvent(ServerAction.ConnectionTimeOut).withMessage("disconnected due to inactivity"));
+                connectedClient.disconnect();
+                iterator.remove();
+                participantCount--;
+                continue;
+            }
+        }
+    }
+
+    /**
      * Inspects the nature of a message received from a client, and updates
      * collection of connected clients as necessary. Transforms the client
      * message to equivalent server message so that it can be used by the
@@ -157,7 +211,7 @@ public class ChatEngine implements ChatService, ServerNotification {
      * @param clientEvent produced by the client
      * @return equivalent server message
      */
-    private ServerEvent processClientMessage(ClientThread clientThread, ClientEvent clientEvent) {
+    private ServerEvent clientEventToServerEvent(ClientThread clientThread, ClientEvent clientEvent) {
 
         ClientAction clientAction = clientEvent.getAction();
         ServerAction serverAction = null;
@@ -169,7 +223,7 @@ public class ChatEngine implements ChatService, ServerNotification {
                 serverAction = ServerAction.ParticipantCount;
                 participantCount++;
 
-                author = App.SERVER_NAME;
+                author = ApiUtils.APP_NAME;
                 StringBuilder msg = new StringBuilder(String.format("%s joined;", clientEvent.getAuthor()));
                 if(participantCount > 1)
                     msg.append(String.format(" %d participants", participantCount));
@@ -181,7 +235,7 @@ public class ChatEngine implements ChatService, ServerNotification {
             case Signoff:
                 serverAction = ServerAction.ParticipantCount;
                 participantCount--;
-                author = App.SERVER_NAME;
+                author = ApiUtils.APP_NAME;
                 serverMessage = String.format("%s left; %d participant(s) remaining", clientEvent.getAuthor(), participantCount);
                 break;
             case Message:
@@ -200,7 +254,8 @@ public class ChatEngine implements ChatService, ServerNotification {
 
         return new ServerEvent(serverAction, serverMessage)
                 .withParticipantCount(participantCount)
-                .withAuthor(author);
+                .withAuthor(author)
+                .withClientId(clientEvent.getId());
     }
 
     @Override
@@ -224,6 +279,6 @@ public class ChatEngine implements ChatService, ServerNotification {
 
     @PreDestroy
     public void shutdown() {
-        log.info("shutting down; bye!");
+        log.debug("engine shutdown ({} clients, {} participants)", getConnectedClientCount(), participantCount);
     }
 }

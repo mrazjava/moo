@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
+import pl.zimowski.moo.api.ServerAction;
 import pl.zimowski.moo.api.ServerEvent;
 
 /**
@@ -51,6 +52,16 @@ public class ServerListener extends Thread {
                 ServerEvent serverEvent = (ServerEvent)in.readObject();
 
                 log.info(serverEvent.toString());
+
+                if(serverEvent.getAction() == ServerAction.ConnectionEstablished) {
+                    continue;
+                }
+
+                if(serverEvent.getAction() == ServerAction.NickGenerated) {
+                    String nick = serverEvent.getMessage();
+                    serverEvent.setMessage(String.format("You will be known as '%s'", nick));
+                    sender.convertAndSend("/topic/nick-generated", new String[] { nick });
+                }
 
                 if(recentMessages.size() == 15)
                     recentMessages.removeFirst();

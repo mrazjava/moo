@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,8 @@ public class EventProvider {
     @RequestMapping(value = "/moo/login", method = RequestMethod.POST)
     public boolean mooLogin(@RequestBody String nick) {
 
-        log.debug("login: {}", nick);
+        log.debug("login: [{}]", nick);
+
         ClientEvent event = new ClientEvent(ClientAction.Signin).withAuthor(nick);
         return sendClientEvent(event);
     }
@@ -84,9 +86,14 @@ public class EventProvider {
      * @return {@code true} on success
      */
     @RequestMapping(value = "/moo/logout", method = RequestMethod.POST)
-    public boolean mooLogout(@RequestBody String nick) {
+    public boolean mooLogout(@RequestBody String nick, HttpSession httpSession) {
 
         log.debug("logout: {}", nick);
+
+        if(httpSession != null) {
+            httpSession.removeAttribute(App.SESSION_ATTR_NICK);
+        }
+
         ClientEvent event = new ClientEvent(ClientAction.Signoff).withAuthor(nick);
         return sendClientEvent(event);
     }

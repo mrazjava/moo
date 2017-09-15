@@ -14,7 +14,7 @@
   <logger name="javax.management" level="INFO" />
   <logger name="org.hibernate.validator" level="ERROR" />
 
-  <logger name="pl.zimowski.moo.ui.angular" level="TRACE" />
+  <logger name="pl.zimowski.moo.ui.web1" level="TRACE" />
 
   <root level="WARN">
     <appender-ref ref="STDOUT" />
