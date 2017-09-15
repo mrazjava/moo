@@ -114,7 +114,8 @@ public class ChatEngine implements ChatService, ServerNotification {
         return connectedClients.size();
     }
 
-    @Override
+    @SuppressWarnings("unlikely-arg-type")
+	@Override
     public int notify(ClientThread clientThread, ClientEvent clientEvent) {
 
         log.debug("processing {} from {}", clientEvent, clientThread);
