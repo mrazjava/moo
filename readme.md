@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mrazjava/moo.svg)](https://travis-ci.org/mrazjava/moo)
+
 # Moo - distributed chat experiment
 -----------
 Mooo is a Java based chat service written as test bed for various concepts.
