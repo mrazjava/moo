@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/mrazjava/moo.svg)](https://travis-ci.org/mrazjava/moo)
+[![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=master)](https://coveralls.io/github/mrazjava/moo?branch=master)
 
 # Moo - distributed chat experiment
 -----------
