@@ -1,6 +1,6 @@
 language: java
 dist: trusty
-after_success: coveralls
+after_success: mvn clean verify jacoco:report coveralls:report
 jdk:
   - oraclejdk8
   - openjdk8
