@@ -1,6 +1,6 @@
 | branch  | status |
 | ------------- | ------------- |
-| master  | [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=master)](https://travis-ci.org/mrazjava/moo?branch=master) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=master)](https://coveralls.io/github/mrazjava/moo?branch=master) [![GitHub Download Count](https://github-basic-badges.herokuapp.com/downloads/mrazjava/moo/total.svg)]() [![GitHub Release](https://github-basic-badges.herokuapp.com/release/mrazjava/moo.svg)]() |
+| master  | [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=master)](https://travis-ci.org/mrazjava/moo?branch=master) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=master)](https://coveralls.io/github/mrazjava/moo?branch=master) [![GitHub version](https://badge.fury.io/gh/moo.svg)](http://badge.fury.io/gh/moo) |
 | develop  | [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=develop)](https://travis-ci.org/mrazjava/moo?branch=develop) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=develop)](https://coveralls.io/github/mrazjava/moo?branch=develop) |
 
 # Moo - distributed chat experiment
