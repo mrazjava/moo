@@ -1,5 +1,6 @@
-[![Build Status](https://travis-ci.org/mrazjava/moo.svg)](https://travis-ci.org/mrazjava/moo)
-[![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=master)](https://coveralls.io/github/mrazjava/moo?branch=master)
+| ------------- | ------------- |
+| master  | [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=master)](https://travis-ci.org/mrazjava/moo?branch=master) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=master)](https://coveralls.io/github/mrazjava/moo?branch=master)  |
+| develop  | [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=develop)](https://travis-ci.org/mrazjava/moo?branch=develop) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=develop)](https://coveralls.io/github/mrazjava/moo?branch=develop) |
 
 # Moo - distributed chat experiment
 -----------
