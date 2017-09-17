@@ -351,6 +351,5 @@
     <module>moo-api</module>
     <module>moo-server</module>
     <module>moo-client</module>
-    <module>moo-ui-web1</module>
   </modules>
 </project>

@@ -1,22 +1,21 @@
-# Moo - distributed chat experiment
+# Moo - flexible chat
 -----------
-Mooo is a Java based chat service written as test bed for various concepts.
+Mooo is a Java based chat service written as test bed for various concepts. Currently the only 
+supported UI is command based.
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) &nbsp; master: &nbsp; [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=master)](https://travis-ci.org/mrazjava/moo?branch=master) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=master)](https://coveralls.io/github/mrazjava/moo?branch=master) &nbsp; develop: &nbsp; [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=develop)](https://travis-ci.org/mrazjava/moo?branch=develop) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=develop)](https://coveralls.io/github/mrazjava/moo?branch=develop)
 
 ### Stack
 
  * Java 8
- * Angular
  * REST
  * Spring Boot
 
 ### Features
 
- * Distributed Architecture (eg: console client can chat with web client)
+ * Distributed Architecture
  * Server JMX reporting
- * Console client
- * Web client (single page angular/rest/springboot)
+ * Console UI
 
 ## First things first
 -----------
@@ -48,21 +47,6 @@ Client will attempt to connect to server at `localhost` on port `8000`.
 This can be re-configured via `application.properties`. Client aborts 
 immediately if server connection cannot be established.
 
-Starting web client:
-```
-cd moo/moo-ui-web1
-mvn spring-boot:run
-```
-This client will also attempt to connect to server at `localhost` on port 
-`8000`. This client right now does not expose configuration options.
-
 ## Chatting
 -----------
 Start yet another client and have fun! Moo...
-
-## Future Vision
------------
- * More clients! (various flavors of web, android, ios)
- * More servers! (maybe node? with gui?)
- * Alternate implementation of ChatService (different engine, same server)
- * More features! (direct/private user chats, channels, encryption, etc) 
