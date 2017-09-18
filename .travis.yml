@@ -1,5 +1,8 @@
-language: java
-dist: trusty
-after_success: jacoco:report coveralls:report
+language:
+ - java
+dist:
+ - trusty
+after_success:
+ - coveralls
 jdk:
-  - oraclejdk8
+ - oraclejdk8

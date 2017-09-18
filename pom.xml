@@ -49,16 +49,43 @@
       </plugin>
 
 	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-surefire-plugin</artifactId>
+		<configuration>
+			<!-- Jacoco prepare-agent builds some command-line params without -->
+			<!-- which jacoco will not instrument. Hence it is important to add -->
+			<!-- those command-line params here (${argLine} holds those params) -->
+			<argLine>${argLine} -Xms256m -Xmx2048m</argLine>
+			<forkCount>1</forkCount>
+			<runOrder>random</runOrder>
+		</configuration>
+	</plugin>
+
+	<plugin>
 		<groupId>org.jacoco</groupId>
 		<artifactId>jacoco-maven-plugin</artifactId>
-		<version>0.7.6.201602180812</version>
+		<version>0.7.9</version>
 		<executions>
 			<execution>
 				<id>prepare-agent</id>
 				<goals>
 					<goal>prepare-agent</goal>
 				</goals>
+				<configuration>
+					<skip>${maven.test.skip}</skip>
+					<append>true</append>
+					<!-- <destFile>${project.basedir}/../moo-jacoco-reports/target/jacoco.exec</destFile> -->
+				</configuration>
 			</execution>
+			<!-- 
+			<execution>
+				<id>report-aggregate</id>
+				<phase>verify</phase>
+				<goals>
+					<goal>report-aggregate</goal>
+				</goals>
+			</execution>
+			 -->
 		</executions>
 	</plugin>
 
@@ -209,6 +236,21 @@
         <version>1.2.0-SNAPSHOT</version>
       </dependency>
       <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-client-socket</artifactId>
+        <version>1.2.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-server-socket</artifactId>
+        <version>1.2.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-ui-command</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>1.7.25</version>
@@ -351,5 +393,7 @@
     <module>moo-api</module>
     <module>moo-server-socket</module>
     <module>moo-client-socket</module>
+    <module>moo-ui-command</module>
+    <module>moo-reports</module>
   </modules>
 </project>
