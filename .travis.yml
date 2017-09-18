@@ -3,6 +3,6 @@ language:
 dist:
  - trusty
 after_success:
- - coveralls
+ - mvn verify coveralls
 jdk:
  - oraclejdk8
