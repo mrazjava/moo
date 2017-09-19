@@ -5,6 +5,13 @@
     <artifactId>moo</artifactId>
     <version>1.2.0-SNAPSHOT</version>
   </parent>
-  <artifactId>moo-ui-command</artifactId>
+  <artifactId>moo-ui-shell</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Moo UI (shell)</name>
+  <description>Parent POM for Moo shell UI.</description>
+  <modules>
+  	<module>moo-ui-shell-reader</module>
+  	<module>moo-ui-shell-writer</module>
+  </modules>
 </project>

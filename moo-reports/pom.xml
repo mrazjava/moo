@@ -42,8 +42,14 @@
   	</dependency>
   	<dependency>
   		<groupId>pl.zimowski</groupId>
-  		<artifactId>moo-ui-command</artifactId>
+  		<artifactId>moo-ui-shell-reader</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>pl.zimowski</groupId>
+  		<artifactId>moo-ui-shell-writer</artifactId>
   	</dependency>
   </dependencies>
 
+  <name>Reports</name>
+  <description>Build help artifact which generates useful code/stat reports (eg: jacoco).</description>
 </project>
