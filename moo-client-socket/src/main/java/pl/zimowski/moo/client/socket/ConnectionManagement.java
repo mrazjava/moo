@@ -1,6 +1,7 @@
 package pl.zimowski.moo.client.socket;
 
 import pl.zimowski.moo.api.ClientEvent;
+import pl.zimowski.moo.api.ClientListener;
 
 /**
  * Ability to establish connection from a client to a server and do basic
@@ -17,7 +18,7 @@ public interface ConnectionManagement {
      *
      * @return {@code true} if connection was established; {@code false} if connection failed
      */
-    boolean connect();
+    boolean connect(ClientListener listener);
 
     void disconnect();
 

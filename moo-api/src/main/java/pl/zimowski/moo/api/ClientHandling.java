@@ -6,7 +6,11 @@ package pl.zimowski.moo.api;
  */
 public interface ClientHandling {
 
-	void send(ClientEvent event);
+	boolean connect(ClientListener listener);
 	
-	void register(ClientListener listener);
+	boolean isConnected();
+	
+	void disconnect();
+	
+	void send(ClientEvent event);
 }

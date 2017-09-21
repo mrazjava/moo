@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
@@ -13,7 +14,9 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import pl.zimowski.moo.api.ApiUtils;
 import pl.zimowski.moo.api.ClientEvent;
+import pl.zimowski.moo.api.ClientListener;
 
 /**
  * Socket based manager. Expects that server is capable talking over web
@@ -35,15 +38,22 @@ public class ConnectionManager implements ConnectionManagement {
     private int port;
 
     private Socket socket;
+    
+    boolean connected;
 
-    private boolean connected;
 
-    @Inject
-    private NickNameAssigning nickNameAssigner;
+    @PostConstruct
+    public void init() {
+    	log.info("\n{}", ApiUtils.fetchResource("/logo"));
+    }
 
+    @PreDestroy
+    public void cleanup() {
+    	disconnect();
+    }
 
     @Override
-    public boolean connect() {
+    public boolean connect(ClientListener clientListener) {
 
         log.info("establishing connection to {}:{}", host, port);
 
@@ -51,9 +61,7 @@ public class ConnectionManager implements ConnectionManagement {
 
         try {
             socket = new Socket(host, port);
-            Thread serverListener = new ServerListener(socket, this)
-                    .withNickNameAssigner(nickNameAssigner);
-            executor.submit(serverListener);
+            executor.submit(new ServerListener(socket, clientListener));
             connected = true;
         }
         catch(IOException e) {
@@ -72,12 +80,7 @@ public class ConnectionManager implements ConnectionManagement {
     public boolean isConnected() {
         return connected;
     }
-
-    @PreDestroy
-    public void cleanup() {
-        // server will close the socket for us :-)
-    }
-
+    
     @Override
     public void send(ClientEvent event) {
 

@@ -38,6 +38,8 @@ import pl.zimowski.moo.server.socket.jmx.JmxReportingSupport;
 @Component
 public class WebSocketChatService implements ChatService, EventBroadcasting {
 
+	private static final String ANONYMOUS = "AnonymousCoward";
+	
     @Inject
     private Logger log;
 
@@ -127,7 +129,6 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         return connectedClients.size();
     }
 
-    @SuppressWarnings("unlikely-arg-type")
 	@Override
     public int broadcast(ClientThread clientThread, ClientEvent clientEvent) {
 
@@ -135,15 +136,23 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
 
         log.debug("broadcasting {} from {}", clientEvent, clientThread);
 
-        verifySignin(clientThread, clientEvent);
-
-        ServerEvent serverEvent = clientEventToServerEvent(clientThread, clientEvent);
-        int notifiedClients = 0;
-
         if(clientEvent.getAction() == ClientAction.Disconnect) {
-            connectedClients.remove(clientEvent);
-            return notifiedClients;
+        	connectedClients.remove(clientThread);
         }
+        
+        ServerEvent serverEvent = clientEventToServerEvent(clientThread, clientEvent);
+        
+        if(clientEvent.getAction() == ClientAction.GenerateNick) {
+        	clientThread.notify(serverEvent);
+        	return 1; // only nick requestor gets notified with generated nick
+        }
+        
+        return broadcast(serverEvent);
+    }
+    
+    private int broadcast(ServerEvent event) {
+    	        
+        int notifiedClients = 0;
 
         // could be perf bottleneck - should re-think for optimization; this
         // needs to be thread safe as otherwise iterator would get screwed up
@@ -154,7 +163,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
 
                 log.debug("broadcasting to: {}", connectedClient);
 
-                if(connectedClient.notify(serverEvent)) {
+                if(connectedClient.notify(event)) {
                     notifiedClients++;
                 }
             }
@@ -163,23 +172,6 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         log.debug("nofied {} clients", notifiedClients);
 
         return notifiedClients;
-    }
-
-    /**
-     * Ensures that user is always signed in with a valid nick name. Client
-     * may opt to produce signin event without a user nick name in which case
-     * server must ensure that one is provided (randomly).
-     *
-     * @param clientThread associated with the client attached to the user
-     * @param clientEvent to verify (and modify if necessary)
-     */
-    private void verifySignin(ClientThread clientThread, ClientEvent clientEvent) {
-
-        if(clientEvent.getAction() == ClientAction.Signin && StringUtils.isBlank(clientEvent.getAuthor())) {
-            String nick = serverUtils.randomNickName();
-            clientThread.notify(new ServerEvent(ServerAction.NickGenerated).withMessage(nick));
-            clientEvent.setAuthor(nick);
-        }
     }
 
     private synchronized void evictInactiveClients() {
@@ -217,6 +209,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         ServerAction serverAction = null;
         String serverMessage = null;
         String author = null;
+        String note = null;
 
         switch(clientAction) {
             case Signin:
@@ -241,12 +234,19 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
             case Message:
                 serverAction = ServerAction.Message;
                 author = clientEvent.getAuthor();
+                if(StringUtils.isEmpty(author)) author = ANONYMOUS;
                 serverMessage = String.format("%s", clientEvent.getMessage());
                 break;
+            case GenerateNick:
+            	serverAction = ServerAction.NickGenerated;
+            	author = ApiUtils.APP_NAME;
+            	serverMessage = serverUtils.randomNickName();
+            	break;
             case Disconnect:
-                synchronized(this) {
-                    connectedClients.remove(clientThread);
-                }
+            	serverAction = ServerAction.ClientDisconnected;
+            	author = ApiUtils.APP_NAME;
+            	serverMessage = String.format("client disconnect: %s", clientThread.getClientId());
+            	note = clientThread.getClientId();
                 break;
         }
 
@@ -255,7 +255,8 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         return new ServerEvent(serverAction, serverMessage)
                 .withParticipantCount(participantCount)
                 .withAuthor(author)
-                .withClientId(clientEvent.getId());
+                .withClientId(clientEvent.getId())
+                .withNote(note);
     }
 
     @Override
@@ -279,6 +280,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
 
     @PreDestroy
     public void shutdown() {
+    	broadcast(new ServerEvent(ServerAction.ServerExit).withMessage("deliberate server shutdown"));
         log.debug("engine shutdown ({} clients, {} participants)", getConnectedClientCount(), participantCount);
     }
 }

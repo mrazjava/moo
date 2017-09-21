@@ -139,6 +139,17 @@ public class ClientThread extends Thread implements ClientNotification {
     }
 
     @Override
+	public boolean equals(Object otherThread) {
+    	
+    	if(otherThread == null || !(otherThread instanceof ClientThread))
+    		return false;
+    	
+    	ClientThread that = (ClientThread)otherThread;
+    	
+		return getClientId().equals(that.getClientId());
+	}
+
+	@Override
     public int hashCode() {
 
         int result = 23;
@@ -147,8 +158,9 @@ public class ClientThread extends Thread implements ClientNotification {
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "ClientThread [socket=" + socket + "]";
-    }
+	@Override
+	public String toString() {
+		return "ClientThread [clientId=" + clientId + ", socket=" + socket + ", serverNotifier=" + serverNotifier
+				+ ", lastActivity=" + lastActivity + "]";
+	}
 }

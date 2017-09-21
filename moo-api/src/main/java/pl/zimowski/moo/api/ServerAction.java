@@ -8,8 +8,16 @@ package pl.zimowski.moo.api;
  */
 public enum ServerAction {
 
+    /**
+     * Upon client request to establish connection with the server, 
+     * server confirmed successful connection.
+     */
     ConnectionEstablished,
 
+    /**
+     * Upon client request to generate a random nick name, server generated 
+     * the nick name.
+     */
     NickGenerated,
 
     /**
@@ -22,9 +30,19 @@ public enum ServerAction {
      * server aborted client connection due to inactivity
      */
     ConnectionTimeOut,
+    
+    /**
+     * Client voluntarily chose to disconnect.
+     */
+    ClientDisconnected,
 
     /**
      * chat message from another user
      */
-    Message
+    Message,
+    
+    /**
+     * Server process terminated and all client connections were aborted
+     */
+    ServerExit
 }

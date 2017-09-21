@@ -22,6 +22,8 @@ public class ServerEvent implements Serializable {
     private String message;
 
     private String author = ApiUtils.APP_NAME;
+    
+    private String note;
 
     private int participantCount;
 
@@ -46,6 +48,17 @@ public class ServerEvent implements Serializable {
         return this;
     }
 
+    /**
+     * Additional data associated with this an event. Often empty.
+     * 
+     * @param note free text that could mean different things depending on the context
+     * @return metadata (note) associated with an event
+     */
+    public ServerEvent withNote(String note) {
+    	this.note = note;
+    	return this;
+    }
+    
     public ServerEvent withParticipantCount(int count) {
         participantCount = count;
         return this;
@@ -84,7 +97,15 @@ public class ServerEvent implements Serializable {
         return author;
     }
 
-    /**
+    public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	/**
      * @return id of a client which triggered this server event; may be
      *  {@code null} if server itself triggered the event
      */
@@ -95,6 +116,6 @@ public class ServerEvent implements Serializable {
     @Override
     public String toString() {
         return "ServerEvent [timestamp=" + timestamp + ", action=" + action + ", clientId=" + clientId + ", author=" + author
-                + ", message=" + message + ", participantCount=" + participantCount + "]";
+                + ", message=" + message + ", note=" + note + ", participantCount=" + participantCount + "]";
     }
 }
