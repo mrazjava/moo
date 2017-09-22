@@ -8,43 +8,4 @@
   <artifactId>moo-ui-shell-reader</artifactId>
   <name>Moo UI (shell: reader)</name>
   <description>Text based UI for displaying chat events (read only). In text based console, reading and writing events is most convenient when managed via separate apps.</description>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-integration</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>  
-    <dependency>
-      <groupId>javax.enterprise</groupId>
-      <artifactId>cdi-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>pl.zimowski</groupId>
-      <artifactId>moo-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>pl.zimowski</groupId>
-      <artifactId>moo-client-socket</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-  </dependencies>
-
 </project>

@@ -146,6 +146,12 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         	clientThread.notify(serverEvent);
         	return 1; // only nick requestor gets notified with generated nick
         }
+        if(clientEvent.getAction() == ClientAction.Signin) {
+        	clientThread.notify(
+        			new ServerEvent(ServerAction.SigninConfirmed)
+        				.withAuthor(clientEvent.getAuthor())
+        				);
+        }
         
         return broadcast(serverEvent);
     }
