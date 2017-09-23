@@ -66,7 +66,7 @@ public class App implements ApplicationRunner {
             	Thread.sleep(50);
             }
 
-            log.info("How do you want to moo? (type nickname or just hit enter, ctrl-c to exit)");
+            EventHandler.LOG.info("({}) type nickname or just hit enter; ctrl-c to exit", EventHandler.AUTHOR);
 
             String nickName = scanner.nextLine();
             ClientEvent signinEvent = new ClientEvent(ClientAction.Signin);

@@ -222,7 +222,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
                 serverAction = ServerAction.ParticipantCount;
                 participantCount++;
 
-                author = ApiUtils.APP_NAME;
+                author = ServerEvent.AUTHOR;
                 StringBuilder msg = new StringBuilder(String.format("%s joined;", clientEvent.getAuthor()));
                 if(participantCount > 1)
                     msg.append(String.format(" %d participants", participantCount));
@@ -234,7 +234,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
             case Signoff:
                 serverAction = ServerAction.ParticipantCount;
                 participantCount--;
-                author = ApiUtils.APP_NAME;
+                author = ServerEvent.AUTHOR;
                 serverMessage = String.format("%s left; %d participant(s) remaining", clientEvent.getAuthor(), participantCount);
                 break;
             case Message:
@@ -245,12 +245,12 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
                 break;
             case GenerateNick:
             	serverAction = ServerAction.NickGenerated;
-            	author = ApiUtils.APP_NAME;
+            	author = ServerEvent.AUTHOR;
             	serverMessage = serverUtils.randomNickName();
             	break;
             case Disconnect:
             	serverAction = ServerAction.ClientDisconnected;
-            	author = ApiUtils.APP_NAME;
+            	author = ServerEvent.AUTHOR;
             	serverMessage = String.format("client disconnect: %s", clientThread.getClientId());
             	note = clientThread.getClientId();
                 break;

@@ -19,12 +19,32 @@
     </encoder>
   </appender>
 
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/moo-shell-writer.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- daily rollover -->
+      <fileNamePattern>${LOG_DIR}/moo-shell-writer.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <!-- keep 30 days' worth of history capped at 1GB total size -->
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>1GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+    <!-- %-4relative [%thread] %-5level %logger{35} - %msg %n -->
+      <pattern>%date{yyyy-MM-dd HH:mm:ss} [%level] %logger [%M] - %msg%n</pattern>
+    </encoder>
+  </appender>
+
   <logger name="org.springframework" level="WARN" />
   <logger name="javax.management" level="INFO" />
   <logger name="org.hibernate.validator" level="ERROR" />
+  <logger name="org.jboss.logging" level="WARN" />
 
-  <logger name="pl.zimowski.moo.api.ApiUtils" level="DEBUG" />
-  <logger name="pl.zimowski.moo.client.sockets.App" level="INFO" />
+  <!-- <logger name="pl.zimowski.moo.api.ApiUtils" level="DEBUG" /> -->
+  <!-- <logger name="pl.zimowski.moo.client.sockets.App" level="INFO" /> -->
+  
+  <logger name="pl.zimowski.moo" level="DEBUG" additivity="false">
+  	<appender-ref ref="FILE" />
+  </logger>
 
   <logger name="CHAT_ECHO" level="INFO" additivity="false">
     <appender-ref ref="STDOUT-chat" />

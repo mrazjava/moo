@@ -45,9 +45,11 @@ public class ChatEngineTest {
     @Test
     public void shouldStartAndStop() throws InterruptedException {
 
+    	final int PORT = 8000;
+    	
         assertFalse(engine.isRunning());
-        startEngine(8000);
-        assertTrue(engine.isRunning());
+        startEngine(PORT);
+        assertTrue(String.format("is port %d already in use? (server running)", PORT), engine.isRunning());
         engine.stop();
         assertFalse(engine.isRunning());
     }

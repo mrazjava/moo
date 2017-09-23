@@ -61,11 +61,14 @@ public class ConnectionManager implements ConnectionManagement {
 
         try {
             socket = new Socket(host, port);
+            clientListener.onBeforeServerConnect(host, port);
             executor.submit(new ServerListener(socket, clientListener));
             connected = true;
         }
         catch(IOException e) {
-            log.error("could not connect to server: {}", e.getMessage());
+        	String error = e.getMessage();
+            log.error("could not connect to server: {}", error);
+            clientListener.onConnectToServerError(error);
         }
 
         return connected;
