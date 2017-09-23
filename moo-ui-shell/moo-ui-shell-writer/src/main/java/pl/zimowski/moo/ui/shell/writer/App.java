@@ -105,7 +105,7 @@ public class App implements ApplicationRunner {
     	if(clientHandler.isConnected()) {
     	
 	    	if(nick != null) { // may be null if connected, then exit before signin
-	    		EventHandler.LOG.info("(client) done mooing? bye {}!", nick);
+	    		EventHandler.LOG.info("({}) done mooing? bye {}!", EventHandler.AUTHOR, nick);
 	    		clientHandler.send(new ClientEvent(ClientAction.Signoff).withAuthor(nick));
 	    	}
     	
