@@ -1,5 +1,5 @@
 # Moo Shell
-=====================
+---------------------
 Console (text) based UI for Moo. This is a default Moo UI. Powered by 
 two components: reader and writer.
 

@@ -1,5 +1,5 @@
 # Moo - flexible chat
------------
+---------------------
 Moo is a Java based chat service written as test bed for various concepts. Moo features 
 a modular design, which separates the concepts of a UI, client and a server. As a 
 result, a UI can be developed based on a common chat API, without compile time dependency 
@@ -21,6 +21,7 @@ a compatible runtime client dependency.
  * Console UI
 
 ## Screenshot
+---------------------
 ![Moo Shell UI in Action](/docs/images/moo-ui-shell-tmux.png?raw=true "Shell UI Screenshot")
 Here we have a 4 way tmux session. In the left upper corner we're running moo server. In 
 the right upper we have a moo reader which displays chat activity. In both bottom corners, 
@@ -28,7 +29,7 @@ we're running two instances of a writer, simulating user chat experience. In a t
 case, end user would run one instance of a reader and writer only. 
 
 ## First things first
------------
+---------------------
 Make a local build:
 ```
 cd moo/
@@ -36,7 +37,7 @@ mvn install
 ```
 
 ## Server
------------
+---------------------
 Starting server:
 ```
 cd moo/moo-server-socket/
@@ -47,7 +48,7 @@ Server reports client count stats to JMX console. Start the JMX console with a
 server PID and watch `ClientAnalytics` MBean.
 
 ## Client
------------
+---------------------
 Starting console client requires two terminal sessions. It's probably easiest to 
 split terminal session into two using something like `screen` or `tmux`.
 
@@ -72,8 +73,8 @@ Because writer uses the same client as reader, same customization strategy
 applies. If server is based on websockets, then websocket client should be 
 used. If server is based on JMS, then JMS client should be used, etc.
 
-## Eager to help and join?
------------
+## Care to help or join?
+---------------------
 This could be more fun with alternate UIs. For example, web based Angular UI would 
 be nice. Or Eclipse RCP ui. Or JavaFX. You get the point. If you feel like 
 hacking please issue a PR against `develop` branch and I will happily merge your 

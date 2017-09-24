@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import pl.zimowski.moo.api.ClientHandling;
-import pl.zimowski.moo.api.ClientListener;
 import pl.zimowski.moo.api.ServerAction;
 import pl.zimowski.moo.api.ServerEvent;
+import pl.zimowski.moo.ui.shell.commons.AbstractClientListener;
 
 /**
  * Reports chat events to the UI console.
@@ -18,9 +18,7 @@ import pl.zimowski.moo.api.ServerEvent;
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 @Component
-public class EventReporter implements ClientListener {
-
-	static final Logger LOG = LoggerFactory.getLogger("CHAT_ECHO");
+public class EventReporter extends AbstractClientListener {
 	
 	private static final Logger log = LoggerFactory.getLogger(EventReporter.class);
 	
@@ -29,14 +27,15 @@ public class EventReporter implements ClientListener {
 	 */
 	static final String AUTHOR = "reader";
 	
-	private String nick;
-	
 	@Inject
 	private ClientHandling clientHandler;
 	
-	private String clientId;
 	
-	
+	@Override
+	public String getAuthor() {
+		return AUTHOR;
+	}
+
 	@Override
 	public void onEvent(ServerEvent event) {
 
@@ -60,27 +59,5 @@ public class EventReporter implements ClientListener {
         else {
         	LOG.info("({}): {}", author, event.getMessage());
         }
-	}
-	
-	@Override
-	public void onBeforeServerConnect(String host, int port) {
-		LOG.info("({}) establishing connection to {}:{}", AUTHOR, host, port);
-	}
-
-	@Override
-	public void onConnectToServerError(String error) {
-		LOG.info("(()) could not establish server connection: {}", AUTHOR, error);
-	}
-
-	String getClientId() {
-		return clientId;
-	}
-	
-	String getNick() {
-		return nick;
-	}
-	
-	void setNick(String nick) {
-		this.nick = nick;
 	}
 }

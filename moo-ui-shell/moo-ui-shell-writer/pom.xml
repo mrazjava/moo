@@ -8,4 +8,10 @@
   <artifactId>moo-ui-shell-writer</artifactId>
   <name>Moo UI (shell: writer)</name>
   <description>Text based UI for generating chat events (write only). In text based console, reading and writing events is most convenient when managed via separate apps.</description>
+  <dependencies>
+    <dependency>
+      <groupId>pl.zimowski</groupId>
+      <artifactId>moo-ui-shell-commons</artifactId>
+    </dependency>  
+  </dependencies>
 </project>

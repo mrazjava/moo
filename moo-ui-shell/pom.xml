@@ -52,5 +52,6 @@
   <modules>
   	<module>moo-ui-shell-reader</module>
   	<module>moo-ui-shell-writer</module>
+  	<module>moo-ui-shell-commons</module>
   </modules>
 </project>

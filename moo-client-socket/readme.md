@@ -1,4 +1,5 @@
 # Moo - chat client
-=====================
+---------------------
 
-Console (text based) client for Moo chat service.
+Socket based client runtime. If using socket server implementation, 
+then this runtime is placed as dependency of a UI.
