@@ -20,7 +20,12 @@ a compatible runtime client dependency.
  * Server JMX reporting
  * Console UI
 
+## Screenshot
 ![Moo Shell UI in Action](/docs/images/moo-ui-shell-tmux.png?raw=true "Shell UI Screenshot")
+Here we have a 4 way tmux session. In the left upper corner we're running moo server. In 
+the right upper we have a moo reader which displays chat activity. In both bottom corners, 
+we're running two instances of a writer, simulating user chat experience. In a typical use 
+case, end user would run one instance of a reader and writer only. 
 
 ## First things first
 -----------
