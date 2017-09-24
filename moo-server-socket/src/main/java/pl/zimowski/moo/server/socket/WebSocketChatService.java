@@ -115,6 +115,9 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
                 client.notify(new ServerEvent(ServerAction.ConnectionEstablished)
                         .withClientId(client.getClientId())
                         );
+                client.notify(new ServerEvent(ServerAction.ParticipantCount)
+                		.withMessage(String.format("%d participant(s)", participantCount))
+                		);
             }
             catch(IOException e) {
                 log.error("unexpected problem; aborting!", e);

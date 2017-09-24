@@ -1,14 +1,17 @@
 # Moo - flexible chat
 -----------
-Mooo is a Java based chat service written as test bed for various concepts. Currently the only 
-supported UI is command based.
+Moo is a Java based chat service written as test bed for various concepts. Moo features 
+a modular design, which separates the concepts of a UI, client and a server. As a 
+result, a UI can be developed based on a common chat API, without compile time dependency 
+on neither client or a server. Depending on which server is running, a UI only needs 
+a compatible runtime client dependency. 
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) &nbsp; master: &nbsp; [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=master)](https://travis-ci.org/mrazjava/moo?branch=master) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=master)](https://coveralls.io/github/mrazjava/moo?branch=master) &nbsp; develop: &nbsp; [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=develop)](https://travis-ci.org/mrazjava/moo?branch=develop) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=develop)](https://coveralls.io/github/mrazjava/moo?branch=develop)
 
 ### Stack
 
  * Java 8
- * REST
+ * Web Sockets
  * Spring Boot
 
 ### Features
@@ -16,6 +19,8 @@ supported UI is command based.
  * Distributed Architecture
  * Server JMX reporting
  * Console UI
+
+![Moo Shell UI in Action](/docs/images/moo-ui-shell-tmux.png?raw=true "Shell UI Screenshot" =800x417)
 
 ## First things first
 -----------
