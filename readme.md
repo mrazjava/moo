@@ -39,7 +39,7 @@ mvn install
 -----------
 Starting server:
 ```
-cd moo/moo-server/
+cd moo/moo-server-socket/
 mvn spring-boot:run
 ```
 Server starts on port `8000`. Port can be changed via `application.properties`. 
@@ -48,15 +48,35 @@ server PID and watch `ClientAnalytics` MBean.
 
 ## Client
 -----------
-Starting console client:
+Starting console client requires two terminal sessions. It's probably easiest to 
+split terminal session into two using something like `screen` or `tmux`.
+
+First, start UI reader which will allow to view public chats:
 ```
-cd moo/moo-client/
+cd moo/moo-ui-shell/moo-ui-shell-reader
 mvn spring-boot:run
 ```
-Client will attempt to connect to server at `localhost` on port `8000`. 
-This can be re-configured via `application.properties`. Client aborts 
-immediately if server connection cannot be established.
+Reader will attempt to connect to server at `localhost` on port `8000`. 
+This can be re-configured via `application.properties` of `moo-client-*` that 
+is used at runtime, or more conveniently, by overriding these spring managed 
+props as command line args. Client aborts immediately if server connection cannot 
+be established.
 
-## Chatting
+To be able to actually send chat messages, it is necessary to have a running 
+instance of a writer:
+```
+cd moo/moo-ui-shell/moo-ui-shell-writer
+mvn spring-boot:run
+```
+Because writer uses the same client as reader, same customization strategy 
+applies. If server is based on websockets, then websocket client should be 
+used. If server is based on JMS, then JMS client should be used, etc.
+
+## Eager to help and join?
 -----------
-Start yet another client and have fun! Moo...
+This could be more fun with alternate UIs. For example, web based Angular UI would 
+be nice. Or Eclipse RCP ui. Or JavaFX. You get the point. If you feel like 
+hacking please issue a PR and I will happily merge your improvements. Other areas 
+of improvemnts are obviously server/api/feature related.
+
+Enjoy!
