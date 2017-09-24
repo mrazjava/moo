@@ -20,7 +20,7 @@ a compatible runtime client dependency.
  * Server JMX reporting
  * Console UI
 
-![Moo Shell UI in Action](/docs/images/moo-ui-shell-tmux.png?raw=true "Shell UI Screenshot" =800x417)
+![Moo Shell UI in Action](/docs/images/moo-ui-shell-tmux.png?raw=true "Shell UI Screenshot")
 
 ## First things first
 -----------
