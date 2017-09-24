@@ -76,7 +76,7 @@ used. If server is based on JMS, then JMS client should be used, etc.
 -----------
 This could be more fun with alternate UIs. For example, web based Angular UI would 
 be nice. Or Eclipse RCP ui. Or JavaFX. You get the point. If you feel like 
-hacking please issue a PR and I will happily merge your improvements. Other areas 
-of improvemnts are obviously server/api/feature related.
+hacking please issue a PR against `develop` branch and I will happily merge your 
+improvements. Other areas of improvemnts are obviously server/api/feature related.
 
-Enjoy!
+*Enjoy!*
