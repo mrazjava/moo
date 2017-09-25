@@ -28,9 +28,9 @@ import pl.zimowski.moo.server.socket.WebSocketChatService;
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
-public class ChatEngineTest {
+public class WebSocketChatServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ChatEngineTest.class);
+    private static final Logger log = LoggerFactory.getLogger(WebSocketChatServiceTest.class);
 
     @Rule
     public MockitoRule mockito = MockitoJUnit.rule();
