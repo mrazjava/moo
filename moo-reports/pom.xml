@@ -42,6 +42,10 @@
   	</dependency>
   	<dependency>
   		<groupId>pl.zimowski</groupId>
+  		<artifactId>moo-ui-shell-commons</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>pl.zimowski</groupId>
   		<artifactId>moo-ui-shell-reader</artifactId>
   	</dependency>
   	<dependency>

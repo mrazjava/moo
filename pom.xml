@@ -74,18 +74,8 @@
 				<configuration>
 					<skip>${maven.test.skip}</skip>
 					<append>true</append>
-					<!-- <destFile>${project.basedir}/../moo-jacoco-reports/target/jacoco.exec</destFile> -->
 				</configuration>
 			</execution>
-			<!-- 
-			<execution>
-				<id>report-aggregate</id>
-				<phase>verify</phase>
-				<goals>
-					<goal>report-aggregate</goal>
-				</goals>
-			</execution>
-			 -->
 		</executions>
 	</plugin>
 
@@ -93,6 +83,9 @@
 	    <groupId>org.eluder.coveralls</groupId>
 	    <artifactId>coveralls-maven-plugin</artifactId>
 	    <version>4.3.0</version>
+	    <configuration>
+	    	<jacocoReports>moo-reports/target/site/jacoco-aggregate/jacoco.xml</jacocoReports>
+	    </configuration>
 	</plugin>
 
     </plugins>
