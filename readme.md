@@ -94,7 +94,7 @@ used. If server is based on JMS, then JMS client should be used, etc.
 ## Code Coverage
 ---------------------
 Playing around with Coveralls Github plugin, found it interesting but unstable. The 
-readme batch is really nice, but it is not reliably updated when coverage changes 
+readme badge is really nice, but it is not reliably updated when coverage changes 
 and there are a lot of complaints about it posted on the web. Don't trust the badge. 
 The sure way to verify code coverage is to invoke suite locally:
 ```
