@@ -77,8 +77,6 @@ public class EventHandlerTest {
     public void shouldHandleServerExit() {
     	
     	ServerEvent event = new ServerEvent(ServerAction.ServerExit);
-
-    	Mockito.when(clientHandler.isConnected()).thenReturn(connected);
     	
     	Mockito.doAnswer(new Answer<Boolean>() {
 

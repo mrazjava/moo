@@ -1,5 +1,8 @@
 package pl.zimowski.moo.ui.shell.commons;
 
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,16 +15,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class ThreadDelay implements ExecutionThrottling {
 
-    private @Value("${shell.commons.throttle}") Long delay;
+    @Inject
+    private Logger log;
+    
+    @Value("${shell.commons.throttle}") Long delay;
     
     
 	@Override
     public void throttle() {
+	    log.warn("sleeping {}ms ... zzzzzzzz", delay);
         delay(this.delay);
     }
 
     @Override
 	public void throttle(long delay) {
+        log.warn("sleeping {}ms ... zzzzzzzz", delay);
 	    delay(delay);
 	}
 
