@@ -105,7 +105,6 @@ Then check `jacoco` reports:
 cd moo/moo-reports/target/site/jacoco-aggregate/
 ```
 and open `index.html` in your favorite browser.
-```
 
 ## Care to help or join?
 ---------------------
