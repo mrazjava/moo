@@ -7,19 +7,17 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Scope;
 
 import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ClientHandling;
+import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
+import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
 
 /**
  * Text based UI client of a Moo chat service with write only 
@@ -41,6 +39,13 @@ public class App implements ApplicationRunner {
     
     @Inject
     private EventHandler eventReporter;
+    
+    @Inject
+    private ShutdownAgent shutdownAgent;
+    
+    @Inject
+    private ExecutionThrottling throttler;
+    
 
     /**
      * Application entry point.
@@ -63,7 +68,7 @@ public class App implements ApplicationRunner {
 
             // allow connection thru while console buffers the output
             while(eventReporter.getClientId() == null) {
-            	Thread.sleep(50);
+            	throttler.throttle();
             }
 
             EventHandler.LOG.info("({}) type nickname or just hit enter; ctrl-c to exit", EventHandler.AUTHOR);
@@ -81,7 +86,7 @@ public class App implements ApplicationRunner {
             // wait until server responds with a nick; event reporter listens 
             // for nick confirmation and sets nick accordingly
             while(eventReporter.getNick() == null) {
-            	Thread.sleep(50);
+                throttler.throttle();
             }
             
             signinEvent.setAuthor(eventReporter.getNick());
@@ -90,11 +95,18 @@ public class App implements ApplicationRunner {
             while(scanner.hasNextLine()) {
 
                 String input = scanner.nextLine();
+                
+                if(input.equals("moo:exit")) {
+                	break; // in the future we should expand moo: into a managable predicates
+                }
+                
                 ClientEvent event = new ClientEvent(ClientAction.Message, eventReporter.getNick(), input);
                 log.debug("sending: {}", event);
                 clientHandler.send(event);
             }
         }
+        
+        shutdownAgent.initiateShutdown(0);
     }
 
     @PreDestroy
@@ -111,12 +123,5 @@ public class App implements ApplicationRunner {
     	
             clientHandler.send(new ClientEvent(ClientAction.Disconnect));
         }
-    }
-
-    @Bean
-    @Scope("prototype")
-    static Logger logger(InjectionPoint injectionPoint){
-        return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass());
-
     }
 }

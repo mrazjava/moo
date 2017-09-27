@@ -53,6 +53,10 @@
       <artifactId>moo-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>pl.zimowski</groupId>
+      <artifactId>moo-commons</artifactId>
+    </dependency>  
+    <dependency>
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
     </dependency>

@@ -231,32 +231,37 @@
       <dependency>
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-api</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>${moo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-commons</artifactId>
+        <version>${moo.version}</version>
       </dependency>
       <dependency>
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-client-socket</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>${moo.version}</version>
       </dependency>
       <dependency>
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-server-socket</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>${moo.version}</version>
       </dependency>
       <dependency>
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-ui-shell-reader</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${moo-ui-shell.version}</version>
       </dependency>
       <dependency>
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-ui-shell-writer</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${moo-ui-shell.version}</version>
       </dependency>
       <dependency>
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-ui-shell-commons</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${moo-ui-shell.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -377,8 +382,18 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
         <version>${spring.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.version}</version>
+      </dependency>      
       <dependency>
           <groupId>joda-time</groupId>
           <artifactId>joda-time</artifactId>
@@ -389,9 +404,12 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <moo.version>1.2.0-SNAPSHOT</moo.version>
+    <moo-ui-shell.version>1.0.0-SNAPSHOT</moo-ui-shell.version>
     <weld.version>2.4.4.Final</weld.version>
     <deltaspike.version>1.7.2</deltaspike.version>
-    <spring.version>1.5.6.RELEASE</spring.version>
+    <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
+    <spring.version>4.3.11.RELEASE</spring.version>
     <cxf.version>3.1.12</cxf.version>
   </properties>
   <inceptionYear>2017</inceptionYear>
@@ -399,6 +417,7 @@
   <description>Root project for Moo chat service</description>
   <modules>
     <module>moo-api</module>
+    <module>moo-commons</module>
     <module>moo-server-socket</module>
     <module>moo-client-socket</module>
     <module>moo-ui-shell</module>

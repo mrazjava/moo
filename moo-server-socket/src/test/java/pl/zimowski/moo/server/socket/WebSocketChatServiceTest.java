@@ -19,7 +19,7 @@ import org.mockito.junit.MockitoRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.zimowski.moo.api.MockLogger;
+import pl.zimowski.moo.commons.MockLogger;
 import pl.zimowski.moo.server.socket.WebSocketChatService;
 
 /**
@@ -45,7 +45,7 @@ public class WebSocketChatServiceTest {
     @Test
     public void shouldStartAndStop() throws InterruptedException {
 
-    	final int PORT = 8000;
+    	final int PORT = 8001;
     	
         assertFalse(engine.isRunning());
         startEngine(PORT);

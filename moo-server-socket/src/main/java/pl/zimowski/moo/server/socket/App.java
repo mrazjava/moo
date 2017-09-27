@@ -3,14 +3,11 @@ package pl.zimowski.moo.server.socket;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ComponentScan;
 
 import pl.zimowski.moo.server.socket.jmx.JmxReportingSupport;
 
@@ -22,6 +19,7 @@ import pl.zimowski.moo.server.socket.jmx.JmxReportingSupport;
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
+@ComponentScan(basePackages = "pl.zimowski.moo")
 @SpringBootApplication
 public class App implements ApplicationRunner {
 
@@ -49,18 +47,5 @@ public class App implements ApplicationRunner {
         server.start();
 
         log.info("server terminated");
-    }
-
-    /**
-     * Produces injectable logger.
-     *
-     * @param injectionPoint where log member is defined
-     * @return log instance bound to injection point
-     */
-    @Bean
-    @Scope("prototype")
-    static Logger logger(InjectionPoint injectionPoint){
-        return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass());
-
     }
 }

@@ -3,20 +3,16 @@ package pl.zimowski.moo.ui.shell.reader;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Scope;
 
 import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ClientHandling;
+import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
 
 /**
  * Text based UI client of a Moo chat service with read only 
@@ -34,6 +30,9 @@ public class App implements ApplicationRunner {
     
     @Inject
     private EventReporter eventReporter;
+    
+    @Inject
+    private ExecutionThrottling throttler;
 
 
     /**
@@ -55,7 +54,7 @@ public class App implements ApplicationRunner {
 
         // allow connection thru while console buffers the output
         while(eventReporter.getClientId() == null) {
-        	Thread.sleep(50);
+            throttler.throttle();
         }
     }
 
@@ -65,12 +64,5 @@ public class App implements ApplicationRunner {
     	if(clientHandler.isConnected()) {    	
             clientHandler.send(new ClientEvent(ClientAction.Disconnect));
         }
-    }
-
-    @Bean
-    @Scope("prototype")
-    static Logger logger(InjectionPoint injectionPoint){
-        return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass());
-
     }
 }

@@ -1,4 +1,4 @@
-package pl.zimowski.moo.api;
+package pl.zimowski.moo.commons;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
