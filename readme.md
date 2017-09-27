@@ -50,7 +50,24 @@ server PID and watch `ClientAnalytics` MBean.
 
 ## Client
 ---------------------
-Starting console client requires two terminal sessions. It's probably easiest to 
+Socket server, requires compatible socket client. Make sure that the UI of your 
+choice, has enabled relevant maven dependency. For example, command line UI 
+would need to have commented out the following in `moo-ui-shell/pom.xml`:
+```
+<!--
+only one moo-client implementation can be enabled otherwise spring 
+IOC will not resolve injection points due to multiple implementations
+-->
+<dependency>
+  <groupId>pl.zimowski</groupId>
+  <artifactId>moo-client-socket</artifactId>
+  <scope>runtime</scope>
+</dependency>
+```
+
+## UI
+---------------------
+Starting console UI requires two terminal sessions. It's probably easiest to 
 split terminal session into two using something like `screen` or `tmux`.
 
 First, start UI reader which will allow to view public chats:
@@ -73,6 +90,22 @@ mvn spring-boot:run
 Because writer uses the same client as reader, same customization strategy 
 applies. If server is based on websockets, then websocket client should be 
 used. If server is based on JMS, then JMS client should be used, etc.
+
+## Code Coverage
+---------------------
+Playing around with Coveralls Github plugin, found it interesting but unstable. The 
+readme batch is really nice, but it is not reliably updated when coverage changes 
+and there are a lot of complaints about it posted on the web. Don't trust the badge. 
+The sure way to verify code coverage is to invoke suite locally:
+```
+mvn clean verify
+```
+Then check `jacoco` reports:
+```
+cd moo/moo-reports/target/site/jacoco-aggregate/
+```
+and open `index.html` in your favorite browser.
+```
 
 ## Care to help or join?
 ---------------------

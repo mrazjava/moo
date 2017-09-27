@@ -45,7 +45,11 @@
     <dependency>
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-commons</artifactId>
-    </dependency>  
+    </dependency>
+    <!--
+    	only one moo-client implementation can be enabled otherwise spring 
+    	IOC will not resolve injection points due to multiple implementations
+    -->
     <dependency>
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-client-socket</artifactId>
