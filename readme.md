@@ -80,10 +80,9 @@ cd moo/moo-ui-shell/moo-ui-shell-reader
 mvn spring-boot:run
 ```
 Reader will attempt to connect to server at `localhost` on port `8000`. 
-This can be re-configured via `application.properties` of `moo-client-*` that 
-is used at runtime, or more conveniently, by overriding these spring managed 
-props as command line args. Client aborts immediately if server connection cannot 
-be established.
+This can be re-configured via `application.properties`, or more conveniently, 
+by overriding these spring managed props as command line args. Client aborts 
+immediately if server connection cannot be established.
 
 To be able to actually send chat messages, it is necessary to have a running 
 instance of a writer:
