@@ -24,7 +24,7 @@ a compatible runtime client dependency.
 
 ## Screenshot
 ---------------------
-![Moo Shell UI in Action](/docs/images/moo-ui-shell-tmux.png?raw=true "Shell UI Screenshot")
+![Shell UI Screenshot](/docs/images/moo-ui-shell-tmux.png?raw=true "Moo Shell UI in Action")
 
 Here we have a 4 way tmux session. In the left upper corner we're running moo server. In 
 the right upper we have a moo reader which displays chat activity. In both bottom corners, 
@@ -49,6 +49,8 @@ mvn spring-boot:run
 Server starts on port `8000`. Port can be changed via `application.properties`. 
 Server reports client count stats to JMX console. Start the JMX console with a 
 server PID and watch `ClientAnalytics` MBean.
+
+![Moo JMX Screenshot](docs/images/moo-jmx-console.png?raw=true "Moo via JMX")
 
 ## Client
 ---------------------
