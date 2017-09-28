@@ -95,16 +95,18 @@ used. If server is based on JMS, then JMS client should be used, etc.
 
 ## Code Coverage
 ---------------------
-Playing around with Coveralls Github plugin, found it interesting but unstable. The 
-readme badge is really nice, but it is not reliably updated when coverage changes 
-and there are a lot of complaints about it posted on the web. Don't trust the badge. 
-The sure way to verify code coverage is to invoke suite locally:
+Playing around with [Coveralls](https://coveralls.io/github/mrazjava/moo) Github plugin, 
+found it interesting but imperfect. The readme badge is really nice, but it is not 
+reliably updated when coverage changes and there are a lot of complaints about it posted 
+on the web. For me, sometimes it updates instantly, other times takes 24 hours. Don't 
+trust the badge. The sure way to verify code coverage is to invoke suite locally:
 ```
+cd moo/
 mvn clean verify
 ```
 Then check `jacoco` reports:
 ```
-cd moo/moo-reports/target/site/jacoco-aggregate/
+cd moo-reports/target/site/jacoco-aggregate/
 ```
 and open `index.html` in your favorite browser.
 
