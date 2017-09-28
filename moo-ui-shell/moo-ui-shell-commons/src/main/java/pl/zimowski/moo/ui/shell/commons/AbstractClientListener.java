@@ -34,7 +34,7 @@ public abstract class AbstractClientListener implements ClientListener {
 
 	@Override
 	public void onConnectToServerError(String error) {
-		LOG.info("(()) could not establish server connection: {}", getAuthor(), error);
+		LOG.info("({}) could not establish server connection: {}", getAuthor(), error);
 	}
 
 	public String getClientId() {
