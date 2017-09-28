@@ -114,9 +114,11 @@ and open `index.html` in your favorite browser.
 
 ## Care to help or join?
 ---------------------
-This could be more fun with alternate UIs. For example, web based Angular UI would 
-be nice. Or Eclipse RCP ui. Or JavaFX. You get the point. If you feel like 
-hacking please issue a PR against `develop` branch and I will happily merge your 
-improvements. Other areas of improvemnts are obviously server/api/feature related.
+This could be more fun with graphical UIs. For example, web based on Angular. Or Eclipse 
+RCP. Or JavaFX. You get the point. I just don't have that much time, besides my 
+`moo` itch was scratched with what you see here. I may come back to this from time to 
+time to experiment more or of `moo` hack will itch me again :-) If you feel like hacking on, 
+please issue a PR against `develop` branch and I will happily merge your improvements. Other 
+areas of improvemnts are obviously server/api/feature related.
 
 *Enjoy!*
