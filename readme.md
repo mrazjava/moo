@@ -23,7 +23,8 @@ a compatible runtime client dependency.
 
 ## Screenshot
 ---------------------
-<img src="/docs/images/moo-ui-shell-tmux.png?raw=true" width=128 alt="Moo Shell UI in Action" title="Shell UI Screenshot"/>
+
+#### ![Moo Shell UI in Action](/docs/images/moo-ui-shell-tmux.png?raw=true&s=128 "Shell UI Screenshot")
 
 Here we have a 4 way tmux session. In the left upper corner we're running moo server. In 
 the right upper we have a moo reader which displays chat activity. In both bottom corners, 
