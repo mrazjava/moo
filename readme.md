@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=develop)](https://travis-ci.org/mrazjava/moo?branch=develop) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=develop)](https://coveralls.io/github/mrazjava/moo?branch=develop)
 
 # Moo - a simple, modular, extensible chat platform
-![Moo Logo](moo.png?raw=true)
+![Moo Logo](moo.png?s=128)
 ---------------------
 Moo is a Java based chat service written as test bed for various concepts. Moo features 
 a modular design, which separates the concepts of a UI, client and a server. As a 
@@ -23,7 +23,7 @@ a compatible runtime client dependency.
 
 ## Screenshot
 ---------------------
-![Moo Shell UI in Action](/docs/images/moo-ui-shell-tmux.png?s=128 "Shell UI Screenshot")
+![Moo Shell UI in Action](/docs/images/moo-ui-shell-tmux.png?raw=true "Shell UI Screenshot")
 
 Here we have a 4 way tmux session. In the left upper corner we're running moo server. In 
 the right upper we have a moo reader which displays chat activity. In both bottom corners, 
