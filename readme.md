@@ -1,7 +1,8 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://travis-ci.org/mrazjava/moo.svg?branch=develop)](https://travis-ci.org/mrazjava/moo?branch=develop) [![Coverage Status](https://coveralls.io/repos/github/mrazjava/moo/badge.svg?branch=develop)](https://coveralls.io/github/mrazjava/moo?branch=develop)
 
 # Moo - a simple, modular, extensible chat platform
-.<p align="center">... <img src="moo.png" width=256 alt="Moo Logo"/> ...</p>.
+<p align="center">......... <img src="moo.png" width=256 alt="Moo Logo"/> .........</p>&nbsp;
+
 ---------------------
 Moo is a Java based chat service written as test bed for various concepts. Moo features 
 a modular design, which separates the concepts of a UI, client and a server. As a 
