@@ -13,16 +13,6 @@
   
   <dependencies>
     <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-integration</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>  
-    <dependency>
       <groupId>javax.enterprise</groupId>
       <artifactId>cdi-api</artifactId>
     </dependency>
@@ -46,10 +36,6 @@
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-commons</artifactId>
     </dependency>
-    <!--
-    	only one moo-client implementation can be enabled otherwise spring 
-    	IOC will not resolve injection points due to multiple implementations
-    -->
     <dependency>
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-client-socket</artifactId>
@@ -58,8 +44,6 @@
     <dependency>
     	<groupId>com.github.stefanbirkner</groupId>
     	<artifactId>system-rules</artifactId>
-    	<version>1.16.1</version>
-    	<scope>test</scope>
     </dependency>
   </dependencies>
   

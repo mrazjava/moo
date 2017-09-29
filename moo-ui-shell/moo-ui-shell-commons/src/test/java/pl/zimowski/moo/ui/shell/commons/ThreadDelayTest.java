@@ -7,7 +7,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import pl.zimowski.moo.commons.MockLogger;
+import pl.zimowski.moo.test.utils.MockLogger;
 
 /**
  * @since 1.2.0

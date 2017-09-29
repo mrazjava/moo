@@ -12,6 +12,10 @@
     <dependency>
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-ui-shell-commons</artifactId>
-    </dependency>  
+    </dependency>
+    <dependency>
+    	<groupId>pl.zimowski</groupId>
+    	<artifactId>moo-test-utils</artifactId>
+    </dependency>
   </dependencies>
 </project>

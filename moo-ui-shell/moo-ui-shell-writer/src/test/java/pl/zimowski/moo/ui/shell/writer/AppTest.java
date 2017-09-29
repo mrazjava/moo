@@ -20,9 +20,8 @@ import org.mockito.junit.MockitoRule;
 
 import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
-import pl.zimowski.moo.api.ClientHandling;
-import pl.zimowski.moo.api.ClientListener;
-import pl.zimowski.moo.commons.MockLogger;
+import pl.zimowski.moo.test.utils.EventAwareClientHandlerMock;
+import pl.zimowski.moo.test.utils.MockLogger;
 import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
 import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
 
@@ -47,7 +46,7 @@ public class AppTest {
     private MockLogger mockLog;
 
     @Spy
-    private FakeClientHandler clientHandler;
+    private EventAwareClientHandlerMock clientHandler;
     
     @Mock
     private EventHandler eventHandler;
@@ -96,6 +95,9 @@ public class AppTest {
 	 */
 	private List<ClientEvent> produceChatAndExit(String nick) throws Exception {
 	    
+	    List<ClientEvent> eventList = new ArrayList<>();
+	    
+	    clientHandler.setEventList(eventList);
         when(eventHandler.getClientId()).thenReturn("foo-bar");
         when(eventHandler.getNick()).thenReturn("Rocky");
         
@@ -104,17 +106,20 @@ public class AppTest {
         writer.run(null);
         writer.shutdown();
         
-        return clientHandler.clientEvents;
+        return eventList;
 	}
 	
 	@Test
 	public void shouldNotConnect() throws Exception {
 		
+	    List<ClientEvent> eventList = new ArrayList<>();
+	    
+	    clientHandler.setEventList(eventList);
 		when(clientHandler.connect(eventHandler)).thenReturn(false);
 		
 		writer.run(null);
-		List<ClientEvent> events = clientHandler.clientEvents;
-		assertTrue(events.isEmpty());
+
+		assertTrue(eventList.isEmpty());
 	}
 	
 	@Test(expected = IllegalStateException.class)
@@ -134,35 +139,5 @@ public class AppTest {
         systemInMock.provideLines(" ", "Howdy", "moo:exit");
         
         writer.run(null);
-	}
-	
-	/**
-	 * Handy mock useful for spying and verifying generated events.
-	 * 
-	 * @since 1.2.0
-	 * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
-	 */
-	class FakeClientHandler implements ClientHandling {
-		
-		List<ClientEvent> clientEvents = new ArrayList<>();
-
-		@Override
-		public boolean connect(ClientListener listener) {
-			return true;
-		}
-
-		@Override
-		public boolean isConnected() {
-			return true;
-		}
-
-		@Override
-		public void disconnect() {
-		}
-
-		@Override
-		public void send(ClientEvent event) {
-			clientEvents.add(event);
-		}
 	}
 }

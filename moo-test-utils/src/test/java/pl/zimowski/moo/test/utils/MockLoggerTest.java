@@ -1,4 +1,4 @@
-package pl.zimowski.moo.commons;
+package pl.zimowski.moo.test.utils;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
@@ -18,7 +18,7 @@ import org.mockito.junit.MockitoRule;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
-import pl.zimowski.moo.commons.MockLogger;
+import pl.zimowski.moo.test.utils.MockLogger;
 
 /**
  * Ensures that {@link MockLogger} is correctly logging messages given various

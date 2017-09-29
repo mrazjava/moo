@@ -224,6 +224,16 @@
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
       </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-integration</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <dependencyManagement>
@@ -232,6 +242,12 @@
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-api</artifactId>
         <version>${moo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-test-utils</artifactId>
+        <version>${moo.version}</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>pl.zimowski</groupId>
@@ -298,6 +314,12 @@
         <artifactId>commons-io</artifactId>
         <version>2.5</version>
       </dependency>
+    <dependency>
+    	<groupId>com.github.stefanbirkner</groupId>
+    	<artifactId>system-rules</artifactId>
+    	<version>1.16.1</version>
+    	<scope>test</scope>
+    </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
@@ -417,6 +439,7 @@
   <description>Root project for Moo chat service</description>
   <modules>
     <module>moo-api</module>
+    <module>moo-test-utils</module>
     <module>moo-commons</module>
     <module>moo-server-socket</module>
     <module>moo-client-socket</module>

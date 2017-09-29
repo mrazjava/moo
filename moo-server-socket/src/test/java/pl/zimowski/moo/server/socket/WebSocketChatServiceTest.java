@@ -19,8 +19,7 @@ import org.mockito.junit.MockitoRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.zimowski.moo.commons.MockLogger;
-import pl.zimowski.moo.server.socket.WebSocketChatService;
+import pl.zimowski.moo.test.utils.MockLogger;
 
 /**
  * Ensures that {@link WebSocketChatService} operates as expected.

@@ -8,4 +8,10 @@
   <artifactId>moo-ui-shell-commons</artifactId>
   <name>Moo UI (shell: commons)</name>
   <description>Common components for shell UI reusable by reader and writer.</description>
+  <dependencies>
+    <dependency>
+    	<groupId>pl.zimowski</groupId>
+    	<artifactId>moo-test-utils</artifactId>
+    </dependency>  
+  </dependencies>
 </project>

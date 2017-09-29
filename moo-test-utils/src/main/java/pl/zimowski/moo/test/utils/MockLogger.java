@@ -1,4 +1,4 @@
-package pl.zimowski.moo.commons;
+package pl.zimowski.moo.test.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ import org.slf4j.event.Level;
 public class MockLogger implements Logger {
 
     private static final Logger log = LoggerFactory.getLogger(MockLogger.class);
-
+    
     /**
      * Disables {@link Level#TRACE} if set to {@code true}. Other levels may
      * or may not be silent depending on their own switch.
