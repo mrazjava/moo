@@ -42,7 +42,11 @@
     <dependency>
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-api</artifactId>
-    </dependency>  
+    </dependency>
+    <dependency>
+      <groupId>pl.zimowski</groupId>
+      <artifactId>moo-test-utils</artifactId>
+    </dependency>
     <dependency>
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-commons</artifactId>

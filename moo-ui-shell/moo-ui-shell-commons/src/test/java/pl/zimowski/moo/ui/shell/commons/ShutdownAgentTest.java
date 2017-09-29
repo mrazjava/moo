@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
 
 import pl.zimowski.moo.test.utils.MooTest;
+import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
 
 /**
  * Ensures that {@link ShutdownAgent} operates as expected.

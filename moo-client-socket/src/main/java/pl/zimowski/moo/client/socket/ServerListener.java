@@ -25,11 +25,17 @@ public class ServerListener extends Thread {
     private Socket socket;
 
     private ClientListener clientListener;
+    
+    private boolean hardExit = true;
 
 
     public ServerListener(Socket socket, ClientListener clientListener) {
         this.socket = socket;
         this.clientListener = clientListener;
+    }
+
+    void setHardExit(boolean hardExit) {
+        this.hardExit = hardExit;
     }
 
     @Override
@@ -49,7 +55,9 @@ public class ServerListener extends Thread {
             log.error("unexpected connection error: {}; aborting!", e.getMessage());
         }
 
-        System.exit(MAX_PRIORITY);
+        if(hardExit) {
+            System.exit(MAX_PRIORITY);
+        }
     }
     
     public boolean isListening() {
