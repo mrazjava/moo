@@ -1,22 +1,17 @@
 package pl.zimowski.moo.ui.shell.commons;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
 import pl.zimowski.moo.test.utils.MockLogger;
+import pl.zimowski.moo.test.utils.MooTest;
 
 /**
  * @since 1.2.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
  */
-public class ThreadDelayTest {
-    
-    @Rule
-    public MockitoRule mockito = MockitoJUnit.rule();
+public class ThreadDelayTest extends MooTest {
 
     @InjectMocks
     private ThreadDelay threadDelay;

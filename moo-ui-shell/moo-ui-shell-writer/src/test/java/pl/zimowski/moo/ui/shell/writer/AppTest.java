@@ -15,13 +15,12 @@ import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
 import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.test.utils.EventAwareClientHandlerMock;
 import pl.zimowski.moo.test.utils.MockLogger;
+import pl.zimowski.moo.test.utils.MooTest;
 import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
 import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
 
@@ -31,10 +30,7 @@ import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
  * @since 1.2.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
-public class AppTest {
-
-    @Rule
-    public MockitoRule mockito = MockitoJUnit.rule();
+public class AppTest extends MooTest {
     
     @Rule
     public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();

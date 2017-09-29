@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * Spring managed generic server config. Getters intentionally omitted to
- * encourage direct value injection.
+ * Spring managed generic server config. Getters intentionally limited in 
+ * scope to encourage direct value injection.
  *
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
@@ -40,8 +40,16 @@ public class Settings {
         this.port = port;
     }
 
+    Integer getPort() {
+        return port;
+    }
+    
     public void setEvictionTimeout(Integer evictionTimeout) {
         this.evictionTimeout = evictionTimeout;
+    }
+    
+    Integer getEvictionTimeout() {
+        return evictionTimeout;
     }
 
     /**
@@ -56,6 +64,10 @@ public class Settings {
     public void setNickAdjectives(String[] nickAdjectives) {
         this.nickAdjectives = nickAdjectives;
     }
+    
+    String[] getNickAdjectives() {
+        return nickAdjectives;
+    }
 
     /**
      * Set of nouns available to build anonymous nick name. Since nick
@@ -68,5 +80,9 @@ public class Settings {
      */
     public void setNickNouns(String[] nickNouns) {
         this.nickNouns = nickNouns;
+    }
+    
+    String[] getNickNouns() {
+        return nickNouns;
     }
 }

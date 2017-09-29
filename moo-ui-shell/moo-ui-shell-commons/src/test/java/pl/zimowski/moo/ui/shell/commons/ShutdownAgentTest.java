@@ -2,15 +2,12 @@ package pl.zimowski.moo.ui.shell.commons;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.springframework.context.ApplicationContext;
 
-import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
+import pl.zimowski.moo.test.utils.MooTest;
 
 /**
  * Ensures that {@link ShutdownAgent} operates as expected.
@@ -18,10 +15,7 @@ import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
  * @since 1.2.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
-public class ShutdownAgentTest {
-
-    @Rule
-    public MockitoRule mockito = MockitoJUnit.rule();
+public class ShutdownAgentTest extends MooTest {
 
 	@InjectMocks
 	private ShutdownAgent agent;

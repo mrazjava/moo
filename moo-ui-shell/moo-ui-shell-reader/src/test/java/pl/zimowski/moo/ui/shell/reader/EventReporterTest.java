@@ -4,19 +4,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
 
 import pl.zimowski.moo.api.ClientHandling;
 import pl.zimowski.moo.api.ServerAction;
 import pl.zimowski.moo.api.ServerEvent;
+import pl.zimowski.moo.test.utils.MooTest;
 
 /**
  * Ensures that {@link EventReporter} operates as expected.
@@ -24,10 +22,7 @@ import pl.zimowski.moo.api.ServerEvent;
  * @since 1.2.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
  */
-public class EventReporterTest {
-
-    @Rule
-    public MockitoRule mockito = MockitoJUnit.rule();
+public class EventReporterTest extends MooTest {
     
     @InjectMocks
     private EventReporter reporter;
