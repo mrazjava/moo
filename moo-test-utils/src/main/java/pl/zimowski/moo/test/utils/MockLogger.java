@@ -195,7 +195,9 @@ public class MockLogger implements Logger {
 
     @Override
     public void debug(String format, Object arg) {
-        if(!isDebugSilent()) log.debug(format, arg);
+        if(!isDebugSilent()) {
+            log.debug(format, arg);
+        }
     }
 
     @Override

@@ -1,11 +1,17 @@
 package pl.zimowski.moo.test.utils;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsMapContaining.hasEntry;
-import static org.junit.Assert.assertNull;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.collection.IsMapContaining.hasEntry;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-import java.util.HashMap;
+import static pl.zimowski.moo.test.utils.DummyLogWorker.THE_QUICK;
+import static pl.zimowski.moo.test.utils.DummyLogWorker.BROWN_FOX;
+import static pl.zimowski.moo.test.utils.DummyLogWorker.JUMPS_OVER;
+import static pl.zimowski.moo.test.utils.DummyLogWorker.THE_LAZY;
+import static pl.zimowski.moo.test.utils.DummyLogWorker.DOG;
+
 import java.util.Map;
 
 import org.junit.After;
@@ -15,10 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.slf4j.Logger;
 import org.slf4j.event.Level;
-
-import pl.zimowski.moo.test.utils.MockLogger;
 
 /**
  * Ensures that {@link MockLogger} is correctly logging messages given various
@@ -33,28 +36,19 @@ public class MockLoggerTest {
     public MockitoRule mockito = MockitoJUnit.rule();
 
     @InjectMocks
-    private DummyBean dummyBean;
+    private DummyLogWorker logWorker;
 
     @Spy
     private TestLogger testLogger;
 
-    private static final String THE_QUICK = "the quick";
-
-    private static final String BROWN_FOX = "brown fox";
-
-    private static final String JUMPS_OVER = "jumps over";
-
-    private static final String THE_LAZY = "the lazy";
-
-    private static final String DOG = "dog";
-
-    // logged messages are stored so that assertions can be made
-    private static Map<Level, String> results = new HashMap<>();
-
 
     @After
     public void initResultsMap() {
-        results.clear();
+        getResults().clear();
+    }
+    
+    private Map<Level, String> getResults() {
+        return testLogger.getResults();
     }
 
     @Test
@@ -62,14 +56,14 @@ public class MockLoggerTest {
 
         MockLogger.resetSilence();
 
-        dummyBean.logIt();
+        logWorker.logIt();
 
-        assertThat(results.values(), hasSize(5));
-        assertThat(results, hasEntry(Level.TRACE, THE_QUICK));
-        assertThat(results, hasEntry(Level.DEBUG, BROWN_FOX));
-        assertThat(results, hasEntry(Level.INFO, JUMPS_OVER));
-        assertThat(results, hasEntry(Level.WARN, THE_LAZY));
-        assertThat(results, hasEntry(Level.ERROR, DOG));
+        assertThat(getResults().values(), hasSize(5));
+        assertThat(getResults(), hasEntry(Level.TRACE, THE_QUICK));
+        assertThat(getResults(), hasEntry(Level.DEBUG, BROWN_FOX));
+        assertThat(getResults(), hasEntry(Level.INFO, JUMPS_OVER));
+        assertThat(getResults(), hasEntry(Level.WARN, THE_LAZY));
+        assertThat(getResults(), hasEntry(Level.ERROR, DOG));
     }
 
     @Test
@@ -88,14 +82,14 @@ public class MockLoggerTest {
 
     private void testDebugUp() {
 
-        dummyBean.logIt();
+        logWorker.logIt();
 
-        assertThat(results.values(), hasSize(4));
-        assertNull(results.get(Level.TRACE));
-        assertThat(results, hasEntry(Level.DEBUG, BROWN_FOX));
-        assertThat(results, hasEntry(Level.INFO, JUMPS_OVER));
-        assertThat(results, hasEntry(Level.WARN, THE_LAZY));
-        assertThat(results, hasEntry(Level.ERROR, DOG));
+        assertThat(getResults().values(), hasSize(4));
+        assertNull(getResults().get(Level.TRACE));
+        assertThat(getResults(), hasEntry(Level.DEBUG, BROWN_FOX));
+        assertThat(getResults(), hasEntry(Level.INFO, JUMPS_OVER));
+        assertThat(getResults(), hasEntry(Level.WARN, THE_LAZY));
+        assertThat(getResults(), hasEntry(Level.ERROR, DOG));
     }
 
     @Test
@@ -103,14 +97,14 @@ public class MockLoggerTest {
 
         MockLogger.silentDebugOn();
 
-        dummyBean.logIt();
+        logWorker.logIt();
 
-        assertThat(results.values(), hasSize(4));
-        assertThat(results, hasEntry(Level.TRACE, THE_QUICK));
-        assertNull(results.get(Level.DEBUG));
-        assertThat(results, hasEntry(Level.INFO, JUMPS_OVER));
-        assertThat(results, hasEntry(Level.WARN, THE_LAZY));
-        assertThat(results, hasEntry(Level.ERROR, DOG));
+        assertThat(getResults().values(), hasSize(4));
+        assertThat(getResults(), hasEntry(Level.TRACE, THE_QUICK));
+        assertNull(getResults().get(Level.DEBUG));
+        assertThat(getResults(), hasEntry(Level.INFO, JUMPS_OVER));
+        assertThat(getResults(), hasEntry(Level.WARN, THE_LAZY));
+        assertThat(getResults(), hasEntry(Level.ERROR, DOG));
     }
 
     @Test
@@ -118,14 +112,14 @@ public class MockLoggerTest {
 
         MockLogger.silentLevel = Level.DEBUG;
 
-        dummyBean.logIt();
+        logWorker.logIt();
 
-        assertThat(results.values(), hasSize(3));
-        assertNull(results.get(Level.TRACE));
-        assertNull(results.get(Level.DEBUG));
-        assertThat(results, hasEntry(Level.INFO, JUMPS_OVER));
-        assertThat(results, hasEntry(Level.WARN, THE_LAZY));
-        assertThat(results, hasEntry(Level.ERROR, DOG));
+        assertThat(getResults().values(), hasSize(3));
+        assertNull(getResults().get(Level.TRACE));
+        assertNull(getResults().get(Level.DEBUG));
+        assertThat(getResults(), hasEntry(Level.INFO, JUMPS_OVER));
+        assertThat(getResults(), hasEntry(Level.WARN, THE_LAZY));
+        assertThat(getResults(), hasEntry(Level.ERROR, DOG));
     }
 
     @Test
@@ -133,14 +127,14 @@ public class MockLoggerTest {
 
         MockLogger.silentInfoOn();
 
-        dummyBean.logIt();
+        logWorker.logIt();
 
-        assertThat(results.values(), hasSize(4));
-        assertThat(results, hasEntry(Level.TRACE, THE_QUICK));
-        assertThat(results, hasEntry(Level.DEBUG, BROWN_FOX));
-        assertNull(results.get(Level.INFO));
-        assertThat(results, hasEntry(Level.WARN, THE_LAZY));
-        assertThat(results, hasEntry(Level.ERROR, DOG));
+        assertThat(getResults().values(), hasSize(4));
+        assertThat(getResults(), hasEntry(Level.TRACE, THE_QUICK));
+        assertThat(getResults(), hasEntry(Level.DEBUG, BROWN_FOX));
+        assertNull(getResults().get(Level.INFO));
+        assertThat(getResults(), hasEntry(Level.WARN, THE_LAZY));
+        assertThat(getResults(), hasEntry(Level.ERROR, DOG));
     }
 
     @Test
@@ -148,14 +142,14 @@ public class MockLoggerTest {
 
         MockLogger.silentLevel = Level.INFO;
 
-        dummyBean.logIt();
+        logWorker.logIt();
 
-        assertThat(results.values(), hasSize(2));
-        assertNull(results.get(Level.TRACE));
-        assertNull(results.get(Level.DEBUG));
-        assertNull(results.get(Level.INFO));
-        assertThat(results, hasEntry(Level.WARN, THE_LAZY));
-        assertThat(results, hasEntry(Level.ERROR, DOG));
+        assertThat(getResults().values(), hasSize(2));
+        assertNull(getResults().get(Level.TRACE));
+        assertNull(getResults().get(Level.DEBUG));
+        assertNull(getResults().get(Level.INFO));
+        assertThat(getResults(), hasEntry(Level.WARN, THE_LAZY));
+        assertThat(getResults(), hasEntry(Level.ERROR, DOG));
     }
 
     @Test
@@ -163,14 +157,14 @@ public class MockLoggerTest {
 
         MockLogger.silentWarnOn();
 
-        dummyBean.logIt();
+        logWorker.logIt();
 
-        assertThat(results.values(), hasSize(4));
-        assertThat(results, hasEntry(Level.TRACE, THE_QUICK));
-        assertThat(results, hasEntry(Level.DEBUG, BROWN_FOX));
-        assertThat(results, hasEntry(Level.INFO, JUMPS_OVER));
-        assertNull(results.get(Level.WARN));
-        assertThat(results, hasEntry(Level.ERROR, DOG));
+        assertThat(getResults().values(), hasSize(4));
+        assertThat(getResults(), hasEntry(Level.TRACE, THE_QUICK));
+        assertThat(getResults(), hasEntry(Level.DEBUG, BROWN_FOX));
+        assertThat(getResults(), hasEntry(Level.INFO, JUMPS_OVER));
+        assertNull(getResults().get(Level.WARN));
+        assertThat(getResults(), hasEntry(Level.ERROR, DOG));
     }
 
     @Test
@@ -178,14 +172,14 @@ public class MockLoggerTest {
 
         MockLogger.silentLevel = Level.WARN;
 
-        dummyBean.logIt();
+        logWorker.logIt();
 
-        assertThat(results.values(), hasSize(1));
-        assertNull(results.get(Level.TRACE));
-        assertNull(results.get(Level.DEBUG));
-        assertNull(results.get(Level.INFO));
-        assertNull(results.get(Level.WARN));
-        assertThat(results, hasEntry(Level.ERROR, DOG));
+        assertThat(getResults().values(), hasSize(1));
+        assertNull(getResults().get(Level.TRACE));
+        assertNull(getResults().get(Level.DEBUG));
+        assertNull(getResults().get(Level.INFO));
+        assertNull(getResults().get(Level.WARN));
+        assertThat(getResults(), hasEntry(Level.ERROR, DOG));
     }
 
     @Test
@@ -193,14 +187,14 @@ public class MockLoggerTest {
 
         MockLogger.silentErrorOn();
 
-        dummyBean.logIt();
+        logWorker.logIt();
 
-        assertThat(results.values(), hasSize(4));
-        assertThat(results, hasEntry(Level.TRACE, THE_QUICK));
-        assertThat(results, hasEntry(Level.DEBUG, BROWN_FOX));
-        assertThat(results, hasEntry(Level.INFO, JUMPS_OVER));
-        assertThat(results, hasEntry(Level.WARN, THE_LAZY));
-        assertNull(results.get(Level.ERROR));
+        assertThat(getResults().values(), hasSize(4));
+        assertThat(getResults(), hasEntry(Level.TRACE, THE_QUICK));
+        assertThat(getResults(), hasEntry(Level.DEBUG, BROWN_FOX));
+        assertThat(getResults(), hasEntry(Level.INFO, JUMPS_OVER));
+        assertThat(getResults(), hasEntry(Level.WARN, THE_LAZY));
+        assertNull(getResults().get(Level.ERROR));
     }
 
     @Test
@@ -208,77 +202,54 @@ public class MockLoggerTest {
 
         MockLogger.silentLevel = Level.ERROR;
 
-        dummyBean.logIt();
+        logWorker.logIt();
 
-        assertThat(results.values(), hasSize(0));
+        assertThat(getResults().values(), hasSize(0));
     }
-
-    /**
-     * Dummy pojo used to invoke {@link MockLogger} at all levels.
-     *
-     * @since 2.5.0
-     * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
-     */
-    static class DummyBean {
-
-        private TestLogging log;
-
-        public void logIt() {
-
-            log.trace(THE_QUICK);
-            log.debug(BROWN_FOX);
-            log.info(JUMPS_OVER);
-            log.warn(THE_LAZY);
-            log.error(DOG);
-        }
+    
+    @Test
+    public void shouldLogAlternateTraceCalls() {
+        
+        TestLogger.resetSilence();
+        logWorker.logAlternateTrace();
+        assertEquals(9, testLogger.getTraceCount());
     }
-
-    /**
-     * Marker interface needed to make mockito and {@link TestLogger} happy.
-     *
-     * @since 2.5.0
-     * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
-     */
-    static interface TestLogging extends Logger {
+    
+    @Test
+    public void shouldLogAlternateDebugCalls() {
+        
+        TestLogger.resetSilence();
+        logWorker.logAlternateDebug();
+        assertEquals(9, testLogger.getDebugCount());
     }
+    
+    @Test
+    public void shouldLogAlternateInfoCalls() {
 
-    /**
-     * Wrapper over actual logger being tested with sole purpose of recording
-     * results so that assertions can be made.
-     *
-     * @since 2.5.0
-     * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
-     */
-    static class TestLogger extends MockLogger implements TestLogging {
-
-        @Override
-        public void trace(String msg) {
-            super.trace(msg);
-            if(!isTraceSilent()) results.put(Level.TRACE, msg);
-        }
-
-        @Override
-        public void debug(String msg) {
-            super.debug(msg);
-            if(!isDebugSilent()) results.put(Level.DEBUG, msg);
-        }
-
-        @Override
-        public void info(String msg) {
-            super.info(msg);
-            if(!isInfoSilent()) results.put(Level.INFO, msg);
-        }
-
-        @Override
-        public void warn(String msg) {
-            super.warn(msg);
-            if(!isWarnSilent()) results.put(Level.WARN, msg);
-        }
-
-        @Override
-        public void error(String msg) {
-            super.error(msg);
-            if(!isErrorSilent()) results.put(Level.ERROR, msg);
-        }
+        TestLogger.resetSilence();
+        logWorker.logAlternateInfo();
+        assertEquals(9, testLogger.getInfoCount());        
+    }
+    
+    @Test
+    public void shouldLogAlternateWarnCalls() {
+        
+        TestLogger.resetSilence();
+        logWorker.logAlternateWarn();
+        assertEquals(9, testLogger.getWarnCount());
+    }
+    
+    @Test
+    public void shouldLogAlternateErrorCalls() {
+        
+        TestLogger.resetSilence();
+        logWorker.logAlternateError();
+        assertEquals(9, testLogger.getErrorCount());
+    }
+    
+    @Test
+    public void shouldGetLoggerName() {
+        
+        assertEquals(MockLogger.class.getName(), testLogger.getName());
     }
 }
