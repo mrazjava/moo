@@ -1,6 +1,7 @@
 package pl.zimowski.moo.api;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -21,13 +22,15 @@ public class ServerEventTest {
 
         assertTrue(event.getTimestamp() > 0);
         assertEquals(ServerAction.ParticipantCount, event.getAction());
+        assertEquals(ServerAction.ParticipantCount, ServerAction.valueOf("ParticipantCount"));
         assertEquals(0, event.getParticipantCount());
         assertNull(event.getMessage());
 
-        event.withParticipantCount(2).withMessage("bar");
+        event.setMessage("foo");
+        event.setNote("bar");
 
-        assertEquals(2, event.getParticipantCount());
-        assertEquals("bar", event.getMessage());
+        assertEquals("foo", event.getMessage());
+        assertEquals("bar", event.getNote());
     }
 
     @Test
@@ -39,5 +42,23 @@ public class ServerEventTest {
         assertEquals(ServerAction.Message, event.getAction());
         assertEquals(0, event.getParticipantCount());
         assertEquals("hello world", event.getMessage());
+    }
+    
+    @Test
+    public void shouldProduceEventWithFluidSetters() {
+        
+        ServerEvent event = new ServerEvent(ServerAction.Message)
+                .withAuthor("johnie")
+                .withClientId("foo-bar")
+                .withMessage("howdy")
+                .withNote("what?")
+                .withParticipantCount(27);
+        
+        assertNotNull(event.getDateTime());
+        assertEquals("johnie", event.getAuthor());
+        assertEquals("foo-bar", event.getClientId());
+        assertEquals("howdy", event.getMessage());
+        assertEquals("what?", event.getNote());
+        assertEquals(27, event.getParticipantCount());
     }
 }

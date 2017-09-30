@@ -13,6 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
+import pl.zimowski.moo.api.ApiUtils;
 import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ClientHandling;
@@ -92,6 +93,8 @@ public class App implements ApplicationRunner {
             signinEvent.setAuthor(eventReporter.getNick());
             clientHandler.send(signinEvent);
 
+            ApiUtils.printPrompt();
+            
             while(scanner.hasNextLine()) {
 
                 String input = scanner.nextLine();
@@ -103,6 +106,8 @@ public class App implements ApplicationRunner {
                 ClientEvent event = new ClientEvent(ClientAction.Message, eventReporter.getNick(), input);
                 log.debug("sending: {}", event);
                 clientHandler.send(event);
+                
+                ApiUtils.printPrompt();
             }
         }
         

@@ -23,7 +23,6 @@ public class ThreadDelayTest extends MooTest {
     @Test
     public void shouldThrotle() throws InterruptedException {
 
-
         threadDelay.delay = 10L;
         
         threadDelay.throttle();

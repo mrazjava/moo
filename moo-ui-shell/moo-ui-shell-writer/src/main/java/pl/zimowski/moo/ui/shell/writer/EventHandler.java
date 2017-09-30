@@ -54,6 +54,7 @@ public class EventHandler extends AbstractClientListener {
 
         }
         else if(event.getAction() == ServerAction.ServerExit) {
+            System.out.println();
         	LOG.info("({}) connection terminated by server; bye!", author);
         	clientHandler.disconnect();
         }

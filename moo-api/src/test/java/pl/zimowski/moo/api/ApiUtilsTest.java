@@ -2,9 +2,15 @@ package pl.zimowski.moo.api;
 
 import static org.junit.Assert.assertEquals;
 
+import java.nio.charset.Charset;
+
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.runners.model.Statement;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 /**
  * Ensures that {@link ApiUtils} operates as expected.
@@ -14,6 +20,13 @@ import org.junit.runners.model.Statement;
  */
 public class ApiUtilsTest {
 
+    @Rule
+    public MockitoRule mockito = MockitoJUnit.rule();
+
+    @Mock
+    private Charset charset;
+    
+    
     @Test
     public void shouldFetchResource() {
 
