@@ -2,24 +2,32 @@ package pl.zimowski.moo.server.socket;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
 
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import pl.zimowski.moo.api.ClientAction;
+import pl.zimowski.moo.api.ClientEvent;
+import pl.zimowski.moo.api.ServerAction;
+import pl.zimowski.moo.api.ServerEvent;
+import pl.zimowski.moo.server.socket.jmx.JmxReporter;
 import pl.zimowski.moo.test.utils.MockLogger;
+import pl.zimowski.moo.test.utils.MooTest;
 
 /**
  * Ensures that {@link WebSocketChatService} operates as expected.
@@ -27,61 +35,131 @@ import pl.zimowski.moo.test.utils.MockLogger;
  * @since 1.0.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
-public class WebSocketChatServiceTest {
+public class WebSocketChatServiceTest extends MooTest {
 
-    private static final Logger log = LoggerFactory.getLogger(WebSocketChatServiceTest.class);
-
-    @Rule
-    public MockitoRule mockito = MockitoJUnit.rule();
+    static final int TEST_PORT = 8001;
 
     @InjectMocks
-    private WebSocketChatService engine;
+    private WebSocketChatService chatService;
 
     @Spy
     private MockLogger mockLog;
+    
+    @Mock
+    private ClientThread clientThread;
+    
+    @Mock
+    private ServerUtils serverUtils;
 
+    @Mock
+    private ServerSocket serverSocket;
+    
+    @Mock
+    private ServerSocketFactory serverSocketFactory;
+    
+    @Mock
+    private Socket socket;
+    
+    @Mock
+    private JmxReporter jmxReporter;
+    
+    @Mock
+    private ClientNotification clientNotification;
+    
+    @Mock
+    private ByteArrayOutputStream byteArrayOutputStream;
+    
+    private SocketAcceptAnswer socketAcceptAnswer;
+    
 
+    @Before
+    public void setupServer() throws IOException {
+        
+        Mockito.when(serverSocket.accept()).thenAnswer(socketAcceptAnswer = new SocketAcceptAnswer());
+        BDDMockito.given(serverSocketFactory.getServerSocket(TEST_PORT)).willReturn(serverSocket);
+        BDDMockito.given(socket.getOutputStream()).willReturn(byteArrayOutputStream);
+        
+        chatService.setPort(TEST_PORT);
+    }
+    
     @Test
-    public void shouldStartAndStop() throws InterruptedException {
+    public void shouldAcceptClientAndBroadcast() {
 
-    	final int PORT = 8001;
-    	
-        assertFalse(engine.isRunning());
-        startEngine(PORT);
-        assertTrue(String.format("is port %d already in use? (server running)", PORT), engine.isRunning());
-        engine.stop();
-        assertFalse(engine.isRunning());
+        
+        assertEquals(0, chatService.getConnectedClientCount());
+
+        chatService.start();
+
+        assertEquals(1, chatService.getConnectedClientCount());
+        assertEquals(1, chatService.broadcast(clientThread, new ClientEvent(ClientAction.Signin)));
+        assertEquals(1, chatService.broadcast(clientThread, new ClientEvent(ClientAction.Message)));
+        assertEquals(1,  chatService.broadcast(clientThread, new ClientEvent(ClientAction.GenerateNick)));
+        assertEquals(1, chatService.broadcast(clientThread, new ClientEvent(ClientAction.Signoff)));
+        assertEquals(1, chatService.broadcast(clientThread, new ClientEvent(ClientAction.Disconnect)));
+        
+        chatService.stop();
+        
+        assertFalse(chatService.isRunning());
+        
+        ArgumentCaptor<ServerEvent> serverEventsCaptor = ArgumentCaptor.forClass(ServerEvent.class);
+        Mockito.verify(clientThread, Mockito.times(6)).notify(serverEventsCaptor.capture());
+
+        List<ServerEvent> serverEvents = serverEventsCaptor.getAllValues();
+        
+        assertEquals(6, serverEvents.size());
+        
+        assertEquals(ServerAction.SigninConfirmed, serverEvents.get(0).getAction());
+        assertEquals(ServerAction.ParticipantCount, serverEvents.get(1).getAction());
+        assertEquals(ServerAction.Message, serverEvents.get(2).getAction());
+        assertEquals(ServerAction.NickGenerated, serverEvents.get(3).getAction());
+        assertEquals(ServerAction.ParticipantCount, serverEvents.get(4).getAction());
+        assertEquals(ServerAction.ClientDisconnected, serverEvents.get(5).getAction());
+        
+        chatService.shutdown();
     }
-
+    
     @Test
-    public void shouldAcceptClient() throws InterruptedException, UnknownHostException, IOException {
-
-        int testPort = 8001;
-
-        startEngine(testPort);
-        assertEquals(0, engine.getConnectedClientCount());
-        Socket socket = establishTestConnection(testPort);
-        assertEquals(1, engine.getConnectedClientCount());
-
-        engine.stop();
-        Thread.sleep(500); // allow engine to shut down
-        socket.close();
+    public void shouldEvictInactiveClient() {
+        
+        ReflectionTestUtils.setField(chatService, "evictionTimeout", 0);
+        chatService.start();
+        
+        assertEquals(1, chatService.getConnectedClientCount());
+        assertEquals(0, chatService.broadcast(clientThread, new ClientEvent(ClientAction.Message)));
+        assertEquals(0, chatService.getConnectedClientCount());
     }
-
-    private void startEngine(int port) throws InterruptedException {
-
-        engine.setPort(port);
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> { engine.start(); });
-        Thread.sleep(500); // allow engine to fully initialize
+    
+    @Test
+    public void shouldStartAndHandleIOException() throws IOException {
+        
+        Mockito.ignoreStubs(serverSocket.accept(), socket.getOutputStream());
+        Mockito.when(serverSocketFactory.getServerSocket(TEST_PORT)).thenThrow(IOException.class);
+        chatService.start();
     }
+    
+    @Test
+    public void shouldListenAndHandleIOException() throws IOException {
+        
+        socketAcceptAnswer.throwable = new IOException();
+        
+        chatService.start();
+        chatService.stop();
+    }
+    
+    
+    /**
+     * @since 1.2.0
+     * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
+     */
+    class SocketAcceptAnswer implements Answer<Socket>  {
 
-    private Socket establishTestConnection(int port) throws InterruptedException, UnknownHostException, IOException {
-
-        Socket socket = new Socket("localhost", port);
-        log.debug("establishing test connection: {}", socket);
-        Thread.sleep(500); // allow connection to fully establish a link
-
-        return socket;
+        Throwable throwable;
+        
+        @Override
+        public Socket answer(InvocationOnMock invocation) throws Throwable {
+            ReflectionTestUtils.setField(chatService, "running", false);
+            if(throwable != null) throw throwable;
+            return socket;
+        }
     }
 }

@@ -26,7 +26,6 @@ public class Settings {
      * server will terminate client connection. If not defined, server never
      * terminates client connection.
      */
-    @SuppressWarnings("unused")
     private Integer evictionTimeout;
 
     @NotNull(message = "At least 1 adjective is required; eg: 'fantastic'")

@@ -42,6 +42,9 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
 	
     @Inject
     private Logger log;
+    
+    @Inject
+    private ServerSocketFactory serverSocketFactory;
 
     @Value("${port}")
     private int port;
@@ -81,7 +84,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         log.info("\n{}", ApiUtils.fetchResource("/logo"));
         log.info("listening on port {} (ctrl-c to exit)", port);
 
-        try (ServerSocket server = new ServerSocket(port)) {
+        try (ServerSocket server = serverSocketFactory.getServerSocket(port)) {
             listen(server);
         }
         catch (IOException e) {
@@ -155,11 +158,12 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         				.withAuthor(clientEvent.getAuthor())
         				);
         }
+        clientThread.notify(serverEvent);
         
-        return broadcast(serverEvent);
+        return broadcast(clientThread, serverEvent);
     }
     
-    private int broadcast(ServerEvent event) {
+    private int broadcast(ClientNotification source, ServerEvent event) {
     	        
         int notifiedClients = 0;
 
@@ -170,6 +174,9 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
             // standard message broadcast
             for(ClientNotification connectedClient : connectedClients) {
 
+                if(source != null && StringUtils.equals(source.getClientId(), connectedClient.getClientId()))
+                    continue;
+                
                 log.debug("broadcasting to: {}", connectedClient);
 
                 if(connectedClient.notify(event)) {
@@ -191,7 +198,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
             DateTime lastActive = new DateTime(connectedClient.getLastActivity());
             int inactiveSeconds = Seconds.secondsBetween(lastActive, new DateTime()).getSeconds();
 
-            if(evictionTimeout != null && inactiveSeconds > evictionTimeout) {
+            if(evictionTimeout != null && inactiveSeconds >= evictionTimeout) {
                 log.info("{} inactive for {} seconds, evicting!", connectedClient, inactiveSeconds);
                 connectedClient.notify(new ServerEvent(ServerAction.ConnectionTimeOut).withMessage("disconnected due to inactivity"));
                 connectedClient.disconnect();
@@ -289,7 +296,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
 
     @PreDestroy
     public void shutdown() {
-    	broadcast(new ServerEvent(ServerAction.ServerExit).withMessage("deliberate server shutdown"));
+    	broadcast(null, new ServerEvent(ServerAction.ServerExit).withMessage("deliberate server shutdown"));
         log.debug("engine shutdown ({} clients, {} participants)", getConnectedClientCount(), participantCount);
     }
 }

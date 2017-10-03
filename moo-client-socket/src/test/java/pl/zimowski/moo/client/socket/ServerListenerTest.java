@@ -86,6 +86,9 @@ public class ServerListenerTest extends MooTest {
     public void shouldBeListening() {
 
         Mockito.doReturn(false).when(socket).isClosed();
-        assertTrue(new ServerListener(socket, null).isListening());
+        ServerListener listener = new ServerListener(socket, null);
+        listener.setHardExit(true);
+        
+        assertTrue(listener.isListening());
     }
 }

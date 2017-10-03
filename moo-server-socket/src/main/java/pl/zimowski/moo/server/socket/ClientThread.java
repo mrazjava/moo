@@ -77,8 +77,7 @@ public class ClientThread extends Thread implements ClientNotification {
                 log.debug("in: {}", msg);
                 serverNotifier.broadcast(this, msg);
                 if(ClientAction.Disconnect == msg.getAction()) {
-                    log.info("closing connection: {}", socket);
-                    socket.close();
+                    disconnect();
                     break;
                 }
             }
@@ -110,6 +109,9 @@ public class ClientThread extends Thread implements ClientNotification {
      * is possible and essentially this thread is dead.
      */
     public void disconnect() {
+        
+        log.info("closing connection: {}", socket);
+        
         try {
             socket.close();
         }

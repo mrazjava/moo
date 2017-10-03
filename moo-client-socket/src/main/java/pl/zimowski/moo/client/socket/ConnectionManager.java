@@ -3,15 +3,12 @@ package pl.zimowski.moo.client.socket;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import pl.zimowski.moo.api.ApiUtils;
@@ -30,16 +27,16 @@ public class ConnectionManager implements ConnectionManagement {
 
     @Inject
     private Logger log;
-
-    @Value("${server.host}")
-    private String host;
-
-    @Value("${server.port}")
-    private int port;
-
+    
+    @Inject
+    private SocketProducer socketProducer;
+    
     private Socket socket;
     
-    boolean connected;
+    private boolean connected;
+    
+    @Inject
+    private ServerListenerInitializer serverListenerInit;
 
 
     @PostConstruct
@@ -54,21 +51,21 @@ public class ConnectionManager implements ConnectionManagement {
 
     @Override
     public boolean connect(ClientListener clientListener) {
+        
+        String host = socketProducer.getSocketHost();
+        int port = socketProducer.getSocketPort();
 
         log.info("establishing connection to {}:{}", host, port);
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-
-        try {
-            socket = new Socket(host, port);
+        socket = socketProducer.getSocket();
+        
+        if(socket != null) {
             clientListener.onBeforeServerConnect(host, port);
-            executor.submit(new ServerListener(socket, clientListener));
+            serverListenerInit.initialize(new ServerListener(socket, clientListener));
             connected = true;
         }
-        catch(IOException e) {
-        	String error = e.getMessage();
-            log.error("could not connect to server: {}", error);
-            clientListener.onConnectToServerError(error);
+        else {
+            clientListener.onConnectToServerError(socketProducer.getStatus());
         }
 
         return connected;
@@ -96,6 +93,7 @@ public class ConnectionManager implements ConnectionManagement {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             out.writeObject(event);
             out.flush();
+            log.debug("sent:\n{}", event);
         }
         catch(IOException e) {
             log.error("message transmission failed: {}", e.getMessage());
