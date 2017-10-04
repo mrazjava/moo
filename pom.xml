@@ -271,12 +271,12 @@
       <dependency>
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-ui-shell-reader</artifactId>
-        <version>${moo-ui-shell.version}</version>
+        <version>${moo.version}</version>
       </dependency>
       <dependency>
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-ui-shell-writer</artifactId>
-        <version>${moo-ui-shell.version}</version>
+        <version>${moo.version}</version>
       </dependency>
       <dependency>
         <groupId>pl.zimowski</groupId>
@@ -436,8 +436,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <moo.version>1.2.0-SNAPSHOT</moo.version>
-    <moo-ui-shell.version>1.0.0-SNAPSHOT</moo-ui-shell.version>
+    <moo.version>1.2.0-FINAL</moo.version>
     <weld.version>2.4.4.Final</weld.version>
     <deltaspike.version>1.7.2</deltaspike.version>
     <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
