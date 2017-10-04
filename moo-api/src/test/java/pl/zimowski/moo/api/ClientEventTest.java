@@ -21,8 +21,10 @@ public class ClientEventTest {
 
         assertTrue(event.getTimestamp() > 0);
         assertEquals(ClientAction.Signin, event.getAction());
+        assertEquals(ClientAction.Signin, ClientAction.valueOf("Signin"));
         assertNull(event.getAuthor());
         assertNull(event.getMessage());
+        assertNull(event.getId());
 
         event.withAuthor("foo").withMessage("bar");
 

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.zimowski</groupId>
   <artifactId>moo</artifactId>
-  <version>1.1.0-FINAL</version>
+  <version>1.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <developers>
     <developer>
@@ -47,6 +47,46 @@
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
       </plugin>
+
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-surefire-plugin</artifactId>
+		<configuration>
+			<!-- Jacoco prepare-agent builds some command-line params without -->
+			<!-- which jacoco will not instrument. Hence it is important to add -->
+			<!-- those command-line params here (${argLine} holds those params) -->
+			<argLine>${argLine} -Xms256m -Xmx2048m</argLine>
+			<forkCount>1</forkCount>
+			<runOrder>random</runOrder>
+		</configuration>
+	</plugin>
+
+	<plugin>
+		<groupId>org.jacoco</groupId>
+		<artifactId>jacoco-maven-plugin</artifactId>
+		<version>0.7.9</version>
+		<executions>
+			<execution>
+				<id>prepare-agent</id>
+				<goals>
+					<goal>prepare-agent</goal>
+				</goals>
+				<configuration>
+					<skip>${maven.test.skip}</skip>
+					<append>true</append>
+				</configuration>
+			</execution>
+		</executions>
+	</plugin>
+
+	<plugin>
+	    <groupId>org.eluder.coveralls</groupId>
+	    <artifactId>coveralls-maven-plugin</artifactId>
+	    <version>4.3.0</version>
+	    <configuration>
+	    	<jacocoReports>moo-reports/target/site/jacoco-aggregate/jacoco.xml</jacocoReports>
+	    </configuration>
+	</plugin>
 
     </plugins>
 
@@ -148,6 +188,11 @@
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+	          <jvmArguments>
+	          	-DLOG_DIR=target/logs
+	          </jvmArguments>
+          </configuration>
           <executions>
             <execution>
               <goals>
@@ -179,6 +224,20 @@
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
       </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-integration</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-test</artifactId>
+	</dependency>
   </dependencies>
 
   <dependencyManagement>
@@ -186,7 +245,43 @@
       <dependency>
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-api</artifactId>
-        <version>1.1.0-FINAL</version>
+        <version>${moo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-test-utils</artifactId>
+        <version>${moo.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-commons</artifactId>
+        <version>${moo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-client-socket</artifactId>
+        <version>${moo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-server-socket</artifactId>
+        <version>${moo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-ui-shell-reader</artifactId>
+        <version>${moo-ui-shell.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-ui-shell-writer</artifactId>
+        <version>${moo-ui-shell.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-ui-shell-commons</artifactId>
+        <version>${moo-ui-shell.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -223,6 +318,12 @@
         <artifactId>commons-io</artifactId>
         <version>2.5</version>
       </dependency>
+    <dependency>
+    	<groupId>com.github.stefanbirkner</groupId>
+    	<artifactId>system-rules</artifactId>
+    	<version>1.16.1</version>
+    	<scope>test</scope>
+    </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
@@ -307,8 +408,24 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter</artifactId>
+        <version>${spring-boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
         <version>${spring.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.version}</version>
+      </dependency>      
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-test</artifactId>
+		    <version>${spring.version}</version>
+		    <scope>test</scope>
+		</dependency>
       <dependency>
           <groupId>joda-time</groupId>
           <artifactId>joda-time</artifactId>
@@ -319,9 +436,12 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <moo.version>1.2.0-SNAPSHOT</moo.version>
+    <moo-ui-shell.version>1.0.0-SNAPSHOT</moo-ui-shell.version>
     <weld.version>2.4.4.Final</weld.version>
     <deltaspike.version>1.7.2</deltaspike.version>
-    <spring.version>1.5.6.RELEASE</spring.version>
+    <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
+    <spring.version>4.3.11.RELEASE</spring.version>
     <cxf.version>3.1.12</cxf.version>
   </properties>
   <inceptionYear>2017</inceptionYear>
@@ -329,8 +449,11 @@
   <description>Root project for Moo chat service</description>
   <modules>
     <module>moo-api</module>
-    <module>moo-server</module>
-    <module>moo-client</module>
-    <module>moo-ui-web1</module>
+    <module>moo-test-utils</module>
+    <module>moo-commons</module>
+    <module>moo-server-socket</module>
+    <module>moo-client-socket</module>
+    <module>moo-ui-shell</module>
+    <module>moo-reports</module>
   </modules>
 </project>

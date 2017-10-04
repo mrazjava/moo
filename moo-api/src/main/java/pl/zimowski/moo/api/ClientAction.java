@@ -13,6 +13,11 @@ public enum ClientAction {
      * After this operation user is ready to chat.
      */
     Signin,
+    
+    /**
+     * Client would like server to randomly generate user nick name.
+     */
+    GenerateNick,
 
     /**
      * Client emitted a chat message to a server on behalf of end user.
