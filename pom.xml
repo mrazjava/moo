@@ -281,7 +281,7 @@
       <dependency>
         <groupId>pl.zimowski</groupId>
         <artifactId>moo-ui-shell-commons</artifactId>
-        <version>${moo-ui-shell.version}</version>
+        <version>${moo.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
