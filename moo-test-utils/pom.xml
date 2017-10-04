@@ -3,7 +3,7 @@
   <parent>
     <groupId>pl.zimowski</groupId>
     <artifactId>moo</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0-FINAL</version>
   </parent>
   <artifactId>moo-test-utils</artifactId>
   <name>Moo Test (utils)</name>
