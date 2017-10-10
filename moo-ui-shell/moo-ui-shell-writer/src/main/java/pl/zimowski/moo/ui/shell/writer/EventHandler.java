@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import pl.zimowski.moo.api.ClientAction;
+import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ClientHandling;
 import pl.zimowski.moo.api.ServerAction;
 import pl.zimowski.moo.api.ServerEvent;
@@ -58,6 +60,36 @@ public class EventHandler extends AbstractClientListener {
         	LOG.info("({}) connection terminated by server; bye!", author);
         	clientHandler.disconnect();
         }
+	}
+	
+	ClientEvent newEvent(ClientAction action) {
+	    return new ClientEvent(action).withId(clientId);
+	}
+	
+	ClientEvent newSigninEvent() {
+	    return newEvent(ClientAction.Signin);
+	}
+	
+	ClientEvent newGenerateNickEvent() {
+	    return newEvent(ClientAction.GenerateNick);
+	}
+	
+	ClientEvent newMessageEvent(String message) {
+	    return newEvent(ClientAction.Message)
+	            .withId(clientId)
+	            .withAuthor(nick)
+	            .withMessage(message);
+	}
+	
+	ClientEvent newSignoffEvent() {
+	    return newEvent(ClientAction.Signoff)
+	            .withId(clientId)
+	            .withAuthor(nick);
+	}
+	
+	ClientEvent newDisconnectEvent() {
+	    return newEvent(ClientAction.Disconnect)
+	            .withId(clientId);
 	}
 	
 	@Override

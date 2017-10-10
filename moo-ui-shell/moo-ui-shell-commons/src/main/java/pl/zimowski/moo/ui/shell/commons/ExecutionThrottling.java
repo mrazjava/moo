@@ -19,4 +19,23 @@ public interface ExecutionThrottling {
 	 * @param delay in milliseconds
 	 */
 	void throttle(long delay);
+	
+	/**
+	 * @return number of times throttle was invoked
+	 */
+	int getCount();
+	
+	/**
+	 * Reset throttle counter to starting point as if no throttling 
+	 * was performed.
+	 */
+	void reset();
+	
+	/**
+	 * Determines if number of throttle invocations exceeded some limit.
+	 * 
+	 * @param limit of allowed throttling executions
+	 * @return {@code true} if throttle was executed beyond allowed limit
+	 */
+	boolean isCountExceeded(Integer limit);
 }

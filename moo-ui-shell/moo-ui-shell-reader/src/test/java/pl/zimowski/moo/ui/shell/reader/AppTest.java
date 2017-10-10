@@ -17,11 +17,11 @@ import org.mockito.quality.Strictness;
 
 import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
+import pl.zimowski.moo.commons.ShutdownAgent;
 import pl.zimowski.moo.test.utils.EventAwareClientHandlerMock;
 import pl.zimowski.moo.test.utils.MockLogger;
 import pl.zimowski.moo.test.utils.MooTest;
 import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
-import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
 
 /**
  * Ensures that {@link App} operates as expected.

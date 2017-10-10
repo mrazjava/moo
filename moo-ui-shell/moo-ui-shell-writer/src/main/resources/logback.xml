@@ -38,12 +38,13 @@
   <logger name="javax.management" level="INFO" />
   <logger name="org.hibernate.validator" level="ERROR" />
   <logger name="org.jboss.logging" level="WARN" />
+  <logger name="org.apache.activemq" level="INFO" />
 
   <!-- <logger name="pl.zimowski.moo.api.ApiUtils" level="DEBUG" /> -->
   <!-- <logger name="pl.zimowski.moo.client.sockets.App" level="INFO" /> -->
   
-  <logger name="pl.zimowski.moo" level="DEBUG" additivity="false">
-  	<appender-ref ref="FILE" />
+  <logger name="pl.zimowski.moo" level="ERROR" additivity="false">
+  	<appender-ref ref="STDOUT" />
   </logger>
 
   <logger name="CHAT_ECHO" level="INFO" additivity="false">

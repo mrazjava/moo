@@ -18,7 +18,13 @@ public class ThreadDelay implements ExecutionThrottling {
     @Inject
     private Logger log;
     
-    @Value("${shell.commons.throttle}") Long delay;
+    private int count;
+    
+    /**
+     * duration in ms to sleep for each throttle
+     */
+    @Value("${shell.commons.throttle}")
+    Long delay;
     
     
 	@Override
@@ -32,10 +38,26 @@ public class ThreadDelay implements ExecutionThrottling {
         log.warn("sleeping {}ms ... zzzzzzzz", delay);
 	    delay(delay);
 	}
+    
+    @Override
+    public int getCount() {
+        return count;
+    }
+    
+    @Override
+    public boolean isCountExceeded(Integer limit) {
+        return limit != null && count > limit;
+    }
+    
+    @Override
+    public void reset() {
+        count = 0;
+    }
 
 	private void delay(long delay) {
 	    
         try {
+            count++;
             Thread.sleep(delay);
         }
         catch(InterruptedException e) {

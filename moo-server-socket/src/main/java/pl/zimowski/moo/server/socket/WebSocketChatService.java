@@ -24,7 +24,9 @@ import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ServerAction;
 import pl.zimowski.moo.api.ServerEvent;
-import pl.zimowski.moo.server.socket.jmx.JmxReportingSupport;
+import pl.zimowski.moo.server.commons.ChatService;
+import pl.zimowski.moo.server.commons.EventManager;
+import pl.zimowski.moo.server.commons.jmx.JmxReportingSupport;
 
 /**
  * Core implementation of chat server based on web sockets. Supports multiple
@@ -37,8 +39,6 @@ import pl.zimowski.moo.server.socket.jmx.JmxReportingSupport;
  */
 @Component
 public class WebSocketChatService implements ChatService, EventBroadcasting {
-
-	private static final String ANONYMOUS = "AnonymousCoward";
 	
     @Inject
     private Logger log;
@@ -58,8 +58,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
     private JmxReportingSupport jmxReporter;
 
     @Inject
-    private ServerUtils serverUtils;
-
+    private EventManager eventManager;
 
     /**
      * each connected client will receive server events; this is the essence
@@ -69,13 +68,6 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
      * </p>
      */
     private Set<ClientNotification> connectedClients = new HashSet<>();
-
-    /**
-     * Connected client is not the same as chat participant. For instance, a
-     * web client may establish a single connection but may provide for many
-     * participants.
-     */
-    private int participantCount;
 
 
     @Override
@@ -113,13 +105,13 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
                     connectedClients.add(client);
                 }
                 jmxReporter.clientConnected();
-                log.debug("connections: {}, participants: {}", connectedClients.size(), participantCount);
+                log.debug("connections: {}, participants: {}", connectedClients.size(), eventManager.getParticipantCount());
                 executor.submit(client);
                 client.notify(new ServerEvent(ServerAction.ConnectionEstablished)
                         .withClientId(client.getClientId())
                         );
                 client.notify(new ServerEvent(ServerAction.ParticipantCount)
-                		.withMessage(String.format("%d participant(s)", participantCount))
+                		.withMessage(String.format("%d participant(s)", eventManager.getParticipantCount()))
                 		);
             }
             catch(IOException e) {
@@ -146,7 +138,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         	connectedClients.remove(clientThread);
         }
         
-        ServerEvent serverEvent = clientEventToServerEvent(clientThread, clientEvent);
+        ServerEvent serverEvent = eventManager.clientEventToServerEvent(clientEvent);
         
         if(clientEvent.getAction() == ClientAction.GenerateNick) {
         	clientThread.notify(serverEvent);
@@ -203,76 +195,10 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
                 connectedClient.notify(new ServerEvent(ServerAction.ConnectionTimeOut).withMessage("disconnected due to inactivity"));
                 connectedClient.disconnect();
                 iterator.remove();
-                participantCount--;
+                eventManager.decrementParticipantCount();
                 continue;
             }
         }
-    }
-
-    /**
-     * Inspects the nature of a message received from a client, and updates
-     * collection of connected clients as necessary. Transforms the client
-     * message to equivalent server message so that it can be used by the
-     * engine to rebroadcast it.
-     *
-     * @param clientThread which produced an event/message
-     * @param clientEvent produced by the client
-     * @return equivalent server message
-     */
-    private ServerEvent clientEventToServerEvent(ClientThread clientThread, ClientEvent clientEvent) {
-
-        ClientAction clientAction = clientEvent.getAction();
-        ServerAction serverAction = null;
-        String serverMessage = null;
-        String author = null;
-        String note = null;
-
-        switch(clientAction) {
-            case Signin:
-                serverAction = ServerAction.ParticipantCount;
-                participantCount++;
-
-                author = ServerEvent.AUTHOR;
-                StringBuilder msg = new StringBuilder(String.format("%s joined;", clientEvent.getAuthor()));
-                if(participantCount > 1)
-                    msg.append(String.format(" %d participants", participantCount));
-                else
-                    msg.append(" and is the only participant so far");
-
-                serverMessage = msg.toString();
-                break;
-            case Signoff:
-                serverAction = ServerAction.ParticipantCount;
-                participantCount--;
-                author = ServerEvent.AUTHOR;
-                serverMessage = String.format("%s left; %d participant(s) remaining", clientEvent.getAuthor(), participantCount);
-                break;
-            case Message:
-                serverAction = ServerAction.Message;
-                author = clientEvent.getAuthor();
-                if(StringUtils.isEmpty(author)) author = ANONYMOUS;
-                serverMessage = String.format("%s", clientEvent.getMessage());
-                break;
-            case GenerateNick:
-            	serverAction = ServerAction.NickGenerated;
-            	author = ServerEvent.AUTHOR;
-            	serverMessage = serverUtils.randomNickName();
-            	break;
-            case Disconnect:
-            	serverAction = ServerAction.ClientDisconnected;
-            	author = ServerEvent.AUTHOR;
-            	serverMessage = String.format("client disconnect: %s", clientThread.getClientId());
-            	note = clientThread.getClientId();
-                break;
-        }
-
-        log.trace("clients: {}, participants: {}", connectedClients.size(), participantCount);
-
-        return new ServerEvent(serverAction, serverMessage)
-                .withParticipantCount(participantCount)
-                .withAuthor(author)
-                .withClientId(clientEvent.getId())
-                .withNote(note);
     }
 
     @Override
@@ -297,6 +223,6 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
     @PreDestroy
     public void shutdown() {
     	broadcast(null, new ServerEvent(ServerAction.ServerExit).withMessage("deliberate server shutdown"));
-        log.debug("engine shutdown ({} clients, {} participants)", getConnectedClientCount(), participantCount);
+        log.debug("engine shutdown ({} clients, {} participants)", getConnectedClientCount(), eventManager.getParticipantCount());
     }
 }

@@ -188,6 +188,7 @@
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
           <configuration>
 	          <jvmArguments>
 	          	-DLOG_DIR=target/logs
@@ -260,12 +261,32 @@
       </dependency>
       <dependency>
         <groupId>pl.zimowski</groupId>
+        <artifactId>moo-jms</artifactId>
+        <version>${moo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
         <artifactId>moo-client-socket</artifactId>
         <version>${moo.version}</version>
       </dependency>
       <dependency>
         <groupId>pl.zimowski</groupId>
+        <artifactId>moo-client-jms</artifactId>
+        <version>${moo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-server-commons</artifactId>
+        <version>${moo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
         <artifactId>moo-server-socket</artifactId>
+        <version>${moo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>pl.zimowski</groupId>
+        <artifactId>moo-server-jms</artifactId>
         <version>${moo.version}</version>
       </dependency>
       <dependency>
@@ -405,6 +426,16 @@
         <artifactId>guice</artifactId>
         <version>4.1.0</version>
       </dependency>
+  	<dependency>
+  		<groupId>javax.jms</groupId>
+  		<artifactId>javax.jms-api</artifactId>
+  		<version>2.0.1</version>
+  	</dependency>
+	<dependency>
+	    <groupId>org.apache.activemq</groupId>
+	    <artifactId>activemq-core</artifactId>
+	    <version>5.7.0</version>
+	</dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter</artifactId>
@@ -450,8 +481,12 @@
     <module>moo-api</module>
     <module>moo-test-utils</module>
     <module>moo-commons</module>
+    <module>moo-jms</module>
+    <module>moo-server-commons</module>
     <module>moo-server-socket</module>
+    <module>moo-server-jms</module>
     <module>moo-client-socket</module>
+    <module>moo-client-jms</module>
     <module>moo-ui-shell</module>
     <module>moo-reports</module>
   </modules>

@@ -36,11 +36,6 @@
       <artifactId>moo-commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>pl.zimowski</groupId>
-      <artifactId>moo-client-socket</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
     	<groupId>com.github.stefanbirkner</groupId>
     	<artifactId>system-rules</artifactId>
     </dependency>

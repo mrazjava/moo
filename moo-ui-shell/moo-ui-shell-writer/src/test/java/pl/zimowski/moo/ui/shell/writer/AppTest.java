@@ -14,15 +14,16 @@ import org.junit.Test;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 
 import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
+import pl.zimowski.moo.commons.ShutdownAgent;
 import pl.zimowski.moo.test.utils.EventAwareClientHandlerMock;
 import pl.zimowski.moo.test.utils.MockLogger;
 import pl.zimowski.moo.test.utils.MooTest;
 import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
-import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
 
 /**
  * Ensures that {@link App} operates as expected.
@@ -61,6 +62,8 @@ public class AppTest extends MooTest {
 	@Test
 	public void shouldProduceChatWithoutNickAndExit() throws Exception {
 	    
+	    when(eventHandler.newGenerateNickEvent()).thenReturn(new ClientEvent(ClientAction.GenerateNick));
+	    
 	    List<ClientEvent> events = produceChatAndExit(" ");
         
         assertTrue(events.size() == 5);
@@ -93,11 +96,17 @@ public class AppTest extends MooTest {
 	    
 	    List<ClientEvent> eventList = new ArrayList<>();
 	    
+	    String msg = "Howdy";
+	    
 	    clientHandler.setEventList(eventList);
         when(eventHandler.getClientId()).thenReturn("foo-bar");
         when(eventHandler.getNick()).thenReturn("Rocky");
+        when(eventHandler.newSigninEvent()).thenReturn(new ClientEvent(ClientAction.Signin));
+        when(eventHandler.newMessageEvent(Mockito.anyString())).thenReturn(new ClientEvent(ClientAction.Message).withMessage(msg));
+        when(eventHandler.newSignoffEvent()).thenReturn(new ClientEvent(ClientAction.Signoff));
+        when(eventHandler.newDisconnectEvent()).thenReturn(new ClientEvent(ClientAction.Disconnect));
         
-        systemInMock.provideLines(nick, "Howdy", "moo:exit");
+        systemInMock.provideLines(nick, msg, "moo:exit");
         
         writer.run(null);
         writer.shutdown();

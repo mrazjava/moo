@@ -41,13 +41,29 @@
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-commons</artifactId>
     </dependency>  
+    <dependency>
+      <groupId>pl.zimowski</groupId>
+      <artifactId>moo-jms</artifactId>
+    </dependency>  
   	<dependency>
   		<groupId>pl.zimowski</groupId>
   		<artifactId>moo-client-socket</artifactId>
   	</dependency>
   	<dependency>
   		<groupId>pl.zimowski</groupId>
+  		<artifactId>moo-client-jms</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>pl.zimowski</groupId>
+  		<artifactId>moo-server-commons</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>pl.zimowski</groupId>
   		<artifactId>moo-server-socket</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>pl.zimowski</groupId>
+  		<artifactId>moo-server-jms</artifactId>
   	</dependency>
   	<dependency>
   		<groupId>pl.zimowski</groupId>

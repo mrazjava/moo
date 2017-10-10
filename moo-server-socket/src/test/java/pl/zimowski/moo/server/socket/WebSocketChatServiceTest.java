@@ -2,6 +2,7 @@ package pl.zimowski.moo.server.socket;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,7 +26,9 @@ import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ServerAction;
 import pl.zimowski.moo.api.ServerEvent;
-import pl.zimowski.moo.server.socket.jmx.JmxReporter;
+import pl.zimowski.moo.server.commons.EventManager;
+import pl.zimowski.moo.server.commons.ServerUtils;
+import pl.zimowski.moo.server.commons.jmx.JmxReporter;
 import pl.zimowski.moo.test.utils.MockLogger;
 import pl.zimowski.moo.test.utils.MooTest;
 
@@ -69,8 +72,10 @@ public class WebSocketChatServiceTest extends MooTest {
     @Mock
     private ByteArrayOutputStream byteArrayOutputStream;
     
-    private SocketAcceptAnswer socketAcceptAnswer;
+    @Mock
+    private EventManager eventManager;
     
+    private SocketAcceptAnswer socketAcceptAnswer;
 
     @Before
     public void setupServer() throws IOException {
@@ -88,14 +93,26 @@ public class WebSocketChatServiceTest extends MooTest {
         
         assertEquals(0, chatService.getConnectedClientCount());
 
+        ClientEvent signinEvent = new ClientEvent(ClientAction.Signin);
+        ClientEvent messageEvent = new ClientEvent(ClientAction.Message);
+        ClientEvent generateNickEvent = new ClientEvent(ClientAction.GenerateNick);
+        ClientEvent signoffEvent = new ClientEvent(ClientAction.Signoff);
+        ClientEvent disconnectEvent = new ClientEvent(ClientAction.Disconnect);
+        
+        when(eventManager.clientEventToServerEvent(signinEvent)).thenReturn(new ServerEvent(ServerAction.ParticipantCount));
+        when(eventManager.clientEventToServerEvent(messageEvent)).thenReturn(new ServerEvent(ServerAction.Message));
+        when(eventManager.clientEventToServerEvent(generateNickEvent)).thenReturn(new ServerEvent(ServerAction.NickGenerated));
+        when(eventManager.clientEventToServerEvent(signoffEvent)).thenReturn(new ServerEvent(ServerAction.ParticipantCount));
+        when(eventManager.clientEventToServerEvent(disconnectEvent)).thenReturn(new ServerEvent(ServerAction.ClientDisconnected));
+        
         chatService.start();
 
         assertEquals(1, chatService.getConnectedClientCount());
-        assertEquals(1, chatService.broadcast(clientThread, new ClientEvent(ClientAction.Signin)));
-        assertEquals(1, chatService.broadcast(clientThread, new ClientEvent(ClientAction.Message)));
-        assertEquals(1,  chatService.broadcast(clientThread, new ClientEvent(ClientAction.GenerateNick)));
-        assertEquals(1, chatService.broadcast(clientThread, new ClientEvent(ClientAction.Signoff)));
-        assertEquals(1, chatService.broadcast(clientThread, new ClientEvent(ClientAction.Disconnect)));
+        assertEquals(1, chatService.broadcast(clientThread, signinEvent));
+        assertEquals(1, chatService.broadcast(clientThread, messageEvent));
+        assertEquals(1,  chatService.broadcast(clientThread, generateNickEvent));
+        assertEquals(1, chatService.broadcast(clientThread, signoffEvent));
+        assertEquals(1, chatService.broadcast(clientThread, disconnectEvent));
         
         chatService.stop();
         

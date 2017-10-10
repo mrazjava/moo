@@ -19,6 +19,15 @@
         <filtering>true</filtering>
       </resource>
     </resources>
+	<plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+			<configuration>
+				<mainClass>pl.zimowski.moo.server.commons.App</mainClass>
+			</configuration>		
+		</plugin>
+	</plugins>
   </build>
 
   <dependencies>
@@ -50,6 +59,10 @@
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-commons</artifactId>
     </dependency>  
+  	<dependency>
+  		<groupId>pl.zimowski</groupId>
+  		<artifactId>moo-server-commons</artifactId>
+  	</dependency>
     <dependency>
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
