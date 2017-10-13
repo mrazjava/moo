@@ -17,10 +17,13 @@ import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ServerAction;
 import pl.zimowski.moo.api.ServerEvent;
-import pl.zimowski.moo.jms.JmsHandler;
 import pl.zimowski.moo.server.commons.EventManager;
 
 /**
+ * Listens for client events, upon processing generates server events which 
+ * are either sent P2P (back to client) or published publicly (to all 
+ * clients).
+ * 
  * @since 1.3.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
  */
@@ -31,7 +34,7 @@ public class ClientEventListener implements MessageListener {
     private Logger log;
     
     @Inject
-    private JmsHandler jms;
+    private JmsServerGateway jms;
     
     @Inject
     private ServerEventSender serverEventSender;
@@ -82,7 +85,7 @@ public class ClientEventListener implements MessageListener {
             ServerEvent serverEvent = processClientEvent(clientEvent);
             if(serverEvent != null) {
                 ServerAction action = serverEvent.getAction();
-                
+
                 // detect public action and publish event
                 if(action == ServerAction.ClientDisconnected || 
                         action == ServerAction.Message || 

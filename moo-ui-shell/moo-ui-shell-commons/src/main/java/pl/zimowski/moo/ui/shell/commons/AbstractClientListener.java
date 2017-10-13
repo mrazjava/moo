@@ -3,6 +3,8 @@ package pl.zimowski.moo.ui.shell.commons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.zimowski.moo.api.ClientAction;
+import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ClientListener;
 
 /**
@@ -48,4 +50,34 @@ public abstract class AbstractClientListener implements ClientListener {
 	public void setNick(String nick) {
 		this.nick = nick;
 	}
+
+    public ClientEvent newEvent(ClientAction action) {
+        return new ClientEvent(action).withId(clientId);
+    }
+    
+    public ClientEvent newSigninEvent() {
+        return newEvent(ClientAction.Signin);
+    }
+    
+    public ClientEvent newGenerateNickEvent() {
+        return newEvent(ClientAction.GenerateNick);
+    }
+    
+    public ClientEvent newMessageEvent(String message) {
+        return newEvent(ClientAction.Message)
+                .withId(clientId)
+                .withAuthor(nick)
+                .withMessage(message);
+    }
+    
+    public ClientEvent newSignoffEvent() {
+        return newEvent(ClientAction.Signoff)
+                .withId(clientId)
+                .withAuthor(nick);
+    }
+    
+    public ClientEvent newDisconnectEvent() {
+        return newEvent(ClientAction.Disconnect)
+                .withId(clientId);
+    }
 }

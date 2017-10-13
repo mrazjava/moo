@@ -2,6 +2,7 @@ package pl.zimowski.moo.ui.shell.reader;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -9,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -30,6 +33,9 @@ import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
  */
 public class AppTest extends MooTest {
+    
+    @Rule
+    public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
 
     @InjectMocks
     private App reader;
@@ -48,6 +54,7 @@ public class AppTest extends MooTest {
     
     @Mock
     private ExecutionThrottling throttler;
+    
     
     @BeforeClass
     public static void dor() {
@@ -75,6 +82,14 @@ public class AppTest extends MooTest {
         reader.run(null);
     }
     
+    @Test
+    public void shouldConnectButShutdownOnThrottleMaxLimit() throws Exception {
+        
+        when(throttler.isCountExceeded(null)).thenReturn(true);
+        
+        reader.run(null);
+    }
+    
     /**
      * Very similar setup to {@link #shouldConnectButThrottleOnNullClientId()} 
      * as throttler is configured to throw exceptione very time, however, 
@@ -91,6 +106,8 @@ public class AppTest extends MooTest {
         doThrow(IllegalStateException.class).when(throttler).throttle();
         when(eventReporter.getClientId()).thenReturn("foo-bar");
         
+        systemInMock.provideLines("moo:exit");
+        
         reader.run(null);
     }
     
@@ -98,6 +115,8 @@ public class AppTest extends MooTest {
     public void shouldShutdownAndDisconnect() {
         
         List<ClientEvent> events = new ArrayList<>();
+        
+        when(eventReporter.newDisconnectEvent()).thenReturn(new ClientEvent(ClientAction.Disconnect));
         
         clientHandler.setEventList(events);
         assertTrue(events.isEmpty());

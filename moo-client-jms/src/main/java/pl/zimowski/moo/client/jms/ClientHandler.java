@@ -11,7 +11,7 @@ import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ClientHandling;
 import pl.zimowski.moo.api.ClientListener;
-import pl.zimowski.moo.jms.JmsHandler;
+import pl.zimowski.moo.jms.JmsGateway;
 
 /**
  * @since 1.3.0
@@ -24,7 +24,7 @@ public class ClientHandler implements ClientHandling {
     private Logger log;
     
     @Inject
-    private JmsHandler jms;
+    private JmsGateway jms;
     
     @Inject
     private ClientEventSender clientEventProducer;

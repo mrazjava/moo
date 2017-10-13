@@ -5,6 +5,10 @@ import static org.junit.Assert.assertNotNull;
 
 import java.lang.reflect.Field;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.slf4j.Logger;
@@ -34,5 +38,14 @@ public class ComponentProducerTest extends MooTest {
         
         assertNotNull(producedLogger);
         assertEquals(ComponentProducerTest.class.getName(), producedLogger.getName());
+    }
+    
+    @Test
+    public void shouldProduceContext() throws NamingException {
+        
+        Context context = producer.namingContext();
+        
+        assertNotNull(context);
+        assertEquals(InitialContext.class, context.getClass());
     }
 }

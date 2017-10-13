@@ -102,6 +102,7 @@ public class App implements ApplicationRunner {
             while(eventHandler.getNick() == null) {
                 if(throttler.isCountExceeded(maxThrottleExecutions)) {
                     log.warn("throttling limit exceeded! continuing...");
+                    throttler.reset();
                     break;
                 }                
                 throttler.throttle();

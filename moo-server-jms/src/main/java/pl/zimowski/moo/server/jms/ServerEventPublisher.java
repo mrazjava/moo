@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import pl.zimowski.moo.api.ServerEvent;
-import pl.zimowski.moo.jms.JmsHandler;
 
 /**
  * @since 1.3.0
@@ -22,7 +21,7 @@ public class ServerEventPublisher {
     private Logger log;
     
     @Inject
-    private JmsHandler jms;
+    private JmsServerGateway jms;
     
     
     public boolean publish(ServerEvent serverEvent) {

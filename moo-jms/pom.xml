@@ -14,20 +14,12 @@
   	<dependency>
   		<groupId>javax.jms</groupId>
   		<artifactId>javax.jms-api</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>pl.zimowski</groupId>
+  		<artifactId>moo-test-utils</artifactId>
   	</dependency>  
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-      </dependency>
-    <dependency>
-    	<groupId>pl.zimowski</groupId>
-    	<artifactId>moo-api</artifactId>
-    </dependency>
-    <dependency>
-    	<groupId>pl.zimowski</groupId>
-    	<artifactId>moo-commons</artifactId>
-    </dependency>
   </dependencies>
   <name>Moo JMS</name>
-  <description>Common JMS support for JMS based client and server</description>
+  <description>Basic support for JMS based client/server</description>
 </project>

@@ -1,5 +1,7 @@
 package pl.zimowski.moo.ui.shell.reader;
 
+import java.util.Scanner;
+
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
@@ -11,8 +13,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-import pl.zimowski.moo.api.ClientAction;
-import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ClientHandling;
 import pl.zimowski.moo.commons.ShutdownAgent;
 import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
@@ -73,10 +73,22 @@ public class App implements ApplicationRunner {
         while(eventReporter.getClientId() == null) {
             if(throttler.isCountExceeded(maxThrottleExecutions)) {
                 log.error("could not obtain client id; aborting!");
-                shutdownAgent.initiateShutdown(0);
+                shutdownAgent.initiateShutdown(1);
                 break;
             }
             throttler.throttle();
+        }
+        
+        try (Scanner scanner = new Scanner(System.in)) {
+            while(scanner.hasNextLine()) {
+    
+                String input = scanner.nextLine();
+                
+                if(input.equals("moo:exit")) {
+                    shutdownAgent.initiateShutdown(0);
+                    break;
+                }
+            }
         }
     }
 
@@ -84,7 +96,7 @@ public class App implements ApplicationRunner {
     public void shutdown() {
 
     	if(clientHandler.isConnected()) {    	
-            clientHandler.send(new ClientEvent(ClientAction.Disconnect));
+            clientHandler.send(eventReporter.newDisconnectEvent());
         }
     }
 }

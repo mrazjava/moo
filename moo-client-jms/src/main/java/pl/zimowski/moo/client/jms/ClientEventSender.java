@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import pl.zimowski.moo.api.ClientEvent;
-import pl.zimowski.moo.jms.JmsHandler;
 
 /**
  * @since 1.3.0
@@ -22,7 +21,7 @@ public class ClientEventSender {
     private Logger log;
 
     @Inject
-    private JmsHandler jms;
+    private JmsClientGateway jms;
     
     
     public boolean send(ClientEvent clientEvent) {

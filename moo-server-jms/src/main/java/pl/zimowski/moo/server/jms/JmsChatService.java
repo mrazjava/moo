@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
-import pl.zimowski.moo.jms.JmsHandler;
+import pl.zimowski.moo.jms.JmsGateway;
 import pl.zimowski.moo.server.commons.ChatService;
 
 /**
@@ -21,7 +21,7 @@ public class JmsChatService implements ChatService {
     private Logger log;
     
     @Inject
-    private JmsHandler jms;
+    private JmsGateway jms;
     
     private boolean running;
     

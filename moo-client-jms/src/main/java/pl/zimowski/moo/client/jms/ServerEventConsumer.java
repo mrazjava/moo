@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import pl.zimowski.moo.api.ClientListener;
 import pl.zimowski.moo.api.ServerEvent;
-import pl.zimowski.moo.jms.JmsHandler;
 
 /**
  * @since 1.3.0
@@ -24,7 +23,7 @@ public class ServerEventConsumer implements MessageListener {
     private Logger log;
     
     @Inject
-    private JmsHandler jms;
+    private JmsClientGateway jms;
     
     private ClientListener clientListener;
 

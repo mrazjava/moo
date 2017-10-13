@@ -1,8 +1,12 @@
 package pl.zimowski.moo.ui.shell.commons;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import pl.zimowski.moo.test.utils.MockLogger;
 import pl.zimowski.moo.test.utils.MooTest;
@@ -37,5 +41,18 @@ public class ThreadDelayTest extends MooTest {
 
         testThread.start();
         testThread.interrupt();
+    }
+    
+    @Test
+    public void shouldTrackCount() {
+        
+        ReflectionTestUtils.setField(threadDelay, "count", 10);
+        
+        assertEquals(10, threadDelay.getCount());
+        assertTrue(threadDelay.isCountExceeded(1));
+        
+        threadDelay.reset();
+        
+        assertEquals(0, threadDelay.getCount());
     }
 }

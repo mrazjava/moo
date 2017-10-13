@@ -134,7 +134,16 @@ public class AppTest extends MooTest {
 	    
 	    writer.run(null);
 	}
-	
+    
+    @Test(expected = IllegalStateException.class)
+    public void shouldTryThrottlingNullClientIdAndExitMaxLimitExceeded() throws Exception {
+        
+        when(throttler.isCountExceeded(null)).thenReturn(true);
+        doThrow(IllegalStateException.class).when(throttler).reset();
+        
+        writer.run(null);
+    }
+
 	@Test(expected = IllegalStateException.class)
 	public void shouldThrottleWhenMissingNick() throws Exception {
 	    
@@ -142,6 +151,18 @@ public class AppTest extends MooTest {
         when(eventHandler.getClientId()).thenReturn("foo-bar");
         
         systemInMock.provideLines(" ", "Howdy", "moo:exit");
+        
+        writer.run(null);
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void shouldTryThrottlingNullNickAndExitMaxLimitExceeded() throws Exception {
+
+	    when(eventHandler.getClientId()).thenReturn("foo-bar");
+        when(throttler.isCountExceeded(null)).thenReturn(true);
+        doThrow(IllegalStateException.class).when(throttler).reset();
+        
+        systemInMock.provideLines(" ");
         
         writer.run(null);
 	}
