@@ -60,7 +60,7 @@ public class ClientHandlerTest extends MooTest {
         ClientEvent connectEvent = clientEventCaptor.getValue();
         
         assertEquals(ClientAction.Connect, connectEvent.getAction());
-        assertNotNull(UUID.fromString(connectEvent.getId()));
+        assertNotNull(UUID.fromString(connectEvent.getClientId()));
     }
     
     @Test

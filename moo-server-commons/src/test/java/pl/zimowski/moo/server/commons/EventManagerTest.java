@@ -44,7 +44,7 @@ public class EventManagerTest extends MooTest {
     public void shouldHandleConnectEvent() {
         
         ServerEvent serverEvent = eventManager.clientEventToServerEvent(
-                new ClientEvent(ClientAction.Connect).withId(clientId));
+                new ClientEvent(ClientAction.Connect).withClientId(clientId));
         
         assertNotNull(serverEvent);
         assertEquals(ServerAction.ConnectionEstablished, serverEvent.getAction());
@@ -59,7 +59,7 @@ public class EventManagerTest extends MooTest {
         
         ServerEvent serverEvent = eventManager.clientEventToServerEvent(
                 new ClientEvent(ClientAction.Signin)
-                    .withId(clientId).withAuthor(author));
+                    .withClientId(clientId).withAuthor(author));
         
         assertNotNull(serverEvent);
         assertEquals(ServerAction.ParticipantCount, serverEvent.getAction());
@@ -78,7 +78,7 @@ public class EventManagerTest extends MooTest {
         
         ServerEvent serverEvent = eventManager.clientEventToServerEvent(
                 new ClientEvent(ClientAction.Signin)
-                    .withId(clientId).withAuthor(author));
+                    .withClientId(clientId).withAuthor(author));
         
         assertNotNull(serverEvent);
         assertEquals(ServerAction.ParticipantCount, serverEvent.getAction());
@@ -97,7 +97,7 @@ public class EventManagerTest extends MooTest {
         
         ServerEvent serverEvent = eventManager.clientEventToServerEvent(
                 new ClientEvent(ClientAction.Signoff)
-                    .withId(clientId).withAuthor(author));
+                    .withClientId(clientId).withAuthor(author));
         
         assertNotNull(serverEvent);
         assertEquals(ServerAction.ParticipantCount, serverEvent.getAction());
@@ -113,7 +113,7 @@ public class EventManagerTest extends MooTest {
         String message = "hello world!";
         
         ServerEvent serverEvent = eventManager.clientEventToServerEvent(
-                new ClientEvent(ClientAction.Message).withId(clientId)
+                new ClientEvent(ClientAction.Message).withClientId(clientId)
                     .withAuthor(author).withMessage(message));
         
         assertNotNull(serverEvent);
@@ -131,7 +131,7 @@ public class EventManagerTest extends MooTest {
         when(serverUtils.randomNickName(0)).thenReturn(nick);
         
         ServerEvent serverEvent = eventManager.clientEventToServerEvent(
-                new ClientEvent(ClientAction.GenerateNick).withId(clientId));
+                new ClientEvent(ClientAction.GenerateNick).withClientId(clientId));
         
         assertNotNull(serverEvent);
         assertEquals(ServerAction.NickGenerated, serverEvent.getAction());
@@ -144,7 +144,7 @@ public class EventManagerTest extends MooTest {
     public void shouldHandleDisconnectEvent() {
         
         ServerEvent serverEvent = eventManager.clientEventToServerEvent(
-                new ClientEvent(ClientAction.Disconnect).withId(clientId));
+                new ClientEvent(ClientAction.Disconnect).withClientId(clientId));
         
         assertNotNull(serverEvent);
         assertEquals(ServerAction.ClientDisconnected, serverEvent.getAction());

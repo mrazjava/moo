@@ -52,7 +52,7 @@ public abstract class AbstractClientListener implements ClientListener {
 	}
 
     public ClientEvent newEvent(ClientAction action) {
-        return new ClientEvent(action).withId(clientId);
+        return new ClientEvent(action).withClientId(clientId);
     }
     
     public ClientEvent newSigninEvent() {
@@ -65,19 +65,19 @@ public abstract class AbstractClientListener implements ClientListener {
     
     public ClientEvent newMessageEvent(String message) {
         return newEvent(ClientAction.Message)
-                .withId(clientId)
+                .withClientId(clientId)
                 .withAuthor(nick)
                 .withMessage(message);
     }
     
     public ClientEvent newSignoffEvent() {
         return newEvent(ClientAction.Signoff)
-                .withId(clientId)
+                .withClientId(clientId)
                 .withAuthor(nick);
     }
     
     public ClientEvent newDisconnectEvent() {
         return newEvent(ClientAction.Disconnect)
-                .withId(clientId);
+                .withClientId(clientId);
     }
 }

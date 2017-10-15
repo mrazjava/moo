@@ -90,7 +90,7 @@ public class AbstractClientListenerTest {
         
         assertNotNull(event);
         assertEquals(ClientAction.Message, event.getAction());
-        assertEquals(clientId, event.getId());
+        assertEquals(clientId, event.getClientId());
         assertEquals(author, event.getAuthor());
         assertEquals(message, event.getMessage());
     }
@@ -108,7 +108,7 @@ public class AbstractClientListenerTest {
         
         assertNotNull(event);
         assertEquals(ClientAction.Signoff, event.getAction());
-        assertEquals(clientId, event.getId());
+        assertEquals(clientId, event.getClientId());
         assertEquals(author, event.getAuthor());
         assertNull(event.getMessage());
     }
@@ -124,6 +124,6 @@ public class AbstractClientListenerTest {
         
         assertNotNull(event);
         assertEquals(ClientAction.Disconnect, event.getAction());
-        assertEquals(clientId, event.getId());
+        assertEquals(clientId, event.getClientId());
     }
 }

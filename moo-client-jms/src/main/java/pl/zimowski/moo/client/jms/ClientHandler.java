@@ -48,7 +48,7 @@ public class ClientHandler implements ClientHandling {
         serverEventConsumer.initialize(listener, clientId);
         serverEventSubscriber.initialize(listener);
         
-        ClientEvent connectEvent = new ClientEvent(ClientAction.Connect).withId(clientId);
+        ClientEvent connectEvent = new ClientEvent(ClientAction.Connect).withClientId(clientId);
         log.debug("connecting....\n{}", connectEvent);
         
         send(connectEvent);

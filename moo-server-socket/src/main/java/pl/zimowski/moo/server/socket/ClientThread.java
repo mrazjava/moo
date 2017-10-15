@@ -73,7 +73,7 @@ public class ClientThread extends Thread implements ClientNotification {
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                 lastActivity = System.currentTimeMillis();
                 ClientEvent msg = (ClientEvent)ois.readObject();
-                msg.withId(clientId);
+                msg.withClientId(clientId);
                 log.debug("in: {}", msg);
                 serverNotifier.broadcast(this, msg);
                 if(ClientAction.Disconnect == msg.getAction()) {

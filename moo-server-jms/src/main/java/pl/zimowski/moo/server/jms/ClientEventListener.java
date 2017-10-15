@@ -110,7 +110,7 @@ public class ClientEventListener implements MessageListener {
      */
     private ServerEvent processClientEvent(ClientEvent clientEvent) {
         
-        String clientId = clientEvent.getId();
+        String clientId = clientEvent.getClientId();
         ServerEvent serverEvent = null;
         
         if(clientEvent.getAction() == ClientAction.Connect) {
@@ -134,7 +134,7 @@ public class ClientEventListener implements MessageListener {
         }
         
         if(clientEvent.getAction() == ClientAction.Disconnect) {
-            connectedClients.remove(clientEvent.getId());
+            connectedClients.remove(clientEvent.getClientId());
         }
         
         if(clientEvent.getAction() == ClientAction.Signin) {

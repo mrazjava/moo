@@ -88,8 +88,8 @@ public class EventManager {
             case Disconnect:
                 serverAction = ServerAction.ClientDisconnected;
                 author = ServerEvent.AUTHOR;
-                serverMessage = String.format("client disconnect: %s", clientEvent.getId());
-                note = clientEvent.getId();
+                serverMessage = String.format("client disconnect: %s", clientEvent.getClientId());
+                note = clientEvent.getClientId();
                 break;
         }
 
@@ -97,7 +97,7 @@ public class EventManager {
 
         ServerEvent serverEvent = new ServerEvent(serverAction)
                 .withParticipantCount(participantCount)
-                .withClientId(clientEvent.getId());
+                .withClientId(clientEvent.getClientId());
         
         if(serverMessage != null) serverEvent.setMessage(serverMessage);
         if(author != null) serverEvent.withAuthor(author);

@@ -26,7 +26,7 @@ public class ClientEventTest {
         assertEquals(ClientAction.Signin, ClientAction.valueOf("Signin"));
         assertNull(event.getAuthor());
         assertNull(event.getMessage());
-        assertNull(event.getId());
+        assertNull(event.getClientId());
 
         event.withAuthor("foo").withMessage("bar");
 
@@ -53,8 +53,8 @@ public class ClientEventTest {
         
         assertEquals(event1, event2);
         
-        event1.withId("foobar123");
-        event2.withId("foobar123");
+        event1.withClientId("foobar123");
+        event2.withClientId("foobar123");
         
         assertEquals(event1, event2);
         
