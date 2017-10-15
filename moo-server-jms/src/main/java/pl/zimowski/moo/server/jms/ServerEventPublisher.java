@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 import pl.zimowski.moo.api.ServerEvent;
 
 /**
+ * Given an already generated {@link ServerEvent}, ensures it is published so 
+ * that registered subscribers can consume it. Events that are published are 
+ * known as "public" event, that is events that are broadcasted (and seen) by 
+ * every client. Most of those events are public chat activity.
+ * 
  * @since 1.3.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
  */

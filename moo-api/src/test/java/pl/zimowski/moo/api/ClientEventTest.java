@@ -1,10 +1,12 @@
 package pl.zimowski.moo.api;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * Ensures that {@link ClientEvent} correctly encapsulates information.
@@ -41,5 +43,45 @@ public class ClientEventTest {
         assertEquals(ClientAction.Message, event.getAction());
         assertEquals("foo", event.getAuthor());
         assertEquals("bar", event.getMessage());
+    }
+    
+    @Test
+    public void shouldEqual() {
+        
+        ClientEvent event1 = new ClientEvent(ClientAction.Connect);
+        ClientEvent event2 = new ClientEvent(ClientAction.Connect);
+        
+        assertEquals(event1, event2);
+        
+        event1.withId("foobar123");
+        event2.withId("foobar123");
+        
+        assertEquals(event1, event2);
+        
+        event1.withAuthor("bebe");
+        event2.withAuthor("bebe");
+        
+        assertEquals(event1, event2);
+        
+        event1.withMessage("kontra");
+        event2.withMessage("kontra");
+        
+        assertEquals(event1, event2);
+        
+        ReflectionTestUtils.setField(event1, "timestamp", 345L);
+        ReflectionTestUtils.setField(event2, "timestamp", 345L);
+        
+        assertEquals(event1, event2);
+    }
+    
+    @Test
+    public void shouldNotEqual() {
+        
+        ClientEvent event1 = new ClientEvent(ClientAction.Connect);
+        ClientEvent event2 = new ClientEvent(ClientAction.Disconnect);
+        
+        assertFalse(event1.equals(event2));
+        assertFalse(event1.equals(null));
+        assertFalse(event1.equals("event1"));
     }
 }

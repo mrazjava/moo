@@ -2,6 +2,8 @@ package pl.zimowski.moo.api;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Information that client can emit to a server.
  *
@@ -79,6 +81,24 @@ public class ClientEvent implements Serializable {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if(obj == null)
+            return false;
+        
+        if(!(obj instanceof ClientEvent))
+            return false;
+        
+        ClientEvent that = (ClientEvent)obj;
+        
+        return StringUtils.equals(id, that.id) &&
+                StringUtils.equals(author, that.author) &&
+                StringUtils.equals(message, that.message) &&
+                timestamp == that.timestamp && 
+                action == that.action;
     }
 
     @Override

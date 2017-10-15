@@ -27,7 +27,7 @@ public class ClientHandler implements ClientHandling {
     private JmsGateway jms;
     
     @Inject
-    private ClientEventSender clientEventProducer;
+    private ClientEventSender clientEventSender;
     
     @Inject
     private ServerEventConsumer serverEventConsumer;
@@ -70,6 +70,6 @@ public class ClientHandler implements ClientHandling {
     @Override
     public void send(ClientEvent event) {
         log.debug("producing:\n{}", event);
-        clientEventProducer.send(event);
+        clientEventSender.send(event);
     }
 }

@@ -57,7 +57,7 @@ public class EventManager {
                 break;
             case Signin:
                 serverAction = ServerAction.ParticipantCount;
-                participantCount++;
+                incrementParticipantCount();
 
                 author = ServerEvent.AUTHOR;
                 StringBuilder msg = new StringBuilder(String.format("%s joined;", clientEvent.getAuthor()));
@@ -70,7 +70,7 @@ public class EventManager {
                 break;
             case Signoff:
                 serverAction = ServerAction.ParticipantCount;
-                participantCount--;
+                decrementParticipantCount();
                 author = ServerEvent.AUTHOR;
                 serverMessage = String.format("%s left; %d participant(s) remaining", clientEvent.getAuthor(), participantCount);
                 break;
