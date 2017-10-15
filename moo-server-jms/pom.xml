@@ -51,6 +51,11 @@
     	<artifactId>moo-test-utils</artifactId>
     </dependency>
     <dependency>
+    	<groupId>com.github.stefanbirkner</groupId>
+    	<artifactId>system-rules</artifactId>
+    	<scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-commons</artifactId>
     </dependency>

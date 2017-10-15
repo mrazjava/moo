@@ -49,7 +49,7 @@ public class ClientEventListener implements MessageListener {
 
     
     @PostConstruct
-    private void initialize() throws JMSException {
+    void initialize() throws JMSException {
         
         jms.getClientEventsConsumer().setMessageListener(this);
     }
@@ -69,8 +69,6 @@ public class ClientEventListener implements MessageListener {
                 if(object instanceof ClientEvent) {
                     clientEvent = (ClientEvent)object;
                     log.debug("...\n{}", clientEvent);
-                    message.acknowledge();
-                    
                 }
                 else {
                     log.warn("unexpected payload type:\n{}", object);

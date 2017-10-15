@@ -46,6 +46,7 @@ public class JmsChatService implements ChatService {
             }
         }
         catch(Exception e) {
+            running = false;
             log.error("jms service init error", e);
         }
     }
