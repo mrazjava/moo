@@ -14,6 +14,10 @@ import javax.naming.NamingException;
 import org.slf4j.Logger;
 
 /**
+ * Basic management of JMS connection and session common and useful 
+ * for JMS based client and server. Defines queues and topics used 
+ * by moo events.
+ * 
  * @since 1.3.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
  */

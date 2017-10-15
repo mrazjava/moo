@@ -29,7 +29,7 @@ import pl.zimowski.moo.test.utils.MooTest;
  * @since 1.3.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
  */
-public class MooJmsTest extends MooTest {
+public class JmsGatewayTest extends MooTest {
 
     @InjectMocks
     private JmsGateway jms;
