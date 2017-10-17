@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import pl.zimowski.moo.api.ApiUtils;
 import pl.zimowski.moo.api.ClientEvent;
-import pl.zimowski.moo.api.ClientListener;
+import pl.zimowski.moo.api.ClientReporting;
 
 /**
  * Socket based manager. Expects that server is capable talking over web
@@ -27,14 +27,14 @@ public class ConnectionManager implements ConnectionManagement {
 
     @Inject
     private Logger log;
-    
+
     @Inject
     private SocketProducer socketProducer;
-    
+
     private Socket socket;
-    
+
     private boolean connected;
-    
+
     @Inject
     private ServerListenerInitializer serverListenerInit;
 
@@ -50,22 +50,22 @@ public class ConnectionManager implements ConnectionManagement {
     }
 
     @Override
-    public boolean connect(ClientListener clientListener) {
-        
+    public boolean connect(ClientReporting reporter) {
+
         String host = socketProducer.getSocketHost();
         int port = socketProducer.getSocketPort();
 
         log.info("establishing connection to {}:{}", host, port);
 
         socket = socketProducer.getSocket();
-        
+
         if(socket != null) {
-            clientListener.onBeforeServerConnect(host, port);
-            serverListenerInit.initialize(new ServerListener(socket, clientListener));
+            reporter.onBeforeServerConnect(String.format("%s:%d", host, port));
+            serverListenerInit.initialize(new ServerListener(socket, reporter));
             connected = true;
         }
         else {
-            clientListener.onConnectToServerError(socketProducer.getStatus());
+            reporter.onConnectToServerError(socketProducer.getStatus());
         }
 
         return connected;
@@ -80,7 +80,7 @@ public class ConnectionManager implements ConnectionManagement {
     public boolean isConnected() {
         return connected;
     }
-    
+
     @Override
     public void send(ClientEvent event) {
 

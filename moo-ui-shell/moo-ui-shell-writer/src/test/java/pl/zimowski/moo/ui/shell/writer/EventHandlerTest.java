@@ -18,7 +18,7 @@ import pl.zimowski.moo.api.ServerEvent;
 import pl.zimowski.moo.test.utils.MooTest;
 
 /**
- * Ensures that {@link EventHandler} operates as expected.
+ * Ensures that {@link ClientReporter} operates as expected.
  *
  * @since 1.2.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
@@ -26,62 +26,62 @@ import pl.zimowski.moo.test.utils.MooTest;
 public class EventHandlerTest extends MooTest {
 
     @InjectMocks
-    private EventHandler eventHandler;
-    
+    private ClientReporter eventHandler;
+
     @Mock
     private ClientHandling clientHandler;
-    
+
     /**
      * stubs connected state of a client handler
      */
     private boolean connected = true;
 
-    
+
     @Test
     public void shouldReportCorrectAuthor() {
-    	assertEquals(EventHandler.AUTHOR, eventHandler.getAuthor());
+    	assertEquals(ClientReporter.AUTHOR, eventHandler.getAuthor());
     }
-    
+
     @Test
     public void shouldHandleConnectionEstablishedEvent() {
-    	
+
     	String clientId = "foo-bar";
-    	
+
     	ServerEvent event = new ServerEvent(ServerAction.ConnectionEstablished)
     			.withClientId(clientId);
-    	
+
     	assertNull(eventHandler.getClientId());
     	eventHandler.onEvent(event);
     	assertEquals(clientId, eventHandler.getClientId());
     }
-    
+
     @Test
     public void shouldHandleNickGeneratedEvent() {
-    	
+
     	String nick = "johnie";
-    	
+
     	ServerEvent event = new ServerEvent(ServerAction.NickGenerated)
     			.withMessage(nick);
-    	
+
     	assertNull(eventHandler.getNick());
     	eventHandler.onEvent(event);
     	assertEquals(nick, eventHandler.getNick());
     }
-    
+
     @Test
     public void shouldHandleServerExit() {
-    	
+
     	ServerEvent event = new ServerEvent(ServerAction.ServerExit);
-    	
+
     	Mockito.doAnswer(new Answer<Boolean>() {
 
 			@Override
 			public Boolean answer(InvocationOnMock arg0) throws Throwable {
 				return connected;
 			}
-    		
+
     	}).when(clientHandler).isConnected();
-    	
+
     	Mockito.doAnswer(new Answer<Void>() {
 
 			@Override
@@ -89,24 +89,24 @@ public class EventHandlerTest extends MooTest {
 				connected = false;
 				return null;
 			}
-    		
+
     	}).when(clientHandler).disconnect();
-    	
-    	
+
+
     	assertTrue(clientHandler.isConnected());
     	eventHandler.onEvent(event);
     	assertFalse(clientHandler.isConnected());
     }
-    
+
     @Test
     public void shouldHandleOnBeforeServerConnect() {
-    	
-    	eventHandler.onBeforeServerConnect("localhost", 8000);
+
+    	eventHandler.onBeforeServerConnect("localhost:8000");
     }
-    
+
     @Test
     public void shouldHandleOnConnectToServerError() {
-    	
+
     	eventHandler.onConnectToServerError("foo bar");
     }
 }

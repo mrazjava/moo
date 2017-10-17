@@ -4,7 +4,7 @@ import java.util.List;
 
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ClientHandling;
-import pl.zimowski.moo.api.ClientListener;
+import pl.zimowski.moo.api.ClientReporting;
 
 /**
  * Handy mock useful for spying and verifying generated client events. 
@@ -19,7 +19,7 @@ public class EventAwareClientHandlerMock implements ClientHandling {
 
     
     @Override
-    public boolean connect(ClientListener listener) {
+    public boolean connect(ClientReporting listener) {
         return true;
     }
 

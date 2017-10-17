@@ -46,7 +46,7 @@ public class AppTest extends MooTest {
     private EventAwareClientHandlerMock clientHandler;
     
     @Mock
-    private EventHandler eventHandler;
+    private ClientReporter eventHandler;
     
     @Mock
     private ShutdownAgent shutdownAgent;

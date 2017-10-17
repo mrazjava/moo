@@ -17,7 +17,7 @@ import pl.zimowski.moo.api.ServerEvent;
 import pl.zimowski.moo.test.utils.MooTest;
 
 /**
- * Ensures that {@link EventReporter} operates as expected.
+ * Ensures that {@link ClientReporter} operates as expected.
  * 
  * @since 1.2.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
@@ -25,7 +25,7 @@ import pl.zimowski.moo.test.utils.MooTest;
 public class EventReporterTest extends MooTest {
     
     @InjectMocks
-    private EventReporter reporter;
+    private ClientReporter reporter;
     
     @Mock
     private ClientHandling clientHandler;
@@ -44,7 +44,7 @@ public class EventReporterTest extends MooTest {
     @Test
     public void shouldReturnAuthor() {
         
-        assertEquals(EventReporter.AUTHOR, reporter.getAuthor());
+        assertEquals(ClientReporter.AUTHOR, reporter.getAuthor());
     }
     
     @Test

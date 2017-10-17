@@ -21,8 +21,8 @@ import pl.zimowski.moo.commons.ShutdownAgent;
 import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
 
 /**
- * Text based UI client of a Moo chat service with write only 
- * capability. Allows to generate chat events. Requires a UI 
+ * Text based UI client of a Moo chat service with write only
+ * capability. Allows to generate chat events. Requires a UI
  * reader to display incoming chats.
  *
  * @since 1.2.0
@@ -31,25 +31,25 @@ import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
 @ComponentScan(basePackages = "pl.zimowski.moo")
 @SpringBootApplication
 public class App implements ApplicationRunner {
-	
+
     @Inject
     private Logger log;
-    
+
     @Inject
     private ClientHandling clientHandler;
-    
+
     @Inject
-    private EventHandler eventHandler;
-    
+    private ClientReporter eventHandler;
+
     @Inject
     private ShutdownAgent shutdownAgent;
-    
+
     @Inject
     private ExecutionThrottling throttler;
-    
+
     /**
-     * maximum number of throttling iterations; once reached, 
-     * there is no more throttling ({@code null} means infinite 
+     * maximum number of throttling iterations; once reached,
+     * there is no more throttling ({@code null} means infinite
      * throttling)
      */
     @Value("${shell.writer.throttle.max}")
@@ -85,50 +85,50 @@ public class App implements ApplicationRunner {
             	throttler.throttle();
             }
 
-            EventHandler.LOG.info("({}) type nickname or just hit enter; ctrl-c to exit", EventHandler.AUTHOR);
+            ClientReporter.LOG.info("({}) type nickname or just hit enter; ctrl-c to exit", ClientReporter.AUTHOR);
 
             String nickName = scanner.nextLine();
             ClientEvent signinEvent = eventHandler.newSigninEvent();
-            
+
             if(StringUtils.isNotBlank(nickName)) {
             	eventHandler.setNick(nickName);
             }
             else {
             	clientHandler.send(eventHandler.newGenerateNickEvent());
             }
-            
-            // wait until server responds with a nick; event reporter listens 
+
+            // wait until server responds with a nick; event reporter listens
             // for nick confirmation and sets nick accordingly
             while(eventHandler.getNick() == null) {
                 if(throttler.isCountExceeded(maxThrottleExecutions)) {
                     log.warn("throttling limit exceeded! continuing...");
                     throttler.reset();
                     break;
-                }                
+                }
                 throttler.throttle();
             }
-            
+
             signinEvent.setAuthor(eventHandler.getNick());
             clientHandler.send(signinEvent);
 
             ApiUtils.printPrompt();
-            
+
             while(scanner.hasNextLine()) {
 
                 String input = scanner.nextLine();
-                
+
                 if(input.equals("moo:exit")) {
                 	break; // in the future we should expand moo: into a managable predicates
                 }
-                
+
                 ClientEvent event = eventHandler.newMessageEvent(input);
                 log.debug("sending: {}", event);
                 clientHandler.send(event);
-                
+
                 ApiUtils.printPrompt();
             }
         }
-        
+
         shutdownAgent.initiateShutdown(0);
     }
 
@@ -136,14 +136,14 @@ public class App implements ApplicationRunner {
     public void shutdown() {
 
     	String nick = eventHandler.getNick();
-    	
+
     	if(clientHandler.isConnected()) {
-    	
+
 	    	if(nick != null) { // may be null if connected, then exit before signin
-	    		EventHandler.LOG.info("({}) done mooing? bye {}!", EventHandler.AUTHOR, nick);
+	    		ClientReporter.LOG.info("({}) done mooing? bye {}!", ClientReporter.AUTHOR, nick);
 	    		clientHandler.send(eventHandler.newSignoffEvent());
 	    	}
-    	
+
             clientHandler.send(eventHandler.newDisconnectEvent());
         }
     }

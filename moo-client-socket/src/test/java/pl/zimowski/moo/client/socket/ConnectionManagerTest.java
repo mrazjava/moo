@@ -17,7 +17,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
-import pl.zimowski.moo.api.ClientListener;
+import pl.zimowski.moo.api.ClientReporting;
 import pl.zimowski.moo.test.utils.MockLogger;
 import pl.zimowski.moo.test.utils.MooTest;
 
@@ -42,7 +42,7 @@ public class ConnectionManagerTest extends MooTest {
     private Socket socket;
     
     @Mock
-    private ClientListener clientListener;
+    private ClientReporting clientListener;
     
     @Mock
     private ServerListenerInitializer serverListenerInit;

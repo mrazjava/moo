@@ -35,7 +35,7 @@ public class App implements ApplicationRunner {
     private ClientHandling clientHandler;
     
     @Inject
-    private EventReporter eventReporter;
+    private ClientReporter eventReporter;
     
     @Inject
     private ExecutionThrottling throttler;
