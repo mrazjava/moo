@@ -23,7 +23,7 @@ import pl.zimowski.moo.test.utils.MooTest;
  * @since 1.2.0
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
-public class EventHandlerTest extends MooTest {
+public class ClientReporterTest extends MooTest {
 
     @InjectMocks
     private ClientReporter eventHandler;

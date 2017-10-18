@@ -25,8 +25,8 @@ public class ApiUtilsTest {
 
     @Mock
     private Charset charset;
-    
-    
+
+
     @Test
     public void shouldFetchResource() {
 
@@ -35,16 +35,16 @@ public class ApiUtilsTest {
 
         assertEquals(expectedContent, fetchedContent);
     }
-    
+
     @Test
     public void shouldNotFetchResource() {
-        
+
         ApiUtils.fetchResource("/blah-blah");
     }
-    
+
     @Test
     public void shouldPrintPrompt() {
-        
+
         SystemOutRule  systemOutMock = new SystemOutRule().mute().enableLog();
         systemOutMock.apply(new Statement() {
             @Override

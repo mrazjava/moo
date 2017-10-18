@@ -5,12 +5,11 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
-import static pl.zimowski.moo.test.utils.DummyLogWorker.THE_QUICK;
 import static pl.zimowski.moo.test.utils.DummyLogWorker.BROWN_FOX;
+import static pl.zimowski.moo.test.utils.DummyLogWorker.DOG;
 import static pl.zimowski.moo.test.utils.DummyLogWorker.JUMPS_OVER;
 import static pl.zimowski.moo.test.utils.DummyLogWorker.THE_LAZY;
-import static pl.zimowski.moo.test.utils.DummyLogWorker.DOG;
+import static pl.zimowski.moo.test.utils.DummyLogWorker.THE_QUICK;
 
 import java.util.Map;
 
@@ -46,7 +45,7 @@ public class MockLoggerTest {
     public void initResultsMap() {
         getResults().clear();
     }
-    
+
     private Map<Level, String> getResults() {
         return testLogger.getResults();
     }
@@ -206,50 +205,50 @@ public class MockLoggerTest {
 
         assertThat(getResults().values(), hasSize(0));
     }
-    
+
     @Test
     public void shouldLogAlternateTraceCalls() {
-        
+
         TestLogger.resetSilence();
         logWorker.logAlternateTrace();
         assertEquals(9, testLogger.getTraceCount());
     }
-    
+
     @Test
     public void shouldLogAlternateDebugCalls() {
-        
+
         TestLogger.resetSilence();
         logWorker.logAlternateDebug();
         assertEquals(9, testLogger.getDebugCount());
     }
-    
+
     @Test
     public void shouldLogAlternateInfoCalls() {
 
         TestLogger.resetSilence();
         logWorker.logAlternateInfo();
-        assertEquals(9, testLogger.getInfoCount());        
+        assertEquals(9, testLogger.getInfoCount());
     }
-    
+
     @Test
     public void shouldLogAlternateWarnCalls() {
-        
+
         TestLogger.resetSilence();
         logWorker.logAlternateWarn();
         assertEquals(9, testLogger.getWarnCount());
     }
-    
+
     @Test
     public void shouldLogAlternateErrorCalls() {
-        
+
         TestLogger.resetSilence();
         logWorker.logAlternateError();
         assertEquals(9, testLogger.getErrorCount());
     }
-    
+
     @Test
     public void shouldGetLoggerName() {
-        
+
         assertEquals(MockLogger.class.getName(), testLogger.getName());
     }
 }

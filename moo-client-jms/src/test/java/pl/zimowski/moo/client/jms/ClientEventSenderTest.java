@@ -24,48 +24,48 @@ import pl.zimowski.moo.test.utils.MooTest;
 
 /**
  * Ensures that {@link ClientEventSender} operates as expected.
- * 
+ *
  * @since 1.3.0
- * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
+ * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 public class ClientEventSenderTest extends MooTest {
 
     @InjectMocks
     private ClientEventSender sender;
-    
+
     @Spy
     private MockLogger mockLog;
-    
+
     @Mock
     private JmsClientGateway jms;
-    
+
     @Mock
     private Message message;
-    
+
     @Mock
     private MessageProducer msgProducer;
-    
-    
+
+
     @Test
     public void shouldSendEvent() throws JMSException {
-        
+
         ClientEvent testEvent = new ClientEvent(ClientAction.Signin).withAuthor("pacanek");
         ArgumentCaptor<ClientEvent> clientEventCaptor = ArgumentCaptor.forClass(ClientEvent.class);
 
         when(jms.createClientEventMessage(Mockito.any())).thenReturn(message);
         when(jms.getClientEventsProducer()).thenReturn(msgProducer);
-        
+
         assertTrue(sender.send(testEvent));
 
         verify(jms).createClientEventMessage(clientEventCaptor.capture());
         ClientEvent capturedEvent = clientEventCaptor.getValue();
-        
+
         assertEquals(testEvent, capturedEvent);
     }
-    
+
     @Test
     public void shouldHandleJmsException() throws JMSException {
-        
+
         when(jms.createClientEventMessage(Mockito.any())).thenThrow(JMSException.class);
         assertFalse(sender.send(new ClientEvent(ClientAction.GenerateNick)));
     }

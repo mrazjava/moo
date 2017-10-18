@@ -39,10 +39,10 @@ import pl.zimowski.moo.server.commons.jmx.JmxReportingSupport;
  */
 @Component
 public class WebSocketChatService implements ChatService, EventBroadcasting {
-	
+
     @Inject
     private Logger log;
-    
+
     @Inject
     private ServerSocketFactory serverSocketFactory;
 
@@ -137,9 +137,9 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         if(clientEvent.getAction() == ClientAction.Disconnect) {
         	connectedClients.remove(clientThread);
         }
-        
+
         ServerEvent serverEvent = eventManager.clientEventToServerEvent(clientEvent);
-        
+
         if(clientEvent.getAction() == ClientAction.GenerateNick) {
         	clientThread.notify(serverEvent);
         	return 1; // only nick requestor gets notified with generated nick
@@ -151,12 +151,12 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
         				);
         }
         clientThread.notify(serverEvent);
-        
+
         return broadcast(clientThread, serverEvent);
     }
-    
+
     private int broadcast(ClientNotification source, ServerEvent event) {
-    	        
+
         int notifiedClients = 0;
 
         // could be perf bottleneck - should re-think for optimization; this
@@ -168,7 +168,7 @@ public class WebSocketChatService implements ChatService, EventBroadcasting {
 
                 if(source != null && StringUtils.equals(source.getClientId(), connectedClient.getClientId()))
                     continue;
-                
+
                 log.debug("broadcasting to: {}", connectedClient);
 
                 if(connectedClient.notify(event)) {

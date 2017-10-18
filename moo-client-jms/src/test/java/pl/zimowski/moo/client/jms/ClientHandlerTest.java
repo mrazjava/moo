@@ -23,49 +23,49 @@ import pl.zimowski.moo.test.utils.MooTest;
 
 /**
  * Ensures that {@link ClientHandler} operates as expected.
- * 
+ *
  * @since 1.3.0
- * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
+ * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 public class ClientHandlerTest extends MooTest {
 
     @InjectMocks
     private ClientHandler clientHandler;
-    
+
     @Spy
     private MockLogger mockLog;
-    
+
     @Mock
     private JmsGateway jms;
-    
+
     @Mock
     private ClientEventSender clientEventSender;
-    
+
     @Mock
     private ServerEventConsumer serverEventConsumer;
-    
+
     @Mock
     private ServerEventSubscriber serverEventSubscriber;
-    
-    
+
+
     @Test
     public void shouldConnect() {
-        
+
         ArgumentCaptor<ClientEvent> clientEventCaptor = ArgumentCaptor.forClass(ClientEvent.class);
-        
+
         assertTrue(clientHandler.connect(null));
         assertTrue(clientHandler.isConnected());
         verify(clientEventSender).send(clientEventCaptor.capture());
-        
+
         ClientEvent connectEvent = clientEventCaptor.getValue();
-        
+
         assertEquals(ClientAction.Connect, connectEvent.getAction());
         assertNotNull(UUID.fromString(connectEvent.getClientId()));
     }
-    
+
     @Test
     public void shouldDisconnect() {
-        
+
         ReflectionTestUtils.setField(clientHandler, "connected", true);
         clientHandler.disconnect();
         assertFalse(clientHandler.isConnected());

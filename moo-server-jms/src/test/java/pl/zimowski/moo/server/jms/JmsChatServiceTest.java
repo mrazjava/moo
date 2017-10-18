@@ -20,9 +20,9 @@ import pl.zimowski.moo.test.utils.MooTest;
 
 /**
  * Ensures that {@link JmsChatService} operates as expected.
- * 
+ *
  * @since 1.3.0
- * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
+ * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 public class JmsChatServiceTest extends MooTest {
 
@@ -31,35 +31,35 @@ public class JmsChatServiceTest extends MooTest {
 
     @InjectMocks
     private JmsChatService chat;
-    
+
     @Spy
     private MockLogger mockLog;
-    
+
     @Mock
     private JmsGateway jms;
-    
-    
+
+
     @Test
     public void shouldStartAndExit() {
-        
+
         systemInMock.provideLines("hello", "moo:exit");
         chat.start();
         assertFalse(chat.isRunning());
     }
-    
+
     @Test
     public void shouldStartAndAbortOnJmsException() {
 
         doThrow(JMSException.class).when(jms).stop();
-        
+
         systemInMock.provideLines("moo:exit");
         chat.start();
-        assertFalse(chat.isRunning());        
+        assertFalse(chat.isRunning());
     }
-    
+
     @Test
     public void shouldStop() {
-        
+
         ReflectionTestUtils.setField(chat, "running", true);
         chat.stop();
         assertFalse(chat.isRunning());

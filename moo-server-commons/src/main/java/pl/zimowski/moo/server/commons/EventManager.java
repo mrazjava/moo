@@ -13,29 +13,29 @@ import pl.zimowski.moo.api.ServerEvent;
 
 /**
  * @since 1.3.0
- * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
+ * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 @Component
 public class EventManager {
 
     @Inject
     private Logger log;
-    
+
     @Inject
     private ServerUtils serverUtils;
-    
+
     /**
      * Connected client is not the same as chat participant. For instance, a
      * web client may establish a single connection but may provide for many
      * participants.
      */
     private int participantCount;
-    
-    
-    
+
+
+
     /**
      * Inspects the nature of a message received from a client, and updates
-     * tracked totals as necessary. Transforms the client message to equivalent 
+     * tracked totals as necessary. Transforms the client message to equivalent
      * server message so that it can be used by the engine to rebroadcast it.
      *
      * @param clientEvent produced by the client
@@ -48,7 +48,7 @@ public class EventManager {
         String serverMessage = null;
         String author = null;
         String note = null;
-        
+
         log.debug("\n{}", clientEvent);
 
         switch(clientAction) {
@@ -98,24 +98,24 @@ public class EventManager {
         ServerEvent serverEvent = new ServerEvent(serverAction)
                 .withParticipantCount(participantCount)
                 .withClientId(clientEvent.getClientId());
-        
+
         if(serverMessage != null) serverEvent.setMessage(serverMessage);
         if(author != null) serverEvent.withAuthor(author);
         if(note != null) serverEvent.setNote(note);
-        
+
         log.debug("\n{}", serverEvent);
-        
+
         return serverEvent;
     }
-    
+
     public void incrementParticipantCount() {
         participantCount++;
     }
-    
+
     public void decrementParticipantCount() {
         participantCount--;
     }
-    
+
     public int getParticipantCount() {
         return participantCount;
     }

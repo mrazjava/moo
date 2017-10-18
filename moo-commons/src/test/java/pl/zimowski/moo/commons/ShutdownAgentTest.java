@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
 
-import pl.zimowski.moo.commons.ShutdownAgent;
 import pl.zimowski.moo.test.utils.MooTest;
 
 /**
@@ -20,16 +19,16 @@ public class ShutdownAgentTest extends MooTest {
 
 	@InjectMocks
 	private ShutdownAgent agent;
-	
+
 	@Mock
 	private ApplicationContext context;
-	
-	
+
+
 	@Test
 	public void shouldShutDown() {
-		
+
 		int shutdownCode = 101;
-		
+
 		assertEquals(shutdownCode, agent.initiateShutdown(shutdownCode));
 	}
 }

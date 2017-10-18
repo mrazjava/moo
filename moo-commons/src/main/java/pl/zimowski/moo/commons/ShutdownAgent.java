@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
- * Mechanism used to gracefully exit spring managed app upon 
+ * Mechanism used to gracefully exit spring managed app upon
  * a request.
  *
  * @since 1.2.0
@@ -18,8 +18,8 @@ public class ShutdownAgent {
 
 	@Inject
 	private ApplicationContext appContext;
-	
-	
+
+
 	public int initiateShutdown(int statusCode) {
 		return SpringApplication.exit(appContext, () -> statusCode);
 	}

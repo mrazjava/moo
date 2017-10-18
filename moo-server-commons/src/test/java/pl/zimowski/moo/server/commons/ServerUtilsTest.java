@@ -35,15 +35,15 @@ public class ServerUtilsTest extends MooTest {
 
         assertEquals("FantasticDonkey", randomNick);
     }
-    
+
     @Test
     public void shouldGenerateNounNickName() {
-        
+
         given(nickNameElements.getAdjectives()).willReturn(new String[] { "Crazy" });
         given(nickNameElements.getNouns()).willReturn(new String[] { "Baboon" });
-        
+
         String randomNick = clientUtils.randomNickName(100);
-        
+
         assertTrue(randomNick.endsWith("Baboon"));
     }
 }

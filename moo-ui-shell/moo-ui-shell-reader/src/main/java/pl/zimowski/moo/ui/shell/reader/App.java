@@ -18,7 +18,7 @@ import pl.zimowski.moo.commons.ShutdownAgent;
 import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
 
 /**
- * Text based UI client of a Moo chat service with read only 
+ * Text based UI client of a Moo chat service with read only
  * capabilities.
  *
  * @since 1.0.0
@@ -27,27 +27,27 @@ import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
 @ComponentScan(basePackages = "pl.zimowski.moo")
 @SpringBootApplication
 public class App implements ApplicationRunner {
-    
+
     @Inject
     private Logger log;
-    
+
     @Inject
     private ClientHandling clientHandler;
-    
+
     @Inject
     private ClientReporter eventReporter;
-    
+
     @Inject
     private ExecutionThrottling throttler;
 
     /**
-     * maximum number of throttling iterations; once reached, 
-     * there is no more throttling ({@code null} means infinite 
+     * maximum number of throttling iterations; once reached,
+     * there is no more throttling ({@code null} means infinite
      * throttling)
      */
     @Value("${shell.writer.throttle.max}")
     private Integer maxThrottleExecutions;
-    
+
     @Inject
     private ShutdownAgent shutdownAgent;
 
@@ -78,12 +78,12 @@ public class App implements ApplicationRunner {
             }
             throttler.throttle();
         }
-        
+
         try (Scanner scanner = new Scanner(System.in)) {
             while(scanner.hasNextLine()) {
-    
+
                 String input = scanner.nextLine();
-                
+
                 if(input.equals("moo:exit")) {
                     shutdownAgent.initiateShutdown(0);
                     break;
@@ -95,7 +95,7 @@ public class App implements ApplicationRunner {
     @PreDestroy
     public void shutdown() {
 
-    	if(clientHandler.isConnected()) {    	
+    	if(clientHandler.isConnected()) {
             clientHandler.send(eventReporter.newDisconnectEvent());
         }
     }

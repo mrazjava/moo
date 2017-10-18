@@ -18,48 +18,48 @@ import pl.zimowski.moo.test.utils.MooTest;
 
 /**
  * Ensures that {@link ClientReporter} operates as expected.
- * 
+ *
  * @since 1.2.0
- * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
+ * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
-public class EventReporterTest extends MooTest {
-    
+public class ClientReporterTest extends MooTest {
+
     @InjectMocks
     private ClientReporter reporter;
-    
+
     @Mock
     private ClientHandling clientHandler;
-    
+
     private boolean connected;
 
 
     @Test
     public void shouldEstablishConnection() {
-        
+
         assertNull(reporter.getClientId());
         reporter.onEvent(new ServerEvent(ServerAction.ConnectionEstablished).withClientId("foo-bar"));
         assertEquals("foo-bar", reporter.getClientId());
     }
-    
+
     @Test
     public void shouldReturnAuthor() {
-        
+
         assertEquals(ClientReporter.AUTHOR, reporter.getAuthor());
     }
-    
+
     @Test
     public void shouldRecordNick() {
-        
+
         assertNull(reporter.getNick());
         reporter.onEvent(new ServerEvent(ServerAction.NickGenerated).withMessage("johnie"));
         assertEquals("johnie", reporter.getNick());
     }
-    
+
     @Test
     public void shouldDisconnectOnExit() {
-        
+
         connected = true;
-        
+
         Mockito.doAnswer(new Answer<Void>() {
 
             @Override
@@ -67,18 +67,18 @@ public class EventReporterTest extends MooTest {
                 connected = false;
                 return null;
             }
-            
+
         }).when(clientHandler).disconnect();
 
         reporter.onEvent(new ServerEvent(ServerAction.ServerExit));
         assertFalse(connected);
     }
-    
+
     @Test
     public void shouldHandleMessage() {
-        
+
         reporter.onEvent(new ServerEvent(ServerAction.Message).withMessage("hello"));
-        
+
         // nothing to assert as message is simply logged
         // at least we covered extra branch :-)
     }

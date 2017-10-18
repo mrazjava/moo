@@ -44,42 +44,42 @@ public class ClientEventTest {
         assertEquals("foo", event.getAuthor());
         assertEquals("bar", event.getMessage());
     }
-    
+
     @Test
     public void shouldEqual() {
-        
+
         ClientEvent event1 = new ClientEvent(ClientAction.Connect);
         ClientEvent event2 = new ClientEvent(ClientAction.Connect);
-        
+
         assertEquals(event1, event2);
-        
+
         event1.withClientId("foobar123");
         event2.withClientId("foobar123");
-        
+
         assertEquals(event1, event2);
-        
+
         event1.withAuthor("bebe");
         event2.withAuthor("bebe");
-        
+
         assertEquals(event1, event2);
-        
+
         event1.withMessage("kontra");
         event2.withMessage("kontra");
-        
+
         assertEquals(event1, event2);
-        
+
         ReflectionTestUtils.setField(event1, "timestamp", 345L);
         ReflectionTestUtils.setField(event2, "timestamp", 345L);
-        
+
         assertEquals(event1, event2);
     }
-    
+
     @Test
     public void shouldNotEqual() {
-        
+
         ClientEvent event1 = new ClientEvent(ClientAction.Connect);
         ClientEvent event2 = new ClientEvent(ClientAction.Disconnect);
-        
+
         assertFalse(event1.equals(event2));
         assertFalse(event1.equals(null));
         assertFalse(event1.equals("event1"));

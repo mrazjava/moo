@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import pl.zimowski.moo.client.socket.configuration.ServerSettings;
-
 /**
  * Ensures opration of {@link ServerSettings}.
  *
