@@ -35,7 +35,7 @@ public class App implements ApplicationRunner {
     private ClientHandling clientHandler;
 
     @Inject
-    private ClientReporter eventReporter;
+    private ClientReporter clientReporter;
 
     @Inject
     private ExecutionThrottling throttler;
@@ -65,12 +65,12 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        if(!clientHandler.connect(eventReporter)) {
+        if(!clientHandler.connect(clientReporter)) {
             return;
         }
 
         // allow connection thru while console buffers the output
-        while(eventReporter.getClientId() == null) {
+        while(clientReporter.getClientId() == null) {
             if(throttler.isCountExceeded(maxThrottleExecutions)) {
                 log.error("could not obtain client id; aborting!");
                 shutdownAgent.initiateShutdown(1);
@@ -96,7 +96,7 @@ public class App implements ApplicationRunner {
     public void shutdown() {
 
     	if(clientHandler.isConnected()) {
-            clientHandler.send(eventReporter.newDisconnectEvent());
+            clientHandler.send(clientReporter.newDisconnectEvent());
         }
     }
 }

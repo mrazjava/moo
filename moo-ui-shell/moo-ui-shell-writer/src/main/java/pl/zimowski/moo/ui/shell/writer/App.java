@@ -39,7 +39,7 @@ public class App implements ApplicationRunner {
     private ClientHandling clientHandler;
 
     @Inject
-    private ClientReporter eventHandler;
+    private ClientReporter clientReporter;
 
     @Inject
     private ShutdownAgent shutdownAgent;
@@ -71,12 +71,12 @@ public class App implements ApplicationRunner {
 
         try (Scanner scanner = new Scanner(System.in)) {
 
-            if(!clientHandler.connect(eventHandler)) {
+            if(!clientHandler.connect(clientReporter)) {
                 return;
             }
 
             // allow connection thru while console buffers the output
-            while(eventHandler.getClientId() == null) {
+            while(clientReporter.getClientId() == null) {
                 if(throttler.isCountExceeded(maxThrottleExecutions)) {
                     log.warn("throttling limit exceeded! continuing...");
                     throttler.reset();
@@ -88,18 +88,18 @@ public class App implements ApplicationRunner {
             ClientReporter.LOG.info("({}) type nickname or just hit enter; ctrl-c to exit", ClientReporter.AUTHOR);
 
             String nickName = scanner.nextLine();
-            ClientEvent signinEvent = eventHandler.newSigninEvent();
+            ClientEvent signinEvent = clientReporter.newSigninEvent();
 
             if(StringUtils.isNotBlank(nickName)) {
-            	eventHandler.setNick(nickName);
+            	clientReporter.setNick(nickName);
             }
             else {
-            	clientHandler.send(eventHandler.newGenerateNickEvent());
+            	clientHandler.send(clientReporter.newGenerateNickEvent());
             }
 
             // wait until server responds with a nick; event reporter listens
             // for nick confirmation and sets nick accordingly
-            while(eventHandler.getNick() == null) {
+            while(clientReporter.getNick() == null) {
                 if(throttler.isCountExceeded(maxThrottleExecutions)) {
                     log.warn("throttling limit exceeded! continuing...");
                     throttler.reset();
@@ -108,7 +108,7 @@ public class App implements ApplicationRunner {
                 throttler.throttle();
             }
 
-            signinEvent.setAuthor(eventHandler.getNick());
+            signinEvent.setAuthor(clientReporter.getNick());
             clientHandler.send(signinEvent);
 
             ApiUtils.printPrompt();
@@ -121,7 +121,7 @@ public class App implements ApplicationRunner {
                 	break; // in the future we should expand moo: into a managable predicates
                 }
 
-                ClientEvent event = eventHandler.newMessageEvent(input);
+                ClientEvent event = clientReporter.newMessageEvent(input);
                 log.debug("sending: {}", event);
                 clientHandler.send(event);
 
@@ -135,16 +135,16 @@ public class App implements ApplicationRunner {
     @PreDestroy
     public void shutdown() {
 
-    	String nick = eventHandler.getNick();
+    	String nick = clientReporter.getNick();
 
     	if(clientHandler.isConnected()) {
 
 	    	if(nick != null) { // may be null if connected, then exit before signin
 	    		ClientReporter.LOG.info("({}) done mooing? bye {}!", ClientReporter.AUTHOR, nick);
-	    		clientHandler.send(eventHandler.newSignoffEvent());
+	    		clientHandler.send(clientReporter.newSignoffEvent());
 	    	}
 
-            clientHandler.send(eventHandler.newDisconnectEvent());
+            clientHandler.send(clientReporter.newDisconnectEvent());
         }
     }
 }
