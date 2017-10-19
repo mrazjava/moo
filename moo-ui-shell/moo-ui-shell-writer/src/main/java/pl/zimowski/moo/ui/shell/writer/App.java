@@ -69,6 +69,8 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
+        ClientReporter.LOG.info("\n{}", ApiUtils.fetchResource("/logo"));
+
         try (Scanner scanner = new Scanner(System.in)) {
 
             if(!clientHandler.connect(clientReporter)) {

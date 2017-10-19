@@ -38,7 +38,7 @@ public class ServerEventSender {
 
         boolean status = false;
 
-        log.debug("sending to client: {}\n{}", clientId, serverEvent);
+        log.debug("delivering msg to client: {}\n{}", clientId, serverEvent);
 
         try {
             Message message = jms.createServerEventMessage(serverEvent);

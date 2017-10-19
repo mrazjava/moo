@@ -76,7 +76,6 @@ public class ConnectionManagerTest extends MooTest {
         ReflectionTestUtils.setField(manager, "connected", true);
 
         assertTrue(manager.isConnected());
-        manager.init();
         manager.cleanup();
         assertFalse(manager.isConnected());
     }

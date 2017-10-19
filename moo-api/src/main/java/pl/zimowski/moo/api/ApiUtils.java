@@ -32,7 +32,7 @@ public class ApiUtils {
 
         InputStream is = ApiUtils.class.getClassLoader().getResourceAsStream(resourcePath);
         if(is == null) is = ApiUtils.class.getResourceAsStream(resourcePath);
-        if(is == null) log.warn("invlid resource: {}", resourcePath);
+        if(is == null) log.warn("invalid resource: {}", resourcePath);
 
         String fetchedContent = null;
 

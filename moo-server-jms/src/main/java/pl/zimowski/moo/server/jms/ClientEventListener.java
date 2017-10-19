@@ -68,7 +68,7 @@ public class ClientEventListener implements MessageListener {
                 object = objectMessage.getObject();
                 if(object instanceof ClientEvent) {
                     clientEvent = (ClientEvent)object;
-                    log.debug("...\n{}", clientEvent);
+                    log.debug("extracted:\n{}", clientEvent);
                 }
                 else {
                     log.warn("unexpected payload type:\n{}", object);
@@ -114,7 +114,7 @@ public class ClientEventListener implements MessageListener {
         if(clientEvent.getAction() == ClientAction.Connect) {
 
             serverEvent = new ServerEvent(ServerAction.ConnectionEstablished).withClientId(clientId);
-            log.debug("sending...\n{}", serverEvent);
+            log.trace("CONNECTION ESTABLISHED\n{}", serverEvent);
             serverEventSender.send(
                     serverEvent,
                     clientId
@@ -122,7 +122,7 @@ public class ClientEventListener implements MessageListener {
 
             serverEvent = new ServerEvent(ServerAction.ParticipantCount).withMessage(
                     String.format("%d participant(s)", eventManager.getParticipantCount()));
-            log.debug("sending...\n{}", serverEvent);
+            log.trace("PARTICIPANT COUNT\n{}", serverEvent);
             serverEventSender.send(
                     serverEvent,
                     clientId
@@ -137,7 +137,7 @@ public class ClientEventListener implements MessageListener {
 
         if(clientEvent.getAction() == ClientAction.Signin) {
             serverEvent = new ServerEvent(ServerAction.SigninConfirmed).withAuthor(clientEvent.getAuthor());
-            log.debug("sending...\n{}", serverEvent);
+            log.trace("SIGNING CONFIRMED\n{}", serverEvent);
             serverEventSender.send(
                     serverEvent,
                     clientId
@@ -148,7 +148,7 @@ public class ClientEventListener implements MessageListener {
         serverEvent = eventManager.clientEventToServerEvent(clientEvent);
 
         if(clientEvent.getAction() == ClientAction.GenerateNick) {
-            log.debug("sending...\n{}", serverEvent);
+            log.trace("GENERATE NICK\n{}", serverEvent);
             serverEventSender.send(serverEvent, clientId);
             serverEvent = null;
         }

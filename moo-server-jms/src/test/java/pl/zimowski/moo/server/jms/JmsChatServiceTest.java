@@ -38,6 +38,9 @@ public class JmsChatServiceTest extends MooTest {
     @Mock
     private JmsGateway jms;
 
+    @Mock
+    private ServerEventPublisher publisher;
+
 
     @Test
     public void shouldStartAndExit() {

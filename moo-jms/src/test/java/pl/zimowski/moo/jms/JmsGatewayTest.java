@@ -12,6 +12,7 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.junit.Test;
@@ -154,5 +155,14 @@ public class JmsGatewayTest extends MooTest {
         doThrow(JMSException.class).when(connection).close();
 
         jms.disconnect();
+    }
+
+    @Test
+    public void shouldProduceContext() throws NamingException {
+
+        Context context = jms.namingContext();
+
+        assertNotNull(context);
+        assertEquals(InitialContext.class, context.getClass());
     }
 }

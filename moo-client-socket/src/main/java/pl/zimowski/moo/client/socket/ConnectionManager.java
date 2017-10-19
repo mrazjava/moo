@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
-import pl.zimowski.moo.api.ApiUtils;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ClientReporting;
 
@@ -38,11 +36,6 @@ public class ConnectionManager implements ConnectionManagement {
     @Inject
     private ServerListenerInitializer serverListenerInit;
 
-
-    @PostConstruct
-    public void init() {
-    	log.info("\n{}", ApiUtils.fetchResource("/logo"));
-    }
 
     @PreDestroy
     public void cleanup() {

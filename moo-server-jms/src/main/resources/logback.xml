@@ -19,6 +19,9 @@
 
   <logger name="pl.zimowski.moo.api.ApiUtils" level="DEBUG" />
   <logger name="pl.zimowski.moo" level="INFO" />
+  <logger name="pl.zimowski.moo.server.jms.ClientEventListener" level="DEBUG" />
+  <logger name="pl.zimowski.moo.server.jms.ServerEventPublisher" level="DEBUG" />
+  <logger name="pl.zimowski.moo.server.jms.ServerEventSender" level="DEBUG" />
 
   <root level="WARN">
     <appender-ref ref="STDOUT" />

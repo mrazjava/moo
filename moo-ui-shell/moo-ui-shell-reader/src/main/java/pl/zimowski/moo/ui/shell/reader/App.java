@@ -13,6 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
+import pl.zimowski.moo.api.ApiUtils;
 import pl.zimowski.moo.api.ClientHandling;
 import pl.zimowski.moo.commons.ShutdownAgent;
 import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
@@ -64,6 +65,8 @@ public class App implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
+        ClientReporter.LOG.info("\n{}", ApiUtils.fetchResource("/logo"));
 
         if(!clientHandler.connect(clientReporter)) {
             return;

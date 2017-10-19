@@ -1,9 +1,5 @@
 package pl.zimowski.moo.commons;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InjectionPoint;
@@ -31,10 +27,5 @@ public class ComponentProducer {
     Logger logger(InjectionPoint injectionPoint){
         return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass());
 
-    }
-
-    @Bean @Scope("singleton")
-    Context namingContext() throws NamingException {
-        return new InitialContext();
     }
 }

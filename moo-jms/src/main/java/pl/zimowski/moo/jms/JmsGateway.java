@@ -9,9 +9,12 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.slf4j.Logger;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 
 /**
  * Basic management of JMS connection and session common and useful
@@ -132,5 +135,15 @@ public class JmsGateway {
         catch(JMSException e) {
             log.info("connection close: {}", e.getMessage());
         }
+    }
+
+    /**
+     * @return naming context for jndi properties
+     * @throws NamingException if context cannot be created
+     */
+    @Scope("singleton")
+    @Bean
+    Context namingContext() throws NamingException {
+        return new InitialContext();
     }
 }
