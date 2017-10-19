@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.zimowski</groupId>
   <artifactId>moo</artifactId>
@@ -48,45 +49,45 @@
         </configuration>
       </plugin>
 
-	<plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-surefire-plugin</artifactId>
-		<configuration>
-			<!-- Jacoco prepare-agent builds some command-line params without -->
-			<!-- which jacoco will not instrument. Hence it is important to add -->
-			<!-- those command-line params here (${argLine} holds those params) -->
-			<argLine>${argLine} -Xms256m -Xmx2048m</argLine>
-			<forkCount>1</forkCount>
-			<runOrder>random</runOrder>
-		</configuration>
-	</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- Jacoco prepare-agent builds some command-line params without -->
+          <!-- which jacoco will not instrument. Hence it is important to add -->
+          <!-- those command-line params here (${argLine} holds those params) -->
+          <argLine>${argLine} -Xms256m -Xmx2048m</argLine>
+          <forkCount>1</forkCount>
+          <runOrder>random</runOrder>
+        </configuration>
+      </plugin>
 
-	<plugin>
-		<groupId>org.jacoco</groupId>
-		<artifactId>jacoco-maven-plugin</artifactId>
-		<version>0.7.9</version>
-		<executions>
-			<execution>
-				<id>prepare-agent</id>
-				<goals>
-					<goal>prepare-agent</goal>
-				</goals>
-				<configuration>
-					<skip>${maven.test.skip}</skip>
-					<append>true</append>
-				</configuration>
-			</execution>
-		</executions>
-	</plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.7.9</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <skip>${maven.test.skip}</skip>
+              <append>true</append>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-	<plugin>
-	    <groupId>org.eluder.coveralls</groupId>
-	    <artifactId>coveralls-maven-plugin</artifactId>
-	    <version>4.3.0</version>
-	    <configuration>
-	    	<jacocoReports>moo-reports/target/site/jacoco-aggregate/jacoco.xml</jacocoReports>
-	    </configuration>
-	</plugin>
+      <plugin>
+        <groupId>org.eluder.coveralls</groupId>
+        <artifactId>coveralls-maven-plugin</artifactId>
+        <version>4.3.0</version>
+        <configuration>
+          <jacocoReports>moo-reports/target/site/jacoco-aggregate/jacoco.xml</jacocoReports>
+        </configuration>
+      </plugin>
 
     </plugins>
 
@@ -190,9 +191,9 @@
           <artifactId>spring-boot-maven-plugin</artifactId>
           <version>${spring-boot.version}</version>
           <configuration>
-	          <jvmArguments>
-	          	-DLOG_DIR=target/logs
-	          </jvmArguments>
+            <jvmArguments>
+              -DLOG_DIR=target/logs
+            </jvmArguments>
           </configuration>
           <executions>
             <execution>
@@ -212,19 +213,19 @@
   </build>
 
   <dependencies>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-classic</artifactId>
-      </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-integration</artifactId>
@@ -235,10 +236,10 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
-	<dependency>
-	    <groupId>org.springframework</groupId>
-	    <artifactId>spring-test</artifactId>
-	</dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+    </dependency>
   </dependencies>
 
   <dependencyManagement>
@@ -325,9 +326,9 @@
         <version>2.7.22</version>
       </dependency>
       <dependency>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-classic</artifactId>
-          <version>1.2.3</version>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -339,12 +340,12 @@
         <artifactId>commons-io</artifactId>
         <version>2.5</version>
       </dependency>
-    <dependency>
-    	<groupId>com.github.stefanbirkner</groupId>
-    	<artifactId>system-rules</artifactId>
-    	<version>1.16.1</version>
-    	<scope>test</scope>
-    </dependency>
+      <dependency>
+        <groupId>com.github.stefanbirkner</groupId>
+        <artifactId>system-rules</artifactId>
+        <version>1.16.1</version>
+        <scope>test</scope>
+      </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
@@ -367,24 +368,24 @@
         <version>6.0.1.Final</version>
       </dependency>
       <dependency>
-          <groupId>org.jboss.weld</groupId>
-          <artifactId>weld-core</artifactId>
-          <version>${weld.version}</version>
+        <groupId>org.jboss.weld</groupId>
+        <artifactId>weld-core</artifactId>
+        <version>${weld.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.weld.se</groupId>
         <artifactId>weld-se-core</artifactId>
         <version>${weld.version}</version>
-      </dependency> 
+      </dependency>
       <dependency>
         <groupId>org.jboss.weld.servlet</groupId>
         <artifactId>weld-servlet</artifactId>
         <version>${weld.version}</version>
       </dependency>
       <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jandex</artifactId>
-          <version>2.0.3.Final</version>
+        <groupId>org.jboss</groupId>
+        <artifactId>jandex</artifactId>
+        <version>2.0.3.Final</version>
       </dependency>
       <dependency>
         <groupId>org.apache.deltaspike.core</groupId>
@@ -426,16 +427,16 @@
         <artifactId>guice</artifactId>
         <version>4.1.0</version>
       </dependency>
-  	<dependency>
-  		<groupId>javax.jms</groupId>
-  		<artifactId>javax.jms-api</artifactId>
-  		<version>2.0.1</version>
-  	</dependency>
-	<dependency>
-	    <groupId>org.apache.activemq</groupId>
-	    <artifactId>activemq-core</artifactId>
-	    <version>5.7.0</version>
-	</dependency>
+      <dependency>
+        <groupId>javax.jms</groupId>
+        <artifactId>javax.jms-api</artifactId>
+        <version>2.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-core</artifactId>
+        <version>5.7.0</version>
+      </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter</artifactId>
@@ -450,17 +451,17 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
         <version>${spring.version}</version>
-      </dependency>      
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-test</artifactId>
-		    <version>${spring.version}</version>
-		    <scope>test</scope>
-		</dependency>
+      </dependency>
       <dependency>
-          <groupId>joda-time</groupId>
-          <artifactId>joda-time</artifactId>
-          <version>2.9.9</version>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${spring.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>2.9.9</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
