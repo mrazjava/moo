@@ -78,9 +78,9 @@ public class App implements ApplicationRunner {
             // allow connection thru while console buffers the output
             while(clientReporter.getClientId() == null) {
                 if(throttler.isCountExceeded(maxThrottleExecutions)) {
-                    log.warn("throttling limit exceeded! continuing...");
-                    throttler.reset();
-                    break;
+                    log.error("could not obtain client id (is server running?); aborting!");
+                    shutdownAgent.initiateShutdown(1);
+                    return;
                 }
             	throttler.throttle();
             }

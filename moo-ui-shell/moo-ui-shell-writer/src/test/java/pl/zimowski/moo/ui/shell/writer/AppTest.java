@@ -139,7 +139,7 @@ public class AppTest extends MooTest {
     public void shouldTryThrottlingNullClientIdAndExitMaxLimitExceeded() throws Exception {
 
         when(throttler.isCountExceeded(null)).thenReturn(true);
-        doThrow(IllegalStateException.class).when(throttler).reset();
+        doThrow(IllegalStateException.class).when(shutdownAgent).initiateShutdown(1);
 
         writer.run(null);
     }

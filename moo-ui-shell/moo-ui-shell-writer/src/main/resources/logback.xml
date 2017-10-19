@@ -43,7 +43,7 @@
   <!-- <logger name="pl.zimowski.moo.api.ApiUtils" level="DEBUG" /> -->
   <!-- <logger name="pl.zimowski.moo.client.sockets.App" level="INFO" /> -->
   
-  <logger name="pl.zimowski.moo" level="ERROR" additivity="false">
+  <logger name="pl.zimowski.moo" level="WARN" additivity="false">
   	<appender-ref ref="STDOUT" />
   </logger>
 

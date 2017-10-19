@@ -29,13 +29,13 @@ public class ThreadDelay implements ExecutionThrottling {
 
 	@Override
     public void throttle() {
-	    log.warn("sleeping {}ms ... zzzzzzzz", delay);
+	    log.info("sleeping {}ms ... zzzzzzzz", delay);
         delay(this.delay);
     }
 
     @Override
 	public void throttle(long delay) {
-        log.warn("sleeping {}ms ... zzzzzzzz", delay);
+        log.info("sleeping {}ms ... zzzzzzzz", delay);
 	    delay(delay);
 	}
 
