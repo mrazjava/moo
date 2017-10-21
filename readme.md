@@ -4,23 +4,43 @@
 <p align="center"><img src="moo.png" width=256 alt="Moo Logo"/> mooooooooooo</p>
 
 ---------------------
-Moo is a Java based chat service written as test bed for various concepts. It features 
-a modular design, which separates the concepts of a UI, client and a server. As a 
-result, a UI can be developed based on a common chat API, without compile time dependency 
-on neither client or a server. Depending on which server is running, a UI only needs 
-a compatible runtime client dependency. 
+Moo is a Java based chat service written as test bed for various concepts. It 
+features a modular design, which separates the concepts of a UI, client and a 
+server. As a result, a UI can be developed based on a common chat API, without 
+compile time dependency on neither client or a server. Depending on which server 
+is running, a UI only needs a compatible runtime client dependency.
+
+My goal in writing `moo` was to achieve practical, working example of a 
+modular chat service with at least two client/server implementations that 
+can be simply swapped without affecting UI. Similarly, I wanted to come up with  
+practical and easy to implement API that makes building any user interface 
+straightforward. As a result of my initial goals, `moo` is not feature rich not 
+optimized for performance. It only provides the very basic chat functionality.
+
+If you're looking for a working example of a chat application, web sockets or 
+JMS, complete test suite powered by Mockito, high code coverage, then you may 
+find moo a happy place to poke around.
 
 ### Stack
 
  * Java 8
  * Web Sockets
+ * (J)ava (M)essaging (S)ervice (ActiveMQ)
  * Spring Boot
+ * Mockito
 
 ### Features
 
  * Distributed Architecture
  * Server JMX reporting
  * Console UI
+ * Server generated nick names
+ * Single public chat hall
+
+## Defaults
+---------------------
+By default `moo` is bound to a web socket client. It expects a running web 
+socket server.
 
 ## Screenshot
 ---------------------
@@ -43,20 +63,19 @@ mvn install
 ---------------------
 Starting server:
 ```
-cd moo/moo-server-socket/
+cd moo/moo-server-IMPL/
 mvn spring-boot:run
 ```
-Server starts on port `8000`. Port can be changed via `application.properties`. 
-Server reports client count stats to JMX console. Start the JMX console with a 
-server PID and watch `ClientAnalytics` MBean.
-
-![Moo JMX Screenshot](docs/images/moo-jmx-console.png?raw=true "Moo via JMX")
+IMPL = one of the available implementations: `moo-server-socket` or 
+`moo-server-jms`. Details about each server are available in the server 
+project readme.
 
 ## Client
 ---------------------
-Socket server, requires compatible socket client. Make sure that the UI of your 
-choice, has enabled relevant maven dependency. For example, command line UI 
-would need to have commented out the following in `moo-ui-shell/pom.xml`:
+Depending on which server is running, a compatible client runtime dependency 
+of a UI app is required. For example, for text based UI socket compatible 
+client would be enabled by commented out the following in `moo-ui-shell/moo-ui-shell-reader/pom.xml` 
+and `moo-ui-shell/moo-ui-shell-writer/pom.xml`:
 ```
 <!--
 only one moo-client implementation can be enabled otherwise spring 
@@ -67,6 +86,18 @@ IOC will not resolve injection points due to multiple implementations
   <artifactId>moo-client-socket</artifactId>
   <scope>runtime</scope>
 </dependency>
+<!--
+<dependency>
+  <groupId>pl.zimowski</groupId>
+  <artifactId>moo-client-jms</artifactId>
+  <scope>runtime</scope>
+</dependency>
+<dependency>
+  <groupId>org.apache.activemq</groupId>
+  <artifactId>activemq-core</artifactId>
+  <scope>runtime</scope>
+</dependency>
+-->
 ```
 
 ## UI
@@ -79,10 +110,11 @@ First, start UI reader which will allow to view public chats:
 cd moo/moo-ui-shell/moo-ui-shell-reader
 mvn spring-boot:run
 ```
-Reader will attempt to connect to server at `localhost` on port `8000`. 
-This can be re-configured via `application.properties`, or more conveniently, 
-by overriding these spring managed props as command line args. Client aborts 
-immediately if server connection cannot be established.
+Reader running on websocket client will attempt to connect to server at 
+`localhost` on port `8000`. This can be re-configured via 
+`application.properties`, or more conveniently, by overriding these spring 
+managed props as command line args. Client aborts immediately if server 
+connection cannot be established.
 
 To be able to actually send chat messages, it is necessary to have a running 
 instance of a writer:

@@ -1,9 +1,12 @@
 # Moo - Chat API
 ---------------------
-Common API shared by UI, client and server. Because UI is bound to an 
-API, and client powers UI at runtime, it is easy to build any new UI 
-client by simply implementing this API.
+Common API for implementing moo components: UI, client or a server. Because of   
+this API, UI and client/server pairs are completely decoupled.
 
-A UI application essentially must inject implementation of `ClientHandling` 
-(which is provided by client runtime), and register `ClientListener` which 
-will process chat events.
+UI is simply deployed against a client runtime dependency. It essentially must 
+inject instance of `ClientHandling` (which is provided by client runtime), and 
+register its own implementation of  `ClientReporting` which is reports 
+server generated chat events.
+
+A client/server pair obviously must be compatible (web socket client expects 
+a running web socket server).
