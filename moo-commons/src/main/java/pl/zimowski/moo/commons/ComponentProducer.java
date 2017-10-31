@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * Customized producers of spring managed components.
- * 
+ *
  * @since 1.2.0
- * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
+ * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 @Component
 public class ComponentProducer {

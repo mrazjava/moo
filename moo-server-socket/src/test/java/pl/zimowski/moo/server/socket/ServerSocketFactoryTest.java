@@ -13,24 +13,24 @@ import org.junit.Test;
 
 /**
  * Ensures that {@link ServerSocketFactory} correctly produces {@link ServerSocket}.
- * 
+ *
  * @since 1.2.0
- * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>) 
+ * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 public class ServerSocketFactoryTest {
 
     @Test
     public void shouldCreateServerSocket() throws IOException {
-        
+
         ServerSocket serverSocket = new ServerSocketFactory().getServerSocket(TEST_PORT);
-        
+
         assertNotNull(serverSocket);
         assertEquals(TEST_PORT, serverSocket.getLocalPort());
         assertFalse(serverSocket.isClosed());
-        
+
         serverSocket.close();
-        
+
         assertTrue(serverSocket.isClosed());
-        
+
     }
 }

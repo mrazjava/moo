@@ -1,15 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>pl.zimowski</groupId>
     <artifactId>moo</artifactId>
-    <version>1.2.0-FINAL</version>
+    <version>1.3.0-FINAL</version>
   </parent>
   <artifactId>moo-ui-shell</artifactId>
   <packaging>pom</packaging>
   <name>Moo UI (shell)</name>
   <description>Parent POM for Moo shell UI.</description>
-  
+
   <dependencies>
     <dependency>
       <groupId>javax.enterprise</groupId>
@@ -36,19 +37,14 @@
       <artifactId>moo-commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>pl.zimowski</groupId>
-      <artifactId>moo-client-socket</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.github.stefanbirkner</groupId>
-    	<artifactId>system-rules</artifactId>
+      <groupId>com.github.stefanbirkner</groupId>
+      <artifactId>system-rules</artifactId>
     </dependency>
   </dependencies>
-  
+
   <modules>
-  	<module>moo-ui-shell-reader</module>
-  	<module>moo-ui-shell-writer</module>
-  	<module>moo-ui-shell-commons</module>
+    <module>moo-ui-shell-reader</module>
+    <module>moo-ui-shell-writer</module>
+    <module>moo-ui-shell-commons</module>
   </modules>
 </project>

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,15 +15,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 import pl.zimowski.moo.api.ApiUtils;
-import pl.zimowski.moo.api.ClientAction;
 import pl.zimowski.moo.api.ClientEvent;
 import pl.zimowski.moo.api.ClientHandling;
+import pl.zimowski.moo.commons.ShutdownAgent;
 import pl.zimowski.moo.ui.shell.commons.ExecutionThrottling;
-import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
 
 /**
- * Text based UI client of a Moo chat service with write only 
- * capability. Allows to generate chat events. Requires a UI 
+ * Text based UI client of a Moo chat service with write only
+ * capability. Allows to generate chat events. Requires a UI
  * reader to display incoming chats.
  *
  * @since 1.2.0
@@ -31,22 +31,30 @@ import pl.zimowski.moo.ui.shell.commons.ShutdownAgent;
 @ComponentScan(basePackages = "pl.zimowski.moo")
 @SpringBootApplication
 public class App implements ApplicationRunner {
-	
+
     @Inject
     private Logger log;
-    
+
     @Inject
     private ClientHandling clientHandler;
-    
+
     @Inject
-    private EventHandler eventReporter;
-    
+    private ClientReporter clientReporter;
+
     @Inject
     private ShutdownAgent shutdownAgent;
-    
+
     @Inject
     private ExecutionThrottling throttler;
-    
+
+    /**
+     * maximum number of throttling iterations; once reached,
+     * there is no more throttling ({@code null} means infinite
+     * throttling)
+     */
+    @Value("${shell.writer.throttle.max}")
+    private Integer maxThrottleExecutions;
+
 
     /**
      * Application entry point.
@@ -61,72 +69,84 @@ public class App implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
+        ClientReporter.LOG.info("\n{}", ApiUtils.fetchResource("/logo"));
+
         try (Scanner scanner = new Scanner(System.in)) {
 
-            if(!clientHandler.connect(eventReporter)) {
+            if(!clientHandler.connect(clientReporter)) {
                 return;
             }
 
             // allow connection thru while console buffers the output
-            while(eventReporter.getClientId() == null) {
+            while(clientReporter.getClientId() == null) {
+                if(throttler.isCountExceeded(maxThrottleExecutions)) {
+                    log.error("could not obtain client id (is server running?); aborting!");
+                    shutdownAgent.initiateShutdown(1);
+                    return;
+                }
             	throttler.throttle();
             }
 
-            EventHandler.LOG.info("({}) type nickname or just hit enter; ctrl-c to exit", EventHandler.AUTHOR);
+            ClientReporter.LOG.info("({}) type nickname or just hit enter; ctrl-c to exit", ClientReporter.AUTHOR);
 
             String nickName = scanner.nextLine();
-            ClientEvent signinEvent = new ClientEvent(ClientAction.Signin);
-            
+            ClientEvent signinEvent = clientReporter.newSigninEvent();
+
             if(StringUtils.isNotBlank(nickName)) {
-            	eventReporter.setNick(nickName);
+            	clientReporter.setNick(nickName);
             }
             else {
-            	clientHandler.send(new ClientEvent(ClientAction.GenerateNick));
+            	clientHandler.send(clientReporter.newGenerateNickEvent());
             }
 
-            // wait until server responds with a nick; event reporter listens 
+            // wait until server responds with a nick; event reporter listens
             // for nick confirmation and sets nick accordingly
-            while(eventReporter.getNick() == null) {
+            while(clientReporter.getNick() == null) {
+                if(throttler.isCountExceeded(maxThrottleExecutions)) {
+                    log.warn("throttling limit exceeded! continuing...");
+                    throttler.reset();
+                    break;
+                }
                 throttler.throttle();
             }
-            
-            signinEvent.setAuthor(eventReporter.getNick());
+
+            signinEvent.setAuthor(clientReporter.getNick());
             clientHandler.send(signinEvent);
 
             ApiUtils.printPrompt();
-            
+
             while(scanner.hasNextLine()) {
 
                 String input = scanner.nextLine();
-                
+
                 if(input.equals("moo:exit")) {
                 	break; // in the future we should expand moo: into a managable predicates
                 }
-                
-                ClientEvent event = new ClientEvent(ClientAction.Message, eventReporter.getNick(), input);
+
+                ClientEvent event = clientReporter.newMessageEvent(input);
                 log.debug("sending: {}", event);
                 clientHandler.send(event);
-                
+
                 ApiUtils.printPrompt();
             }
         }
-        
+
         shutdownAgent.initiateShutdown(0);
     }
 
     @PreDestroy
     public void shutdown() {
 
-    	String nick = eventReporter.getNick();
-    	
+    	String nick = clientReporter.getNick();
+
     	if(clientHandler.isConnected()) {
-    	
+
 	    	if(nick != null) { // may be null if connected, then exit before signin
-	    		EventHandler.LOG.info("({}) done mooing? bye {}!", EventHandler.AUTHOR, nick);
-	    		clientHandler.send(new ClientEvent(ClientAction.Signoff).withAuthor(nick));
+	    		ClientReporter.LOG.info("({}) done mooing? bye {}!", ClientReporter.AUTHOR, nick);
+	    		clientHandler.send(clientReporter.newSignoffEvent());
 	    	}
-    	
-            clientHandler.send(new ClientEvent(ClientAction.Disconnect));
+
+            clientHandler.send(clientReporter.newDisconnectEvent());
         }
     }
 }

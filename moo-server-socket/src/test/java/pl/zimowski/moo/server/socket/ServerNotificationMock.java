@@ -1,8 +1,6 @@
 package pl.zimowski.moo.server.socket;
 
 import pl.zimowski.moo.api.ClientEvent;
-import pl.zimowski.moo.server.socket.ClientThread;
-import pl.zimowski.moo.server.socket.EventBroadcasting;
 
 /**
  * Useful mock which simulates server notifier and allows to test validity of

@@ -24,7 +24,7 @@ public class DummyLogWorker {
 
     private TestLogging log;
 
-    
+
     void logIt() {
 
         log.trace(THE_QUICK);
@@ -33,7 +33,7 @@ public class DummyLogWorker {
         log.warn(THE_LAZY);
         log.error(DOG);
     }
-    
+
     /**
      * invoke all other (overriden) trace calls
      */
@@ -41,7 +41,7 @@ public class DummyLogWorker {
 
         Assert.assertTrue(log.isTraceEnabled());
         Assert.assertTrue(log.isTraceEnabled(FINALIZE_SESSION_MARKER));
-        
+
         log.trace(FINALIZE_SESSION_MARKER, null);
         log.trace("", 1);
         log.trace("", 1, 2, 3);
@@ -52,15 +52,15 @@ public class DummyLogWorker {
         log.trace("", 1, 2);
         log.trace(FINALIZE_SESSION_MARKER, "", 1, 2, 3);
     }
-    
+
     /**
      * invoke all other (overriden) debug calls
      */
     void logAlternateDebug() {
-        
+
         Assert.assertTrue(log.isDebugEnabled());
         Assert.assertTrue(log.isDebugEnabled(FINALIZE_SESSION_MARKER));
-        
+
         log.debug(FINALIZE_SESSION_MARKER, null);
         log.debug("", 1);
         log.debug("", 1, 2, 3);
@@ -71,7 +71,7 @@ public class DummyLogWorker {
         log.debug("", 1, 2);
         log.debug(FINALIZE_SESSION_MARKER, "", 1, 2, 3);
     }
-    
+
     /**
      * invoke all other (overriden) info calls
      */
@@ -79,7 +79,7 @@ public class DummyLogWorker {
 
         Assert.assertTrue(log.isInfoEnabled());
         Assert.assertTrue(log.isInfoEnabled(FINALIZE_SESSION_MARKER));
-        
+
         log.info(FINALIZE_SESSION_MARKER, null);
         log.info("", 1);
         log.info("", 1, 2, 3);
@@ -90,7 +90,7 @@ public class DummyLogWorker {
         log.info("", 1, 2);
         log.info(FINALIZE_SESSION_MARKER, "", 1, 2, 3);
     }
-    
+
     /**
      * invoke all other (overriden) warn calls
      */
@@ -98,7 +98,7 @@ public class DummyLogWorker {
 
         Assert.assertTrue(log.isWarnEnabled());
         Assert.assertTrue(log.isWarnEnabled(FINALIZE_SESSION_MARKER));
-        
+
         log.warn(FINALIZE_SESSION_MARKER, null);
         log.warn("", 1);
         log.warn("", 1, 2, 3);
@@ -109,7 +109,7 @@ public class DummyLogWorker {
         log.warn("", 1, 2);
         log.warn(FINALIZE_SESSION_MARKER, "", 1, 2, 3);
     }
-    
+
     /**
      * invoke all other (overriden) error calls
      */
@@ -117,7 +117,7 @@ public class DummyLogWorker {
 
         Assert.assertTrue(log.isErrorEnabled());
         Assert.assertTrue(log.isErrorEnabled(FINALIZE_SESSION_MARKER));
-        
+
         log.error(FINALIZE_SESSION_MARKER, null);
         log.error("", 1);
         log.error("", 1, 2, 3);
