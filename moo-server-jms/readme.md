@@ -57,10 +57,10 @@ of ActiveMQ admin console after running `moo` with a few clients and chat
 events.
 
 Queues:
-![Moo ActiveMQ](../moo/docs/images/moo-activemq-queues.png?raw=true "ActiveMQ Moo Queues")
+![Moo ActiveMQ](../docs/images/moo-activemq-queues.png?raw=true "ActiveMQ Moo Queues")
 
 Topics:
-![Moo ActiveMQ](../moo/docs/images/moo-activemq-topics.png?raw=true "ActiveMQ Moo Topics")
+![Moo ActiveMQ](../docs/images/moo-activemq-topics.png?raw=true "ActiveMQ Moo Topics")
 
 Connections:
-![Moo ActiveMQ](../moo/docs/images/moo-activemq-connections.png?raw=true "ActiveMQ Moo Connections")
+![Moo ActiveMQ](../docs/images/moo-activemq-connections.png?raw=true "ActiveMQ Moo Connections")
