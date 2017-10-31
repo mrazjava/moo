@@ -46,7 +46,7 @@ socket server.
 ---------------------
 Moo running on web sockets client/server:
 
-![Shell UI Screenshot](/docs/images/moo-ui-shell-sockets.png?raw=true "Moo Shell UI in Action")
+![Shell UI Screenshot](/docs/images/moo-ui-shell-sockets.png?raw=true&x=1 "Moo Shell UI in Action")
 
 Moo running on JMS client/server with ActiveMQ broker (not shown):
 
