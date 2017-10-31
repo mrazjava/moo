@@ -473,7 +473,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <moo.version>1.3.0-SNAPSHOT</moo.version>
+    <moo.version>1.3.0-FINAL</moo.version>
     <weld.version>2.4.4.Final</weld.version>
     <deltaspike.version>1.7.2</deltaspike.version>
     <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
