@@ -4,7 +4,7 @@
   <parent>
     <groupId>pl.zimowski</groupId>
     <artifactId>moo-ui-shell</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.0-FINAL</version>
   </parent>
   <artifactId>moo-ui-shell-writer</artifactId>
   <name>Moo UI (shell: writer)</name>
