@@ -43,17 +43,17 @@ public class ServerEventTest {
         assertEquals(0, event.getParticipantCount());
         assertEquals("hello world", event.getMessage());
     }
-    
+
     @Test
     public void shouldProduceEventWithFluidSetters() {
-        
+
         ServerEvent event = new ServerEvent(ServerAction.Message)
                 .withAuthor("johnie")
                 .withClientId("foo-bar")
                 .withMessage("howdy")
                 .withNote("what?")
                 .withParticipantCount(27);
-        
+
         assertNotNull(event.getDateTime());
         assertEquals("johnie", event.getAuthor());
         assertEquals("foo-bar", event.getClientId());

@@ -73,7 +73,7 @@ public class ClientThread extends Thread implements ClientNotification {
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                 lastActivity = System.currentTimeMillis();
                 ClientEvent msg = (ClientEvent)ois.readObject();
-                msg.withId(clientId);
+                msg.withClientId(clientId);
                 log.debug("in: {}", msg);
                 serverNotifier.broadcast(this, msg);
                 if(ClientAction.Disconnect == msg.getAction()) {
@@ -108,10 +108,11 @@ public class ClientThread extends Thread implements ClientNotification {
      * Terminates connection with a client. After this call, no communication
      * is possible and essentially this thread is dead.
      */
+    @Override
     public void disconnect() {
-        
+
         log.info("closing connection: {}", socket);
-        
+
         try {
             socket.close();
         }
@@ -142,12 +143,12 @@ public class ClientThread extends Thread implements ClientNotification {
 
     @Override
 	public boolean equals(Object otherThread) {
-    	
+
     	if(otherThread == null || !(otherThread instanceof ClientThread))
     		return false;
-    	
+
     	ClientThread that = (ClientThread)otherThread;
-    	
+
 		return getClientId().equals(that.getClientId());
 	}
 

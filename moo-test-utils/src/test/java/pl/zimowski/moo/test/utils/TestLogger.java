@@ -16,23 +16,23 @@ import org.slf4j.event.Level;
 public class TestLogger extends MockLogger implements TestLogging {
 
     private int traceCount;
-    
+
     private int debugCount;
-    
+
     private int infoCount;
-    
+
     private int warnCount;
-    
+
     private int errorCount;
-    
+
     // logged messages are stored so that assertions can be made
     private Map<Level, String> results = new HashMap<>();
-    
+
 
     Map<Level, String> getResults() {
         return results;
     }
-    
+
     @Override
     public void trace(String msg) {
         super.trace(msg);

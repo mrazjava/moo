@@ -8,7 +8,7 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.zimowski.moo.api.ClientListener;
+import pl.zimowski.moo.api.ClientReporting;
 import pl.zimowski.moo.api.ServerEvent;
 
 /**
@@ -19,19 +19,18 @@ import pl.zimowski.moo.api.ServerEvent;
  * @author Adam Zimowski (<a href="mailto:mrazjava@yandex.com">mrazjava</a>)
  */
 public class ServerListener extends Thread {
-	
+
     private static final Logger log = LoggerFactory.getLogger(ServerListener.class);
 
     private Socket socket;
 
-    private ClientListener clientListener;
-    
+    private ClientReporting reporter;
+
     private boolean hardExit = true;
 
-
-    public ServerListener(Socket socket, ClientListener clientListener) {
+    public ServerListener(Socket socket, ClientReporting reporter) {
         this.socket = socket;
-        this.clientListener = clientListener;
+        this.reporter = reporter;
     }
 
     void setHardExit(boolean hardExit) {
@@ -42,25 +41,25 @@ public class ServerListener extends Thread {
     public void run() {
 
         try {
-            while(!socket.isInputShutdown()) {
+            while (!socket.isInputShutdown()) {
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                ServerEvent serverEvent = (ServerEvent)in.readObject();
-                clientListener.onEvent(serverEvent);
+                ServerEvent serverEvent = (ServerEvent) in.readObject();
+                reporter.onEvent(serverEvent);
             }
         }
-        catch(EOFException e) {
+        catch (EOFException e) {
             log.info("server was shut down at administrator's request");
         }
         catch (IOException | ClassNotFoundException e) {
             log.error("unexpected connection error: {}; aborting!", e.getMessage());
         }
 
-        if(hardExit) {
+        if (hardExit) {
             System.exit(MAX_PRIORITY);
         }
     }
-    
+
     public boolean isListening() {
-    	return !socket.isClosed();
+        return !socket.isClosed();
     }
 }
