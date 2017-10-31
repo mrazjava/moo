@@ -1,7 +1,7 @@
 # Moo - JMS client
 ---------------------
 100% pure JMS client support for JMS server. It is required as runtime 
-dependency of a UI is [JMS server](../moo-server-jms/readme.md) is used.
+dependency of a UI if [JMS server](../moo-server-jms/readme.md) is used.
 
 ## Moo Client
 

@@ -18,13 +18,13 @@
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-test-utils</artifactId>
     </dependency>
-<!-- 
+
     <dependency>
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-client-socket</artifactId> 
       <scope>runtime</scope>
-    </dependency>
- --> 
+    </dependency> 
+ <!--
     <dependency>
       <groupId>pl.zimowski</groupId>
       <artifactId>moo-client-jms</artifactId>
@@ -35,6 +35,6 @@
       <artifactId>activemq-core</artifactId>
       <scope>runtime</scope>
     </dependency>
-
+ -->
   </dependencies>
 </project>
