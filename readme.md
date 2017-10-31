@@ -12,10 +12,10 @@ is running, a UI only needs a compatible runtime client dependency.
 
 My goal in writing `moo` was to achieve practical, working example of a 
 modular chat service with at least two client/server implementations that 
-can be simply swapped without affecting UI. Similarly, I wanted to come up with  
-practical and easy to implement API that makes building any user interface 
-straightforward. As a result of my initial goals, `moo` is not feature rich not 
-optimized for performance. It only provides the very basic chat functionality.
+can be simply swapped without affecting UI. Similarly, I wanted to come up with a 
+practical and intuitive API that makes building any user interface straightforward. 
+As a result of my initial goals, `moo` is not feature rich nor is it optimized for 
+performance. It only provides the very basic chat functionality.
 
 If you're looking for a working example of a chat application, web sockets or 
 JMS, complete test suite powered by Mockito, high code coverage, then you may 
@@ -42,14 +42,21 @@ find moo a happy place to poke around.
 By default `moo` is bound to a web socket client. It expects a running web 
 socket server.
 
-## Screenshot
+## Screenshots
 ---------------------
-![Shell UI Screenshot](/docs/images/moo-ui-shell-tmux.png?raw=true "Moo Shell UI in Action")
+Moo running on web sockets client/server:
 
-Here we have a 4 way tmux session. In the left upper corner we're running moo server. In 
+![Shell UI Screenshot](/docs/images/moo-ui-shell-sockets.png?raw=true "Moo Shell UI in Action")
+
+Moo running on JMS client/server with ActiveMQ broker (not shown):
+
+![Shell UI Screenshot](/docs/images/moo-ui-shell-jms.png?raw=true "Moo Shell UI in Action")
+
+In both screenshots we have a 4 way tmux session. In the left upper corner we're running moo server. In 
 the right upper we have a moo reader which displays chat activity. In both bottom corners, 
 we're running two instances of a writer, simulating user chat experience. In a typical use 
 case, end user would run one instance of a reader and writer only. 
+
 
 ## First things first
 ---------------------
@@ -73,7 +80,7 @@ project readme.
 ## Client
 ---------------------
 Depending on which server is running, a compatible client runtime dependency 
-of a UI app is required. For example, for text based UI socket compatible 
+of a UI app is required. For example, for text based shell UI, a socket compatible 
 client would be enabled by commented out the following in `moo-ui-shell/moo-ui-shell-reader/pom.xml` 
 and `moo-ui-shell/moo-ui-shell-writer/pom.xml`:
 ```
