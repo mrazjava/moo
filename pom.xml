@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.zimowski</groupId>
   <artifactId>moo</artifactId>
-  <version>2.0.0-FINAL</version>
+  <version>2.0.1-FINAL</version>
   <packaging>pom</packaging>
   <developers>
     <developer>
@@ -499,7 +499,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
-    <moo.version>2.0.0-FINAL</moo.version>
+    <moo.version>2.0.1-FINAL</moo.version>
     <weld.version>2.4.4.Final</weld.version>
     <deltaspike.version>1.7.2</deltaspike.version>
     <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
