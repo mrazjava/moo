@@ -125,7 +125,7 @@ public class JmsGateway {
         try {
             session.close();
         }
-        catch(JMSException e) {
+        catch(Exception e) {
             log.info("session close: {}", e.getMessage());
         }
 

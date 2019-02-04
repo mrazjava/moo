@@ -53,7 +53,7 @@ public class JmsChatServiceTest extends MooTest {
     @Test
     public void shouldStartAndAbortOnJmsException() {
 
-        doThrow(JMSException.class).when(jms).stop();
+        doThrow(RuntimeException.class).when(jms).stop();
 
         systemInMock.provideLines("moo:exit");
         chat.start();
