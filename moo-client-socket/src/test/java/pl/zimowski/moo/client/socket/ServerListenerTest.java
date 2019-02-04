@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doThrow;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -75,7 +76,7 @@ public class ServerListenerTest extends MooTest {
     @Test
     public void shouldExitOnIOException() {
 
-        Mockito.doThrow(IOException.class).when(socket).isInputShutdown();
+        doThrow(RuntimeException.class).when(socket).isInputShutdown();
         ServerListener serverListener = new ServerListener(socket, null);
 
         serverListener.setHardExit(false);

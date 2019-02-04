@@ -53,6 +53,9 @@ public class ServerListener extends Thread {
         catch (IOException | ClassNotFoundException e) {
             log.error("unexpected connection error: {}; aborting!", e.getMessage());
         }
+        catch(Exception e) {
+            log.error("unexpected error: {}; aborting!", e);
+        }
 
         if (hardExit) {
             System.exit(MAX_PRIORITY);
