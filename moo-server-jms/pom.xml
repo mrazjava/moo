@@ -4,7 +4,7 @@
   <parent>
     <groupId>pl.zimowski</groupId>
     <artifactId>moo</artifactId>
-    <version>2.0.0-FINAL</version>
+    <version>2.0.1-FINAL</version>
   </parent>
   <artifactId>moo-server-jms</artifactId>
   <name>Moo Server (jms)</name>
