@@ -1,0 +1,16 @@
+version: '3.3'
+
+services:
+  server:
+    build: './moo-server-socket'
+    ports:
+      - "8000:8000"
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+  ui-reader:
+    build: './moo-ui-shell/moo-ui-shell-reader'
+    environment:
+      server.host: server

@@ -9,6 +9,29 @@
   <artifactId>moo-ui-shell-reader</artifactId>
   <name>Moo UI (shell: reader)</name>
   <description>Text based UI for displaying chat events (read only). In text based console, reading and writing events is most convenient when managed via separate apps.</description>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources-filtered</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>pl.zimowski.moo.ui.shell.reader.App</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>pl.zimowski</groupId>
