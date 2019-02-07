@@ -142,6 +142,19 @@ Because writer uses the same client as reader, same customization strategy
 applies. If server is based on websockets, then websocket client should be 
 used. If server is based on JMS, then JMS client should be used, etc.
 
+## Easier with docker
+---------------------
+The socket server and socket reader are dockerized and can be run with a single
+command from the root (`moo/`):
+```
+docker-compose up
+```
+Then, just start a writer:
+```
+cd moo/moo-ui-shell/moo-ui-shell-writer/
+mvn clean spring-boot:run
+```
+
 ## Code Coverage
 ---------------------
 Playing around with [Coveralls](https://coveralls.io/github/mrazjava/moo) Github plugin, 
