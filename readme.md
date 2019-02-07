@@ -23,7 +23,7 @@ find moo a happy place to poke around.
 
 ### Stack
 
- * Java 8
+ * Java
  * Web Sockets
  * (J)ava (M)essaging (S)ervice (ActiveMQ)
  * Spring Boot
@@ -159,13 +159,23 @@ cd moo-reports/target/site/jacoco-aggregate/
 ```
 and open `index.html` in your favorite browser.
 
-## Care to help or join?
+## Miscellaneous
 ---------------------
-This could be more fun with graphical UIs. For example, web based on Angular. Or Eclipse 
-RCP. Or JavaFX. You get the point. I just don't have that much time, besides my 
-`moo` itch was scratched with what you see here. I may come back to this from time to 
-time to experiment more or of `moo` hack will itch me again :-) If you feel like hacking on, 
-please issue a PR against `develop` branch and I will happily merge your improvements. Other 
-areas of improvemnts are obviously server/api/feature related.
-
-*Enjoy!*
+### Bumping up version
+As moo is a modular maven project, its version is referenced in several places. The easiest
+way to modify release version is to use the maven plugin. For example, to bump up the version
+execute the following from project root:
+```
+mvn versions:set -DnewVersion=2.2.0-SNAPSHOT
+```
+Maven will use version declaration to determine version being replaced and replace it (and
+all references to it) with the specified new version. It will create temporary backup files
+to give ability to reverse the change. If upon reviewing changed files everything looks good
+we tell maven to permanently write our changes with:
+```
+mvn versions:commit
+```
+In case we do not like version changes performed by maven, we can reverse these with:
+```
+mvn versions:revert
+```
