@@ -142,17 +142,32 @@ Because writer uses the same client as reader, same customization strategy
 applies. If server is based on websockets, then websocket client should be 
 used. If server is based on JMS, then JMS client should be used, etc.
 
-## Easier with docker
+## Dockerization
 ---------------------
-The socket server and socket reader are dockerized and can be run with a single
-command from the root (`moo/`):
+As a convenience, the socket server and a compatible reader are dockerized 
+and can be run with a single command from the root (`moo/`):
 ```
 docker-compose up
 ```
-Then, just start a writer:
+Docker compose will bring up two images and each can be interacted with:
+```
+docker ps
+```
+to obtain a container id, then:
+```
+docker exec -it <container_id> bash
+```
+To produce chat messages we simply start a writer with a standard maven 
+command:
 ```
 cd moo/moo-ui-shell/moo-ui-shell-writer/
 mvn clean spring-boot:run
+```
+By default the output from the server and reader will appear where `docker-compose up` 
+was invoked, so output from server and reader is mixed up and may be difficult to 
+parse to a naked eye. It can be separated by container id using docker logs, though:
+```
+docker logs <container_id> -f
 ```
 
 ## Code Coverage
