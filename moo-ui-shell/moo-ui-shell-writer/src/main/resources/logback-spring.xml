@@ -11,25 +11,20 @@
 
   <!-- eye candy appender so that chat events stand out -->
   <appender name="STDOUT-chat" class="ch.qos.logback.core.ConsoleAppender">
-    <!-- encoders are assigned the type
-         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     <encoder>
-    <!-- %-4relative [%thread] %-5level %logger{35} - %msg %n -->
       <pattern>%date{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
     </encoder>
   </appender>
 
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${LOG_DIR}/moo-shell-reader.log</file>
+    <file>${LOG_PATH}/moo-shell-writer.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <!-- daily rollover -->
-      <fileNamePattern>${LOG_DIR}/moo-shell-reader.%d{yyyy-MM-dd}.log</fileNamePattern>
-      <!-- keep 30 days' worth of history capped at 1GB total size -->
+      <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/moo-shell-writer.log</fileNamePattern>
       <maxHistory>30</maxHistory>
-      <totalSizeCap>1GB</totalSizeCap>
+      <totalSizeCap>10MB</totalSizeCap>
     </rollingPolicy>
     <encoder>
-    <!-- %-4relative [%thread] %-5level %logger{35} - %msg %n -->
       <pattern>%date{yyyy-MM-dd HH:mm:ss} [%level] %logger [%M] - %msg%n</pattern>
     </encoder>
   </appender>
@@ -38,10 +33,12 @@
   <logger name="javax.management" level="INFO" />
   <logger name="org.hibernate.validator" level="ERROR" />
   <logger name="org.jboss.logging" level="WARN" />
+  <logger name="org.apache.activemq" level="INFO" />
 
   <!-- <logger name="pl.zimowski.moo.api.ApiUtils" level="DEBUG" /> -->
   <!-- <logger name="pl.zimowski.moo.client.sockets.App" level="INFO" /> -->
-  <logger name="pl.zimowski.moo" level="ERROR" additivity="false">
+  
+  <logger name="pl.zimowski.moo" level="WARN" additivity="false">
   	<appender-ref ref="STDOUT" />
   </logger>
 

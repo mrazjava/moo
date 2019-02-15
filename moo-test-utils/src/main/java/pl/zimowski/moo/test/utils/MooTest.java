@@ -18,10 +18,4 @@ public abstract class MooTest {
 
     @Rule
     public MockitoRule mockito = MockitoJUnit.rule();
-
-
-    @BeforeClass
-    public static void setupUnit() {
-        System.setProperty("LOG_DIR", "target/logs-test");
-    }
 }

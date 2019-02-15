@@ -56,11 +56,6 @@ public class AppTest extends MooTest {
     private ExecutionThrottling throttler;
 
 
-    @BeforeClass
-    public static void dor() {
-        System.setProperty("LOG_DIR", "target/logs");
-    }
-
     @Test
     public void shouldNotConnect() throws Exception {
 

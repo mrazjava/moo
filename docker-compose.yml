@@ -3,6 +3,7 @@ version: '3.3'
 services:
   server:
     build: './moo-server-socket'
+    image: zimowski.pl/moo/server-socket
     ports:
       - "8000:8000"
 #    healthcheck:
@@ -12,6 +13,7 @@ services:
 #      retries: 5
   ui-reader:
     build: './moo-ui-shell/moo-ui-shell-reader'
+    image: zimowski.pl/moo/shell-reader
     depends_on:
       - server
     environment:

@@ -210,11 +210,13 @@
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
           <version>${spring-boot.version}</version>
+          <!--
           <configuration>
             <jvmArguments>
-              -DLOG_DIR=target/logs
+              -DLOG_PATH=target/logs
             </jvmArguments>
           </configuration>
+          -->
           <executions>
             <execution>
               <goals>

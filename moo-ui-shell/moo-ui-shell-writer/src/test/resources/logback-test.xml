@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr([%level]) %clr(%logger [%M]){cyan} - %m%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="org.springframework" level="WARN" />
+  <logger name="javax.management" level="INFO" />
+  <logger name="org.hibernate.validator" level="ERROR" />
+  <logger name="org.jboss.logging" level="WARN" />
+  <logger name="org.apache.activemq" level="INFO" />
+
+  <logger name="pl.zimowski.moo" level="WARN" additivity="false">
+  	<appender-ref ref="STDOUT" />
+  </logger>
+
+  <logger name="CHAT_ECHO" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+  <root level="WARN">
+    <appender-ref ref="STDOUT" />
+  </root>
+
+</configuration>
